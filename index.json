@@ -1,0 +1,173 @@
+[
+  {
+    "id": "eh.ehentai",
+    "name": "E-Hentai",
+    "version": "1.1.0",
+    "versionCode": 2,
+    "lang": "all",
+    "nsfw": 1,
+    "scriptUrl": "plugins/eh.ehentai.js",
+    "iconUrl": null,
+    "description": "E-Hentai Gallery crawler plugin",
+    "sources": [
+      {
+        "name": "E-Hentai",
+        "lang": "all",
+        "id": 6912170,
+        "baseUrl": "https://e-hentai.org"
+      }
+    ]
+  },
+  {
+    "id": "all.mangadex",
+    "name": "MangaDex",
+    "version": "1.0.0",
+    "versionCode": 1,
+    "lang": "all",
+    "nsfw": 1,
+    "scriptUrl": "plugins/all.mangadex.js",
+    "iconUrl": null,
+    "description": "MangaDex - multi-language manga platform (REST API)",
+    "sources": [
+      {
+        "name": "MangaDex",
+        "lang": "all",
+        "id": 2499283,
+        "baseUrl": "https://mangadex.org"
+      }
+    ]
+  },
+  {
+    "id": "all.nhentai",
+    "name": "NHentai",
+    "version": "1.0.0",
+    "versionCode": 1,
+    "lang": "all",
+    "nsfw": 1,
+    "scriptUrl": "plugins/all.nhentai.js",
+    "iconUrl": null,
+    "description": "NHentai doujinshi gallery",
+    "sources": [
+      {
+        "name": "NHentai",
+        "lang": "all",
+        "id": 7309872,
+        "baseUrl": "https://nhentai.net"
+      }
+    ]
+  },
+  {
+    "id": "zh.jinmantiantang",
+    "name": "禁漫天堂",
+    "version": "1.0.0",
+    "versionCode": 1,
+    "lang": "zh",
+    "nsfw": 1,
+    "scriptUrl": "plugins/zh.jinmantiantang.js",
+    "iconUrl": null,
+    "description": "禁漫天堂 (18comic) 漫畫平台",
+    "sources": [
+      {
+        "name": "禁漫天堂",
+        "lang": "zh",
+        "id": 1817081,
+        "baseUrl": "https://18comic.vip"
+      }
+    ]
+  },
+  {
+    "id": "zh.baozimh",
+    "name": "包子漫画",
+    "version": "1.0.0",
+    "versionCode": 1,
+    "lang": "zh",
+    "nsfw": 0,
+    "scriptUrl": "plugins/zh.baozimh.js",
+    "iconUrl": null,
+    "description": "包子漫画 - 中文漫畫平台",
+    "sources": [
+      {
+        "name": "包子漫画",
+        "lang": "zh",
+        "id": 4502917,
+        "baseUrl": "https://www.baozimh.com"
+      }
+    ]
+  },
+  {
+    "id": "zh.manhuagui",
+    "name": "漫画柜",
+    "version": "1.0.0",
+    "versionCode": 1,
+    "lang": "zh",
+    "nsfw": 1,
+    "scriptUrl": "plugins/zh.manhuagui.js",
+    "iconUrl": null,
+    "description": "漫画柜 (ManHuaGui) - 繁體中文漫畫站",
+    "sources": [
+      {
+        "name": "漫画柜",
+        "lang": "zh",
+        "id": 6301748,
+        "baseUrl": "https://tw.manhuagui.com"
+      }
+    ]
+  },
+  {
+    "id": "zh.komiic",
+    "name": "Komiic",
+    "version": "1.0.1",
+    "versionCode": 2,
+    "lang": "zh",
+    "nsfw": 1,
+    "scriptUrl": "plugins/zh.komiic.js",
+    "iconUrl": null,
+    "description": "Komiic - 繁體中文漫畫平台 (GraphQL)",
+    "sources": [
+      {
+        "name": "Komiic",
+        "lang": "zh",
+        "id": 8104923,
+        "baseUrl": "https://komiic.com"
+      }
+    ]
+  },
+  {
+    "id": "zh.wnacg",
+    "name": "紳士漫畫",
+    "version": "1.3.0",
+    "versionCode": 4,
+    "lang": "zh",
+    "nsfw": 1,
+    "scriptUrl": "plugins/zh.wnacg.js",
+    "iconUrl": null,
+    "description": "紳士漫畫 (WNACG) - 同人漫畫平台",
+    "sources": [
+      {
+        "name": "紳士漫畫",
+        "lang": "zh",
+        "id": 5209831,
+        "baseUrl": "https://www.wnacg.com"
+      }
+    ]
+  },
+  {
+    "id": "zh.dm5",
+    "name": "動漫屋",
+    "version": "1.1.0",
+    "versionCode": 2,
+    "lang": "zh",
+    "nsfw": 1,
+    "scriptUrl": "plugins/zh.dm5.js",
+    "iconUrl": null,
+    "description": "動漫屋 (Dm5) - 中文漫畫站",
+    "sources": [
+      {
+        "name": "動漫屋",
+        "lang": "zh",
+        "id": 3947628,
+        "baseUrl": "https://www.dm5.cn"
+      }
+    ]
+  }
+]
