@@ -7,7 +7,6 @@ Shinsou 社群插件集合，為 [Shinsou](https://github.com/aluoexpiry/shinsou
 | 插件 ID | 名稱 | 語言 | 版本 | 來源網站 |
 |---------|------|------|------|---------|
 | `all.mangadex` | MangaDex | all | 1.0.0 | mangadex.org |
-| `all.nhentai` | NHentai | all | 1.0.0 | nhentai.net |
 | `eh.ehentai` | E-Hentai | all | 1.1.0 | e-hentai.org |
 | `zh.baozimh` | 包子漫画 | zh | 1.0.0 | baozimh.com |
 | `zh.dm5` | 動漫屋 | zh | 1.1.0 | dm5.cn |
