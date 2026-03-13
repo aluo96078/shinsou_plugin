@@ -236,60 +236,55 @@ var source = {
         var html = bridge.httpGetWithHeaders(url, this.headers);
         if (!html || html.error) return [];
 
-        // ManHuaGui uses eval(function(p,a,c,k,e,d){...}) to pack image data
-        // Then LZString.decompressFromBase64 to decode the actual image paths
+        // ManHuaGui packs image data with eval(function(p,a,c,k,e,d){...})
+        // The k array is LZString base64 compressed, split via custom String.prototype.splic method
+        // After unpacking, result is: SMH.imgData({...}).preInit();
 
         var pages = [];
 
-        // Step 1: Extract the packed JS from the page
-        var packedMatch = html.match(/\}\s*\(\s*'([^']+)'\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*'([^']+)'\.split\s*\(\s*'([^']+)'\s*\)/);
+        // Extract packed JS components: p template, a (radix), c (count), k data (LZString base64)
+        // Handles both .split('|') and hex-escaped ['\x73\x70\x6c\x69\x63']('\x7c') formats
+        var packedMatch = html.match(/\}\s*\(\s*'([^']+)'\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*'([^']+)'/);
 
         if (packedMatch) {
             var p = packedMatch[1];
             var a = parseInt(packedMatch[2]);
             var c = parseInt(packedMatch[3]);
-            var k = packedMatch[4].split(packedMatch[5]);
+            var kRaw = packedMatch[4];
 
-            // Unpack
+            // The k data is LZString base64 compressed; decompress then split by '|'
+            var decompressed = this._lzDecompress(kRaw);
+            var k;
+            if (decompressed && decompressed.indexOf("|") !== -1) {
+                k = decompressed.split("|");
+            } else {
+                // Fallback: plain '|'-separated data
+                k = kRaw.split("|");
+            }
+
+            // Unpack p template with k word array
             var unpacked = this._unpack(p, a, c, k);
 
             if (unpacked) {
-                // Extract the LZString base64 encoded data
-                var lzMatch = unpacked.match(/\(["']([A-Za-z0-9+/=]+)["']\)/);
-                if (lzMatch) {
-                    var decompressed = this._lzDecompress(lzMatch[1]);
-                    if (decompressed) {
-                        try {
-                            var imgData = JSON.parse(decompressed);
-                            var path = imgData.path || "";
-                            var files = imgData.files || [];
-                            var sl = imgData.sl || {};
+                // Extract JSON from: SMH.imgData({...}).preInit();
+                var start = unpacked.indexOf("({");
+                var end = unpacked.indexOf("})");
+                if (start !== -1 && end !== -1) {
+                    try {
+                        var imgData = JSON.parse(unpacked.substring(start + 1, end + 1));
+                        var path = imgData.path || "";
+                        var files = imgData.files || [];
+                        var sl = imgData.sl || {};
 
-                            for (var i = 0; i < files.length; i++) {
-                                var imgUrl = this.cdnUrl + path + files[i];
-                                if (sl.e) {
-                                    imgUrl += "?e=" + sl.e + "&m=" + sl.m;
-                                }
-                                pages.push(new Page(i, "", imgUrl));
+                        for (var i = 0; i < files.length; i++) {
+                            var imgUrl = this.cdnUrl + path + files[i];
+                            if (sl.e) {
+                                imgUrl += "?e=" + sl.e + "&m=" + (sl.m || "");
                             }
-                        } catch(e) {
-                            bridge.log("ManHuaGui JSON parse error: " + e);
+                            pages.push(new Page(i, "", imgUrl));
                         }
-                    }
-                }
-
-                // Fallback: try direct JSON extraction
-                if (pages.length === 0) {
-                    var jsonMatch = unpacked.match(/\{[^{]*"files"\s*:\s*\[[^\]]+\][^}]*\}/);
-                    if (jsonMatch) {
-                        try {
-                            var data = JSON.parse(jsonMatch[0]);
-                            var path2 = data.path || "";
-                            var files2 = data.files || [];
-                            for (var j = 0; j < files2.length; j++) {
-                                pages.push(new Page(j, "", this.cdnUrl + path2 + files2[j]));
-                            }
-                        } catch(e2) {}
+                    } catch(e) {
+                        bridge.log("ManHuaGui JSON parse error: " + e);
                     }
                 }
             }

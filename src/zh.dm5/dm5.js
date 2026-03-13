@@ -1,11 +1,12 @@
 // 動漫屋 (Dm5) Plugin for Mihon iOS
-// Crawls https://www.dm5.cn
+// Crawls https://www.dm5.com
 
 var source = {
-    baseUrl: "https://www.dm5.cn",
+    baseUrl: "https://www.dm5.com",
     supportsLatest: true,
     headers: {
-        "Referer": "https://www.dm5.cn/",
+        "Referer": "https://www.dm5.com/",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
         "Cookie": "isAdult=1;fastshow=true;ComicHistoryitem_zh=ViewType%3D1"
     },
 
@@ -372,7 +373,23 @@ var source = {
             if (pageMatch) totalPage = parseInt(pageMatch[1]);
         });
 
+        // Detect paid/VIP chapters
+        var chapterCoin = 0;
+        var isPaid = false;
+        scripts.forEach(function(script) {
+            var text = script.html();
+            var coinMatch = text.match(/DM5_CHAPTERCOIN\s*=\s*(\d+)/);
+            if (coinMatch) chapterCoin = parseInt(coinMatch[1]);
+        });
+        if (chapterCoin > 0) isPaid = true;
+        if (!totalPage && doc.selectFirst(".chapterpay_tip, .read_ban")) isPaid = true;
+
         bridge.domReleaseAll();
+
+        if (isPaid) {
+            bridge.log("⚠️ 此章節需要付費購買" + (chapterCoin > 0 ? "（需要 " + chapterCoin + " 金幣）" : "") + "，無法免費閱讀");
+            return [];
+        }
 
         if (cid && totalPage > 0) {
             // Fetch each page's image via AJAX API
@@ -414,29 +431,56 @@ var source = {
     // Evaluate the JS code returned by chapterfun.ashx to extract image URLs
     _evalImageScript: function(jsCode) {
         try {
-            // The response typically contains eval(function(p,a,c,k,e,d){...})
-            // which unpacks to an array of URLs
-            // Try to extract URLs directly using regex
-            var urls = [];
+            // Response is eval(function(p,a,c,k,e,d){...}('...',a,c,'...'.split('|'),0,{}))
+            // After unpacking: function dm5imagefun(){var pix="https://..."; var pvalue=["img1","img2"]; ...}
+            var packedMatch = jsCode.match(/\}\s*\(\s*'([^']+)'\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*'([^']+)'\.split\s*\(\s*'([^']+)'\s*\)/);
+            if (!packedMatch) return [];
 
-            // Look for URL patterns in the code
-            var urlPattern = /https?:\/\/[^"'\s,\]]+\.(jpg|png|webp|gif)/gi;
-            var match;
-            while ((match = urlPattern.exec(jsCode)) !== null) {
-                urls.push(match[0]);
+            var p = packedMatch[1];
+            var a = parseInt(packedMatch[2]);
+            var c = parseInt(packedMatch[3]);
+            var k = packedMatch[4].split(packedMatch[5]);
+
+            // Unpack
+            while (c--) {
+                if (k[c]) {
+                    var pattern = new RegExp("\\b" + this._itoa(c, a) + "\\b", "g");
+                    p = p.replace(pattern, k[c]);
+                }
             }
 
-            if (urls.length > 0) return urls;
+            // Extract pix (base URL) and pvalue (image path array) from unpacked code
+            var pixMatch = p.match(/pix\s*=\s*"([^"]+)"/);
+            var pvalueMatch = p.match(/pvalue\s*=\s*\[([^\]]+)\]/);
+            if (pixMatch && pvalueMatch) {
+                var pix = pixMatch[1];
+                var paths = pvalueMatch[1].match(/"([^"]+)"/g);
+                if (paths) {
+                    var urls = [];
+                    for (var i = 0; i < paths.length; i++) {
+                        var imgPath = paths[i].replace(/"/g, "");
+                        urls.push(pix + imgPath);
+                    }
+                    return urls;
+                }
+            }
 
-            // If no direct URLs, the code might need eval
-            // The packed JS usually unpacks to something like:
-            // var dm5imagefun = function() { ... return d; }
-            // where d is an array of image URLs
             return [];
         } catch(e) {
             bridge.log("Dm5 eval error: " + e);
             return [];
         }
+    },
+
+    _itoa: function(num, radix) {
+        var result = "";
+        var digits = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        if (num === 0) return "0";
+        while (num > 0) {
+            result = digits.charAt(num % radix) + result;
+            num = Math.floor(num / radix);
+        }
+        return result;
     },
 
     // ======== Filters ========

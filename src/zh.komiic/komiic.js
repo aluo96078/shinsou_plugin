@@ -13,24 +13,23 @@ var source = {
     // ======== Popular ========
 
     getPopularManga: function(page) {
-        var query = '{"query":"query hotComics($pagination: Pagination!) { hotComics(pagination: $pagination) { id title status dateUpdated imageUrl authors { id name } categories { id name } } }","variables":{"pagination":{"limit":30,"offset":' + (page * 30) + ',"orderBy":"DATE_UPDATED","asc":false}}}';
+        var query = '{"query":"query { hotComics(pagination: {limit: 30, offset: ' + (page * 30) + ', orderBy: DATE_UPDATED, asc: false}) { id title status dateUpdated imageUrl authors { id name } categories { id name } } }"}';
         return this._fetchComicList(query);
     },
 
     // ======== Latest ========
 
     getLatestUpdates: function(page) {
-        var query = '{"query":"query recentUpdate($pagination: Pagination!) { recentUpdate(pagination: $pagination) { id title status dateUpdated imageUrl authors { id name } categories { id name } } }","variables":{"pagination":{"limit":30,"offset":' + (page * 30) + ',"orderBy":"DATE_UPDATED","asc":false}}}';
+        var query = '{"query":"query { recentUpdate(pagination: {limit: 30, offset: ' + (page * 30) + ', orderBy: DATE_UPDATED, asc: false}) { id title status dateUpdated imageUrl authors { id name } categories { id name } } }"}';
         return this._fetchComicList(query);
     },
 
     // ======== Search ========
 
     getSearchManga: function(page, query, filters) {
-        var searchQuery;
-
         if (query && query.trim()) {
-            searchQuery = '{"query":"query searchComicAndAuthorQuery($keyword: String!) { searchComicsAndAuthors(keyword: $keyword) { comics { id title status dateUpdated imageUrl authors { id name } categories { id name } } } }","variables":{"keyword":"' + query.trim().replace(/"/g, '\\"') + '"}}';
+            var keyword = query.trim().replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+            var searchQuery = '{"query":"query { searchComicsAndAuthors(keyword: \\"' + keyword + '\\") { comics { id title status dateUpdated imageUrl authors { id name } categories { id name } } } }"}';
 
             var json = bridge.httpPost(this.apiUrl, searchQuery, this.headers);
             if (!json || json.error) return new MangasPage([], false);
@@ -45,10 +44,9 @@ var source = {
             }
         }
 
-        // Browse by category/status
+        // Browse with filters
         var orderBy = "DATE_UPDATED";
         var status = "";
-        var categoryId = "";
 
         if (filters && filters.length > 0) {
             for (var i = 0; i < filters.length; i++) {
@@ -67,9 +65,10 @@ var source = {
             }
         }
 
-        searchQuery = '{"query":"query hotComics($pagination: Pagination!) { hotComics(pagination: $pagination) { id title status dateUpdated imageUrl authors { id name } categories { id name } } }","variables":{"pagination":{"limit":30,"offset":' + (page * 30) + ',"orderBy":"' + orderBy + '","asc":false' + (status ? ',"status":"' + status + '"' : '') + '}}}';
+        var statusFilter = status ? ', status: "' + status + '"' : '';
+        var browseQuery = '{"query":"query { hotComics(pagination: {limit: 30, offset: ' + (page * 30) + ', orderBy: ' + orderBy + ', asc: false' + statusFilter + '}) { id title status dateUpdated imageUrl authors { id name } categories { id name } } }"}';
 
-        return this._fetchComicList(searchQuery);
+        return this._fetchComicList(browseQuery);
     },
 
     // ======== Fetch & Parse Comics ========
@@ -80,6 +79,10 @@ var source = {
 
         try {
             var resp = JSON.parse(json);
+            if (resp.errors) {
+                bridge.log("Komiic API error: " + JSON.stringify(resp.errors));
+                return new MangasPage([], false);
+            }
             var data = resp.data;
 
             // Try different response shapes
@@ -121,7 +124,7 @@ var source = {
 
     getMangaDetails: function(manga) {
         var comicId = this._extractComicId(manga.url);
-        var query = '{"query":"query comicById($comicId: ID!) { comicById(comicId: $comicId) { id title status dateUpdated imageUrl synopsis authors { id name } categories { id name } } }","variables":{"comicId":"' + comicId + '"}}';
+        var query = '{"query":"query { comicById(comicId: \\"' + comicId + '\\") { id title status dateUpdated imageUrl authors { id name } categories { id name } } }"}';
 
         var json = bridge.httpPost(this.apiUrl, query, this.headers);
         if (!json || json.error) return manga;
@@ -142,8 +145,6 @@ var source = {
                     result.thumbnailUrl = this.baseUrl + result.thumbnailUrl;
                 }
             }
-
-            result.description = comic.synopsis || null;
 
             // Authors
             if (comic.authors && comic.authors.length > 0) {
@@ -183,7 +184,7 @@ var source = {
 
     getChapterList: function(manga) {
         var comicId = this._extractComicId(manga.url);
-        var query = '{"query":"query chaptersByComicId($comicId: ID!) { chaptersByComicId(comicId: $comicId) { id serial type dateCreated dateUpdated size } }","variables":{"comicId":"' + comicId + '"}}';
+        var query = '{"query":"query { chaptersByComicId(comicId: \\"' + comicId + '\\") { id serial type dateCreated dateUpdated size } }"}';
 
         var json = bridge.httpPost(this.apiUrl, query, this.headers);
         if (!json || json.error) return [];
@@ -199,7 +200,7 @@ var source = {
                 chapter.url = "/chapter/" + ch.id + "/images/all";
 
                 var name = "";
-                if (ch.type === "BOOK") {
+                if (ch.type === "book") {
                     name = "卷 " + ch.serial;
                 } else {
                     name = "第 " + ch.serial + " 話";
@@ -225,20 +226,21 @@ var source = {
 
     getPageList: function(chapter) {
         var chapterId = this._extractChapterId(chapter.url);
-        var query = '{"query":"query imagesByChapterId($chapterId: ID!) { imagesByChapterId(chapterId: $chapterId) { id kid height width } }","variables":{"chapterId":"' + chapterId + '"}}';
+        // Use imageTickets API to get CDN URLs with auth tickets
+        var query = '{"query":"query { imageTicketsByChapterId(chapterId: \\"' + chapterId + '\\") { url ticket kid width height } }"}';
 
         var json = bridge.httpPost(this.apiUrl, query, this.headers);
         if (!json || json.error) return [];
 
         try {
             var resp = JSON.parse(json);
-            var images = resp.data.imagesByChapterId || [];
+            var images = resp.data.imageTicketsByChapterId || [];
             var pages = [];
 
             for (var i = 0; i < images.length; i++) {
                 var img = images[i];
-                // Komiic image URL pattern
-                var imageUrl = "https://komiic.com/api/image/" + img.kid;
+                // Encode ticket in URL fragment — app extracts it as X-Image-Ticket header
+                var imageUrl = img.url + "#X-Image-Ticket=" + encodeURIComponent(img.ticket);
                 pages.push(new Page(i, "", imageUrl));
             }
 

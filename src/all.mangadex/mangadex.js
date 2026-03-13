@@ -370,6 +370,11 @@ var source = {
                         chapter.dateUpload = new Date(attrs.publishAt).getTime() || 0;
                     }
 
+                    // Skip external-only chapters (e.g. MangaPlus links) — they have no readable pages
+                    if (attrs.externalUrl && (!attrs.pages || attrs.pages === 0)) {
+                        continue;
+                    }
+
                     chapters.push(chapter);
                 }
 
@@ -400,6 +405,23 @@ var source = {
             var hash = resp.chapter.hash;
             var files = resp.chapter.data; // full quality
             var pages = [];
+
+            if (!files || files.length === 0) {
+                // Check if this is an external chapter (e.g. MangaPlus, licensed content)
+                var chapterInfoUrl = this.apiUrl + "/chapter/" + chapterId;
+                var chapterJson = bridge.httpGet(chapterInfoUrl);
+                if (chapterJson && !chapterJson.error) {
+                    try {
+                        var chapterResp = JSON.parse(chapterJson);
+                        if (chapterResp.result === "ok" && chapterResp.data.attributes.externalUrl) {
+                            bridge.log("⚠️ 此章節為外部授權內容（" + chapterResp.data.attributes.externalUrl + "），無法在 App 內閱讀");
+                            return [];
+                        }
+                    } catch(e2) {}
+                }
+                bridge.log("⚠️ 此章節沒有可用的頁面");
+                return [];
+            }
 
             for (var i = 0; i < files.length; i++) {
                 var imageUrl = serverBaseUrl + "/data/" + hash + "/" + files[i];
