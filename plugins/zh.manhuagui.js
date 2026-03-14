@@ -12,10 +12,7 @@ var source = {
     // ======== Popular ========
 
     getPopularManga: function(page) {
-        var url = this.baseUrl + "/rank/";
-        if (page > 0) {
-            url = this.baseUrl + "/list/view_p" + (page + 1) + ".html";
-        }
+        var url = this.baseUrl + "/list/view_p" + (page + 1) + ".html";
         var html = bridge.httpGetWithHeaders(url, this.headers);
         if (!html || html.error) return new MangasPage([], false);
         return this._parseList(html);

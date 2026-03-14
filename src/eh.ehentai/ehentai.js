@@ -8,35 +8,50 @@ var source = {
         "Cookie": "nw=1"  // Skip content warning
     },
 
+    // Cursor storage for pagination (e-hentai uses next=<id> instead of page=N)
+    _nextSearchUrl: null,
+    _nextLatestUrl: null,
+
     // ======== Popular ========
 
     getPopularManga: function(page) {
         var url = this.baseUrl + "/popular";
         var html = bridge.httpGetWithHeaders(url, this.headers);
         if (!html || html.error) return new MangasPage([], false);
-        return this._parseGalleryList(html, false);
+        return this._parseGalleryList(html);
     },
 
     // ======== Latest ========
 
     getLatestUpdates: function(page) {
-        var url = this.baseUrl + "/?page=" + page;
+        var url;
+        if (page === 0 || !this._nextLatestUrl) {
+            url = this.baseUrl + "/";
+            this._nextLatestUrl = null;
+        } else {
+            url = this._nextLatestUrl;
+        }
         var html = bridge.httpGetWithHeaders(url, this.headers);
         if (!html || html.error) return new MangasPage([], false);
-        return this._parseGalleryList(html, true);
+        return this._parseGalleryList(html, "_nextLatestUrl");
     },
 
     // ======== Search ========
 
     getSearchManga: function(page, query, filters) {
-        var params = this._buildSearchParams(query, filters);
-        params += "&page=" + page;
-        var url = this.baseUrl + "/?" + params;
+        var url;
+        if (page === 0 || !this._nextSearchUrl) {
+            var params = this._buildSearchParams(query, filters);
+            url = this.baseUrl + "/?" + params;
+            this._nextSearchUrl = null;
+        } else {
+            url = this._nextSearchUrl;
+        }
 
         bridge.log("Search URL: " + url);
         var html = bridge.httpGetWithHeaders(url, this.headers);
         if (!html || html.error) return new MangasPage([], false);
-        return this._parseGalleryList(html, true);
+        return this._parseGalleryList(html, "_nextSearchUrl");
     },
 
     // ======== Build search URL from filters ========
@@ -255,7 +270,9 @@ var source = {
 
     // ======== Gallery List Parser ========
 
-    _parseGalleryList: function(html, hasNext) {
+    // cursorKey: property name to store next page URL (e.g. "_nextSearchUrl"), or falsy for no pagination
+    _parseGalleryList: function(html, cursorKey) {
+        var self = this;
         var doc = Jsoup.parse(html, this.baseUrl);
         var mangas = [];
 
@@ -319,13 +336,32 @@ var source = {
             });
         }
 
-        // Check for next page
-        var nextPage = hasNext;
-        var pager = doc.selectFirst("table.ptb");
-        if (pager) {
-            var current = pager.selectFirst("td.ptds");
-            if (current) {
-                nextPage = current.nextElementSibling() != null;
+        // Check for next page using the "next" navigation link (cursor-based)
+        var nextPage = false;
+        if (cursorKey) {
+            // Look for the "next >" link in the pager (id="dnext" or ">")
+            var nextLink = doc.selectFirst("a#dnext, a#unext");
+            if (!nextLink) {
+                // Fallback: look for ">" text in pager links
+                var pager = doc.selectFirst("table.ptb");
+                if (pager) {
+                    var links = pager.select("a");
+                    links.forEach(function(a) {
+                        if (a.text().indexOf(">") !== -1 && a.text().indexOf(">>") === -1) {
+                            nextLink = a;
+                        }
+                    });
+                }
+            }
+            if (nextLink) {
+                var nextUrl = nextLink.attr("href");
+                if (nextUrl) {
+                    self[cursorKey] = nextUrl;
+                    nextPage = true;
+                    bridge.log("Next page URL: " + nextUrl);
+                }
+            } else {
+                self[cursorKey] = null;
             }
         }
 
