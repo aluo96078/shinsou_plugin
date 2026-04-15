@@ -9,11 +9,42 @@ var source = {
         "Referer": "https://tw.manhuagui.com/"
     },
 
+    // Small FIFO cache to collapse repeat requests for the same URL.
+    // - Manga detail pages: 60s TTL covers "open detail -> load chapters".
+    // - List pages: 15s TTL covers "browse list -> open manga -> return" without
+    //   serving noticeably stale updates.
+    _htmlCache: {},
+    _htmlCacheOrder: [],
+    _HTML_CACHE_MAX: 4,
+    _MANGA_CACHE_TTL_MS: 60000,
+    _LIST_CACHE_TTL_MS: 15000,
+
+    _getCachedHtml: function(url, ttl) {
+        var now = Date.now();
+        var entry = this._htmlCache[url];
+        if (entry && entry.expiresAt > now) {
+            return entry.html;
+        }
+        var html = bridge.httpGetWithHeaders(url, this.headers);
+        if (!html || html.error) return html;
+
+        this._htmlCache[url] = { html: html, expiresAt: now + ttl };
+        var order = this._htmlCacheOrder;
+        var idx = order.indexOf(url);
+        if (idx !== -1) order.splice(idx, 1);
+        order.push(url);
+        while (order.length > this._HTML_CACHE_MAX) {
+            var evicted = order.shift();
+            delete this._htmlCache[evicted];
+        }
+        return html;
+    },
+
     // ======== Popular ========
 
     getPopularManga: function(page) {
         var url = this.baseUrl + "/list/view_p" + (page + 1) + ".html";
-        var html = bridge.httpGetWithHeaders(url, this.headers);
+        var html = this._getCachedHtml(url, this._LIST_CACHE_TTL_MS);
         if (!html || html.error) return new MangasPage([], false);
         return this._parseList(html);
     },
@@ -22,7 +53,7 @@ var source = {
 
     getLatestUpdates: function(page) {
         var url = this.baseUrl + "/list/update_p" + (page + 1) + ".html";
-        var html = bridge.httpGetWithHeaders(url, this.headers);
+        var html = this._getCachedHtml(url, this._LIST_CACHE_TTL_MS);
         if (!html || html.error) return new MangasPage([], false);
         return this._parseList(html);
     },
@@ -38,7 +69,7 @@ var source = {
             url = this.baseUrl + "/list/update_p" + (page + 1) + ".html";
         }
 
-        var html = bridge.httpGetWithHeaders(url, this.headers);
+        var html = this._getCachedHtml(url, this._LIST_CACHE_TTL_MS);
         if (!html || html.error) return new MangasPage([], false);
         return this._parseList(html);
     },
@@ -79,16 +110,16 @@ var source = {
                 if (manga.url && manga.title) {
                     mangas.push(manga);
                 }
-            } catch(e) {}
+            } catch(e) {
+                bridge.log("manhuagui list item parse failed: " + e);
+            }
         });
 
-        // Pagination
+        // Pagination: rely solely on the explicit "next" link with an href.
+        // Avoid count-based heuristics, which over-request on exact-30 tail pages.
         var hasNext = false;
-        var nextBtn = doc.selectFirst("a.next, a:contains(下一頁)");
-        if (nextBtn) {
-            hasNext = true;
-        }
-        if (mangas.length >= 30) {
+        var nextBtn = doc.selectFirst("a.next");
+        if (nextBtn && nextBtn.hasAttr("href")) {
             hasNext = true;
         }
 
@@ -104,7 +135,7 @@ var source = {
             url = this.baseUrl + url;
         }
 
-        var html = bridge.httpGetWithHeaders(url, this.headers);
+        var html = this._getCachedHtml(url, this._MANGA_CACHE_TTL_MS);
         if (!html || html.error) return manga;
 
         var doc = Jsoup.parse(html, this.baseUrl);
@@ -184,7 +215,7 @@ var source = {
             url = this.baseUrl + url;
         }
 
-        var html = bridge.httpGetWithHeaders(url, this.headers);
+        var html = this._getCachedHtml(url, this._MANGA_CACHE_TTL_MS);
         if (!html || html.error) return [];
 
         var doc = Jsoup.parse(html, this.baseUrl);
@@ -206,8 +237,12 @@ var source = {
                 chapter.chapterNumber = num;
                 num--;
 
-                // Try to extract chapter number
-                var numMatch = chapter.name.match(/(\d+(?:\.\d+)?)/);
+                // Only override the descending sequence number when the name
+                // carries an explicit chapter marker (話/话/章/回). This avoids
+                // collisions from volume entries ("第01卷") and incidental
+                // digits (year numbers, subtitles) that the old greedy match
+                // used to treat as chapter numbers.
+                var numMatch = chapter.name.match(/第?\s*(\d+(?:\.\d+)?)\s*[話话章回]/);
                 if (numMatch) {
                     chapter.chapterNumber = parseFloat(numMatch[1]);
                 }
@@ -215,7 +250,9 @@ var source = {
                 if (chapter.url && chapter.name) {
                     chapters.push(chapter);
                 }
-            } catch(e) {}
+            } catch(e) {
+                bridge.log("manhuagui chapter parse failed: " + e);
+            }
         });
 
         bridge.domReleaseAll();
@@ -242,6 +279,10 @@ var source = {
         // Extract packed JS components: p template, a (radix), c (count), k data (LZString base64)
         // Handles both .split('|') and hex-escaped ['\x73\x70\x6c\x69\x63']('\x7c') formats
         var packedMatch = html.match(/\}\s*\(\s*'([^']+)'\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*'([^']+)'/);
+
+        if (!packedMatch) {
+            bridge.log("manhuagui: packed image data not found in chapter page");
+        }
 
         if (packedMatch) {
             var p = packedMatch[1];
@@ -273,8 +314,15 @@ var source = {
                         var files = imgData.files || [];
                         var sl = imgData.sl || {};
 
+                        // Encode path segments (may contain un-encoded Chinese characters)
+                        // but preserve '/' separators so the URL stays valid.
+                        var encodedPath = path.split('/').map(function(seg) {
+                            return seg ? encodeURIComponent(seg) : '';
+                        }).join('/');
+
                         for (var i = 0; i < files.length; i++) {
-                            var imgUrl = this.cdnUrl + path + files[i];
+                            // files[i] is already percent-encoded from the packed JS
+                            var imgUrl = this.cdnUrl + encodedPath + files[i];
                             if (sl.e) {
                                 imgUrl += "?e=" + sl.e + "&m=" + (sl.m || "");
                             }
@@ -293,14 +341,18 @@ var source = {
     // ======== p,a,c,k,e,d unpacker ========
 
     _unpack: function(p, a, c, k) {
-        // JavaScript p,a,c,k,e,d unpacker
-        while (c--) {
-            if (k[c]) {
-                var pattern = new RegExp("\\b" + this._itoa(c, a) + "\\b", "g");
-                p = p.replace(pattern, k[c]);
+        // Build token -> value map once, then do a single tokenized pass over p.
+        // O(|p|) instead of O(c * |p|) — meaningful when c reaches thousands.
+        var map = {};
+        for (var i = 0; i < c; i++) {
+            if (k[i]) {
+                map[this._itoa(i, a)] = k[i];
             }
         }
-        return p;
+        return p.replace(/\b\w+\b/g, function(token) {
+            var v = map[token];
+            return v !== undefined ? v : token;
+        });
     },
 
     _itoa: function(num, radix) {
