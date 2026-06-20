@@ -6,7 +6,11 @@ var source = {
     apiUrl: "https://api.mangadex.org",
     cdnUrl: "https://uploads.mangadex.org",
     supportsLatest: true,
-    headers: {},
+    headers: {
+        "Accept": "application/json",
+        "Referer": "https://mangadex.org/",
+        "Origin": "https://mangadex.org"
+    },
 
     // ======== Popular ========
 
@@ -14,9 +18,9 @@ var source = {
         var limit = 20;
         var offset = page * limit;
         var url = this.apiUrl + "/manga?limit=" + limit + "&offset=" + offset
-            + "&order[followedCount]=desc"
-            + "&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica"
-            + "&includes[]=cover_art&includes[]=author&includes[]=artist";
+            + "&" + this._q("order[followedCount]", "desc")
+            + "&" + this._qa("contentRating", "safe") + "&" + this._qa("contentRating", "suggestive") + "&" + this._qa("contentRating", "erotica")
+            + "&" + this._qa("includes", "cover_art") + "&" + this._qa("includes", "author") + "&" + this._qa("includes", "artist");
         return this._fetchMangaList(url);
     },
 
@@ -26,9 +30,9 @@ var source = {
         var limit = 20;
         var offset = page * limit;
         var url = this.apiUrl + "/manga?limit=" + limit + "&offset=" + offset
-            + "&order[latestUploadedChapter]=desc"
-            + "&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica"
-            + "&includes[]=cover_art&includes[]=author&includes[]=artist"
+            + "&" + this._q("order[latestUploadedChapter]", "desc")
+            + "&" + this._qa("contentRating", "safe") + "&" + this._qa("contentRating", "suggestive") + "&" + this._qa("contentRating", "erotica")
+            + "&" + this._qa("includes", "cover_art") + "&" + this._qa("includes", "author") + "&" + this._qa("includes", "artist")
             + "&hasAvailableChapters=true";
         return this._fetchMangaList(url);
     },
@@ -39,7 +43,7 @@ var source = {
         var limit = 20;
         var offset = page * limit;
         var url = this.apiUrl + "/manga?limit=" + limit + "&offset=" + offset
-            + "&includes[]=cover_art&includes[]=author&includes[]=artist";
+            + "&" + this._qa("includes", "cover_art") + "&" + this._qa("includes", "author") + "&" + this._qa("includes", "artist");
 
         if (query && query.trim()) {
             url += "&title=" + encodeURIComponent(query.trim());
@@ -60,55 +64,55 @@ var source = {
 
                 // Content Rating checkboxes
                 if (f.type === "checkBox" && f.name === "Safe") {
-                    if (f.state) { url += "&contentRating[]=safe"; hasContentRating = true; }
+                    if (f.state) { url += "&" + this._qa("contentRating", "safe"); hasContentRating = true; }
                     continue;
                 }
                 if (f.type === "checkBox" && f.name === "Suggestive") {
-                    if (f.state) { url += "&contentRating[]=suggestive"; hasContentRating = true; }
+                    if (f.state) { url += "&" + this._qa("contentRating", "suggestive"); hasContentRating = true; }
                     continue;
                 }
                 if (f.type === "checkBox" && f.name === "Erotica") {
-                    if (f.state) { url += "&contentRating[]=erotica"; hasContentRating = true; }
+                    if (f.state) { url += "&" + this._qa("contentRating", "erotica"); hasContentRating = true; }
                     continue;
                 }
                 if (f.type === "checkBox" && f.name === "Pornographic") {
-                    if (f.state) { url += "&contentRating[]=pornographic"; hasContentRating = true; }
+                    if (f.state) { url += "&" + this._qa("contentRating", "pornographic"); hasContentRating = true; }
                     continue;
                 }
 
                 // Status checkboxes
                 if (f.type === "checkBox" && f.name === "Ongoing") {
-                    if (f.state) { url += "&status[]=ongoing"; hasStatus = true; }
+                    if (f.state) { url += "&" + this._qa("status", "ongoing"); hasStatus = true; }
                     continue;
                 }
                 if (f.type === "checkBox" && f.name === "Completed") {
-                    if (f.state) { url += "&status[]=completed"; hasStatus = true; }
+                    if (f.state) { url += "&" + this._qa("status", "completed"); hasStatus = true; }
                     continue;
                 }
                 if (f.type === "checkBox" && f.name === "Hiatus") {
-                    if (f.state) { url += "&status[]=hiatus"; hasStatus = true; }
+                    if (f.state) { url += "&" + this._qa("status", "hiatus"); hasStatus = true; }
                     continue;
                 }
                 if (f.type === "checkBox" && f.name === "Cancelled") {
-                    if (f.state) { url += "&status[]=cancelled"; hasStatus = true; }
+                    if (f.state) { url += "&" + this._qa("status", "cancelled"); hasStatus = true; }
                     continue;
                 }
 
                 // Demographic checkboxes
                 if (f.type === "checkBox" && f.name === "Shounen") {
-                    if (f.state) { url += "&publicationDemographic[]=shounen"; hasDemographic = true; }
+                    if (f.state) { url += "&" + this._qa("publicationDemographic", "shounen"); hasDemographic = true; }
                     continue;
                 }
                 if (f.type === "checkBox" && f.name === "Shoujo") {
-                    if (f.state) { url += "&publicationDemographic[]=shoujo"; hasDemographic = true; }
+                    if (f.state) { url += "&" + this._qa("publicationDemographic", "shoujo"); hasDemographic = true; }
                     continue;
                 }
                 if (f.type === "checkBox" && f.name === "Seinen") {
-                    if (f.state) { url += "&publicationDemographic[]=seinen"; hasDemographic = true; }
+                    if (f.state) { url += "&" + this._qa("publicationDemographic", "seinen"); hasDemographic = true; }
                     continue;
                 }
                 if (f.type === "checkBox" && f.name === "Josei") {
-                    if (f.state) { url += "&publicationDemographic[]=josei"; hasDemographic = true; }
+                    if (f.state) { url += "&" + this._qa("publicationDemographic", "josei"); hasDemographic = true; }
                     continue;
                 }
 
@@ -116,7 +120,7 @@ var source = {
                 if (f.type === "select" && f.name === "Original Language") {
                     var langs = ["", "ja", "ko", "zh", "zh-hk", "en"];
                     if (f.state > 0 && f.state < langs.length) {
-                        url += "&originalLanguage[]=" + langs[f.state];
+                        url += "&" + this._qa("originalLanguage", langs[f.state]);
                     }
                     continue;
                 }
@@ -125,7 +129,7 @@ var source = {
                 if (f.type === "select" && f.name === "Translated Language") {
                     var tlangs = ["", "en", "zh", "zh-hk", "ja", "ko", "fr", "de", "es", "pt-br", "ru", "it"];
                     if (f.state > 0 && f.state < tlangs.length) {
-                        url += "&availableTranslatedLanguage[]=" + tlangs[f.state];
+                        url += "&" + this._qa("availableTranslatedLanguage", tlangs[f.state]);
                         hasLang = true;
                     }
                     continue;
@@ -159,7 +163,7 @@ var source = {
                             var tag = tags[t].trim().toLowerCase();
                             var tagId = this._findTagId(tag);
                             if (tagId) {
-                                url += "&includedTags[]=" + tagId;
+                                url += "&" + this._qa("includedTags", tagId);
                             }
                         }
                     }
@@ -174,7 +178,7 @@ var source = {
                             var exTag = exTags[e].trim().toLowerCase();
                             var exTagId = this._findTagId(exTag);
                             if (exTagId) {
-                                url += "&excludedTags[]=" + exTagId;
+                                url += "&" + this._qa("excludedTags", exTagId);
                             }
                         }
                     }
@@ -185,14 +189,14 @@ var source = {
 
         // Apply defaults if not set by filters
         if (!hasContentRating) {
-            url += "&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica";
+            url += "&" + this._qa("contentRating", "safe") + "&" + this._qa("contentRating", "suggestive") + "&" + this._qa("contentRating", "erotica");
         }
 
         // Sort order
         if (orderField) {
-            url += "&order[" + orderField + "]=" + orderDir;
+            url += "&" + this._q("order[" + orderField + "]", orderDir);
         } else if (!query || !query.trim()) {
-            url += "&order[followedCount]=desc";
+            url += "&" + this._q("order[followedCount]", "desc");
         }
 
         return this._fetchMangaList(url);
@@ -203,9 +207,9 @@ var source = {
     getMangaDetails: function(manga) {
         var mangaId = this._extractMangaId(manga.url);
         var url = this.apiUrl + "/manga/" + mangaId
-            + "?includes[]=cover_art&includes[]=author&includes[]=artist";
+            + "?" + this._qa("includes", "cover_art") + "&" + this._qa("includes", "author") + "&" + this._qa("includes", "artist");
 
-        var json = bridge.httpGet(url);
+        var json = this._apiGet(url);
         if (!json || json.error) return manga;
 
         try {
@@ -308,11 +312,11 @@ var source = {
         while (offset < total) {
             var url = this.apiUrl + "/manga/" + mangaId + "/feed"
                 + "?limit=" + limit + "&offset=" + offset
-                + "&order[chapter]=desc&order[volume]=desc"
-                + "&includes[]=scanlation_group"
-                + "&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic";
+                + "&" + this._q("order[chapter]", "desc") + "&" + this._q("order[volume]", "desc")
+                + "&" + this._qa("includes", "scanlation_group")
+                + "&" + this._qa("contentRating", "safe") + "&" + this._qa("contentRating", "suggestive") + "&" + this._qa("contentRating", "erotica") + "&" + this._qa("contentRating", "pornographic");
 
-            var json = bridge.httpGet(url);
+            var json = this._apiGet(url);
             if (!json || json.error) break;
 
             try {
@@ -394,7 +398,7 @@ var source = {
         var chapterId = this._extractChapterId(chapter.url);
         var url = this.apiUrl + "/at-home/server/" + chapterId;
 
-        var json = bridge.httpGet(url);
+        var json = this._apiGet(url);
         if (!json || json.error) return [];
 
         try {
@@ -409,7 +413,7 @@ var source = {
             if (!files || files.length === 0) {
                 // Check if this is an external chapter (e.g. MangaPlus, licensed content)
                 var chapterInfoUrl = this.apiUrl + "/chapter/" + chapterId;
-                var chapterJson = bridge.httpGet(chapterInfoUrl);
+                var chapterJson = this._apiGet(chapterInfoUrl);
                 if (chapterJson && !chapterJson.error) {
                     try {
                         var chapterResp = JSON.parse(chapterJson);
@@ -491,8 +495,23 @@ var source = {
 
     // ======== Private Helpers ========
 
+    _apiGet: function(url) {
+        if (bridge.httpGetWithHeaders) {
+            return bridge.httpGetWithHeaders(url, this.headers);
+        }
+        return bridge.httpGet(url);
+    },
+
+    _q: function(name, value) {
+        return encodeURIComponent(name) + "=" + encodeURIComponent(value);
+    },
+
+    _qa: function(name, value) {
+        return this._q(name + "[]", value);
+    },
+
     _fetchMangaList: function(url) {
-        var json = bridge.httpGet(url);
+        var json = this._apiGet(url);
         if (!json || json.error) return new MangasPage([], false);
 
         try {
@@ -561,7 +580,7 @@ var source = {
         if (!this._tagMap) {
             this._tagMap = {};
             // Fetch tag list from API (cached after first call)
-            var json = bridge.httpGet(this.apiUrl + "/manga/tag");
+            var json = this._apiGet(this.apiUrl + "/manga/tag");
             if (json && !json.error) {
                 try {
                     var resp = JSON.parse(json);

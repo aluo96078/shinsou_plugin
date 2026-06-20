@@ -8,6 +8,131 @@ var source = {
     headers: {
         "Referer": "https://tw.manhuagui.com/"
     },
+    filterOptions: {
+        regions: [
+            { label: "全部", code: "" },
+            { label: "日本", code: "japan" },
+            { label: "港臺", code: "hongkong" },
+            { label: "其它", code: "other" },
+            { label: "歐美", code: "europe" },
+            { label: "內地", code: "china" },
+            { label: "韓國", code: "korea" }
+        ],
+        genres: [
+            { label: "全部", code: "" },
+            { label: "熱血", code: "rexue" },
+            { label: "冒險", code: "maoxian" },
+            { label: "魔幻", code: "mohuan" },
+            { label: "神鬼", code: "shengui" },
+            { label: "搞笑", code: "gaoxiao" },
+            { label: "萌系", code: "mengxi" },
+            { label: "愛情", code: "aiqing" },
+            { label: "科幻", code: "kehuan" },
+            { label: "魔法", code: "mofa" },
+            { label: "格鬥", code: "gedou" },
+            { label: "武俠", code: "wuxia" },
+            { label: "機戰", code: "jizhan" },
+            { label: "戰爭", code: "zhanzheng" },
+            { label: "競技", code: "jingji" },
+            { label: "體育", code: "tiyu" },
+            { label: "校園", code: "xiaoyuan" },
+            { label: "生活", code: "shenghuo" },
+            { label: "勵志", code: "lizhi" },
+            { label: "歷史", code: "lishi" },
+            { label: "偽娘", code: "weiniang" },
+            { label: "宅男", code: "zhainan" },
+            { label: "腐女", code: "funv" },
+            { label: "耽美", code: "danmei" },
+            { label: "百合", code: "baihe" },
+            { label: "後宮", code: "hougong" },
+            { label: "治癒", code: "zhiyu" },
+            { label: "美食", code: "meishi" },
+            { label: "推理", code: "tuili" },
+            { label: "懸疑", code: "xuanyi" },
+            { label: "恐怖", code: "kongbu" },
+            { label: "四格", code: "sige" },
+            { label: "職場", code: "zhichang" },
+            { label: "偵探", code: "zhentan" },
+            { label: "社會", code: "shehui" },
+            { label: "音樂", code: "yinyue" },
+            { label: "舞蹈", code: "wudao" },
+            { label: "雜誌", code: "zazhi" },
+            { label: "黑道", code: "heidao" }
+        ],
+        audiences: [
+            { label: "全部", code: "" },
+            { label: "少女", code: "shaonv" },
+            { label: "少年", code: "shaonian" },
+            { label: "青年", code: "qingnian" },
+            { label: "兒童", code: "ertong" },
+            { label: "通用", code: "tongyong" }
+        ],
+        years: [
+            { label: "全部", code: "" },
+            { label: "2026年", code: "2026" },
+            { label: "2025年", code: "2025" },
+            { label: "2024年", code: "2024" },
+            { label: "2023年", code: "2023" },
+            { label: "2022年", code: "2022" },
+            { label: "2021年", code: "2021" },
+            { label: "2020年", code: "2020" },
+            { label: "2019年", code: "2019" },
+            { label: "2018年", code: "2018" },
+            { label: "2017年", code: "2017" },
+            { label: "2016年", code: "2016" },
+            { label: "2015年", code: "2015" },
+            { label: "2014年", code: "2014" },
+            { label: "2013年", code: "2013" },
+            { label: "2012年", code: "2012" },
+            { label: "2011年", code: "2011" },
+            { label: "2010年", code: "2010" },
+            { label: "00年代", code: "200x" },
+            { label: "90年代", code: "199x" },
+            { label: "80年代", code: "198x" },
+            { label: "更早", code: "197x" }
+        ],
+        letters: [
+            { label: "全部", code: "" },
+            { label: "A", code: "a" },
+            { label: "B", code: "b" },
+            { label: "C", code: "c" },
+            { label: "D", code: "d" },
+            { label: "E", code: "e" },
+            { label: "F", code: "f" },
+            { label: "G", code: "g" },
+            { label: "H", code: "h" },
+            { label: "I", code: "i" },
+            { label: "J", code: "j" },
+            { label: "K", code: "k" },
+            { label: "L", code: "l" },
+            { label: "M", code: "m" },
+            { label: "N", code: "n" },
+            { label: "O", code: "o" },
+            { label: "P", code: "p" },
+            { label: "Q", code: "q" },
+            { label: "R", code: "r" },
+            { label: "S", code: "s" },
+            { label: "T", code: "t" },
+            { label: "U", code: "u" },
+            { label: "V", code: "v" },
+            { label: "W", code: "w" },
+            { label: "X", code: "x" },
+            { label: "Y", code: "y" },
+            { label: "Z", code: "z" },
+            { label: "0-9", code: "0-9" }
+        ],
+        statuses: [
+            { label: "全部", code: "" },
+            { label: "連載", code: "lianzai" },
+            { label: "完結", code: "wanjie" }
+        ],
+        sorts: [
+            { label: "最新發布", code: "index" },
+            { label: "最新更新", code: "update" },
+            { label: "人氣最旺", code: "view" },
+            { label: "評分最高", code: "rate" }
+        ]
+    },
 
     // Small FIFO cache to collapse repeat requests for the same URL.
     // - Manga detail pages: 60s TTL covers "open detail -> load chapters".
@@ -66,7 +191,7 @@ var source = {
         if (query && query.trim()) {
             url = this.baseUrl + "/s/" + encodeURIComponent(query.trim()) + "_p" + (page + 1) + ".html";
         } else {
-            url = this.baseUrl + "/list/update_p" + (page + 1) + ".html";
+            url = this._buildFilteredListUrl(page, filters);
         }
 
         var html = this._getCachedHtml(url, this._LIST_CACHE_TTL_MS);
@@ -118,7 +243,7 @@ var source = {
         // Pagination: rely solely on the explicit "next" link with an href.
         // Avoid count-based heuristics, which over-request on exact-30 tail pages.
         var hasNext = false;
-        var nextBtn = doc.selectFirst("a.next");
+        var nextBtn = doc.selectFirst("a.next, a.prev:contains(下一頁), a:contains(下一頁), a:contains(下一页)");
         if (nextBtn && nextBtn.hasAttr("href")) {
             hasNext = true;
         }
@@ -550,6 +675,81 @@ var source = {
     // ======== Filters ========
 
     getFilterList: function() {
-        return [];
+        return [
+            { type: "select", name: "排序", values: this._filterLabels(this.filterOptions.sorts), state: 0 },
+
+            { type: "separator" },
+            { type: "header", name: "分類篩選" },
+            { type: "select", name: "地區", values: this._filterLabels(this.filterOptions.regions), state: 0 },
+            { type: "select", name: "劇情", values: this._filterLabels(this.filterOptions.genres), state: 0 },
+            { type: "select", name: "受眾", values: this._filterLabels(this.filterOptions.audiences), state: 0 },
+            { type: "select", name: "年份", values: this._filterLabels(this.filterOptions.years), state: 0 },
+            { type: "select", name: "字母", values: this._filterLabels(this.filterOptions.letters), state: 0 },
+            { type: "select", name: "進度", values: this._filterLabels(this.filterOptions.statuses), state: 0 }
+        ];
+    },
+
+    _buildFilteredListUrl: function(page, filters) {
+        var sort = "index";
+        var segments = [];
+        var region = "";
+        var genre = "";
+        var audience = "";
+        var year = "";
+        var letter = "";
+        var status = "";
+
+        if (filters && filters.length > 0) {
+            for (var i = 0; i < filters.length; i++) {
+                var f = filters[i];
+                if (!f || f.type !== "select") continue;
+
+                if (f.name === "排序") {
+                    sort = this._filterCode(this.filterOptions.sorts, f.state) || "index";
+                } else if (f.name === "地區") {
+                    region = this._filterCode(this.filterOptions.regions, f.state);
+                } else if (f.name === "劇情") {
+                    genre = this._filterCode(this.filterOptions.genres, f.state);
+                } else if (f.name === "受眾") {
+                    audience = this._filterCode(this.filterOptions.audiences, f.state);
+                } else if (f.name === "年份") {
+                    year = this._filterCode(this.filterOptions.years, f.state);
+                } else if (f.name === "字母") {
+                    letter = this._filterCode(this.filterOptions.letters, f.state);
+                } else if (f.name === "進度") {
+                    status = this._filterCode(this.filterOptions.statuses, f.state);
+                }
+            }
+        }
+
+        if (region) segments.push(region);
+        if (genre) segments.push(genre);
+        if (audience) segments.push(audience);
+        if (year) segments.push(year);
+        if (letter) segments.push(letter);
+        if (status) segments.push(status);
+
+        var slug = segments.join("_");
+        var base = this.baseUrl + "/list/" + (slug ? slug + "/" : "");
+        var pageNum = page + 1;
+
+        if (pageNum <= 1) {
+            return sort === "index" ? base : base + sort + ".html";
+        }
+        return base + sort + "_p" + pageNum + ".html";
+    },
+
+    _filterCode: function(options, state) {
+        var idx = parseInt(state || 0, 10);
+        if (idx < 0 || idx >= options.length) return "";
+        return options[idx].code || "";
+    },
+
+    _filterLabels: function(options) {
+        var values = [];
+        options.forEach(function(item) {
+            values.push(item.label);
+        });
+        return values;
     }
 };

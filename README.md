@@ -6,13 +6,13 @@ Shinsou 社群插件集合，為 [Shinsou](https://github.com/aluoexpiry/shinsou
 
 | 插件 ID | 名稱 | 語言 | 版本 | 來源網站 |
 |---------|------|------|------|---------|
-| `all.mangadex` | MangaDex | all | 1.2.0 | mangadex.org |
-| `eh.ehentai` | E-Hentai | all | 1.1.2 | e-hentai.org |
+| `all.mangadex` | MangaDex | all | 1.2.1 | mangadex.org |
+| `eh.ehentai` | E-Hentai | all | 1.1.7 | e-hentai.org |
 | `zh.baozimh` | 包子漫画 | zh | 1.0.0 | baozimh.com |
 | `zh.dm5` | 動漫屋 | zh | 1.3.0 | dm5.cn |
-| `zh.jinmantiantang` | 禁漫天堂 | zh | 1.0.0 | 18comic.vip |
+| `zh.jinmantiantang` | 禁漫天堂 | zh | 1.0.4 | 18comic.vip |
 | `zh.komiic` | Komiic | zh | 1.2.0 | komiic.com |
-| `zh.manhuagui` | 漫画柜 | zh | 1.1.2 | tw.manhuagui.com |
+| `zh.manhuagui` | 漫画柜 | zh | 1.1.6 | tw.manhuagui.com |
 | `zh.wnacg` | 紳士漫畫 | zh | 1.3.0 | wnacg.com |
 
 ## 目錄結構
