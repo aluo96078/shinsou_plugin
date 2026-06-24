@@ -3,9 +3,13 @@
 
 var source = {
     baseUrl: "https://18comic.vip",
+    cdnBaseUrl: "https://cdn-msp.18comic.vip",
     supportsLatest: true,
     headers: {
-        "Referer": "https://18comic.vip/"
+        "Referer": "https://18comic.vip/",
+        "Origin": "https://18comic.vip",
+        "Accept": "*/*",
+        "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.8"
     },
     categoryFilters: [
         { label: "全部" },
@@ -189,10 +193,12 @@ var source = {
                 // Thumbnail
                 var img = item.selectFirst("img");
                 if (img) {
-                    manga.thumbnailUrl = img.attr("data-original") || img.attr("data-src") || img.attr("src") || "";
-                    // Fix protocol
-                    if (manga.thumbnailUrl.indexOf("//") === 0) {
-                        manga.thumbnailUrl = "https:" + manga.thumbnailUrl;
+                    var rawThumb = this._absoluteUrl(this._imageSrc(img));
+                    var albumId = this._extractAlbumId(manga.url);
+                    var normalizedThumb = this._normalizeAlbumThumbnail(rawThumb, albumId);
+                    manga.thumbnailUrl = normalizedThumb || rawThumb;
+                    if (!this._isUsableAlbumThumbnail(manga.thumbnailUrl, albumId)) {
+                        manga.thumbnailUrl = "";
                     }
                 }
 
@@ -202,7 +208,7 @@ var source = {
             } catch(e) {
                 bridge.log("Jinman parse error: " + e);
             }
-        });
+        }.bind(this));
 
         // Pagination
         var hasNext = false;
@@ -316,7 +322,7 @@ var source = {
         }
 
         if (albumId) {
-            return this.baseUrl + "/media/albums/" + albumId + "_3x4.jpg";
+            return this.cdnBaseUrl + "/media/albums/" + albumId + "_3x4.jpg";
         }
         return existingUrl || "";
     },
@@ -332,11 +338,11 @@ var source = {
         if (!albumMatch || albumMatch[1] !== String(albumId)) return "";
         if (url.indexOf("_3x4.") !== -1) return url;
 
-        var match = url.match(/^(.*\/media\/albums\/)(\d+)(\.[a-zA-Z0-9]+)(?:[?&][uv]=([^&#]+))?/);
+        var match = url.match(/^(.*\/media\/albums\/)(\d+)(\.[a-zA-Z0-9]+)(?:[?&]([uv])=([^&#]+))?/);
         if (!match || match[2] !== String(albumId)) return "";
 
         var ext = match[3] || ".jpg";
-        var version = match[4] ? "?v=" + match[4] : "";
+        var version = match[4] && match[5] ? "?" + match[4] + "=" + match[5] : "";
         return match[1] + albumId + "_3x4" + ext + version;
     },
 
@@ -358,9 +364,15 @@ var source = {
 
     _absoluteUrl: function(url) {
         if (!url) return "";
+        url = String(url).replace(/&amp;/g, "&").trim();
         if (url.indexOf("//") === 0) return "https:" + url;
         if (url.indexOf("/") === 0) return this.baseUrl + url;
         return url;
+    },
+
+    _imageSrc: function(img) {
+        if (!img) return "";
+        return img.attr("data-original") || img.attr("data-src") || img.attr("src") || "";
     },
 
     // ======== Chapter List ========

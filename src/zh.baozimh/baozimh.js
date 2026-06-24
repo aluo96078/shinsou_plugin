@@ -5,7 +5,10 @@ var source = {
     baseUrl: "https://www.baozimh.com",
     supportsLatest: true,
     headers: {
-        "Referer": "https://www.baozimh.com/"
+        "Referer": "https://www.baozimh.com/",
+        "Origin": "https://www.baozimh.com",
+        "Accept": "*/*",
+        "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.8"
     },
 
     // ======== Popular ========
@@ -73,37 +76,27 @@ var source = {
         var mangas = [];
 
         // Main manga cards
-        var items = doc.select("a.comics-card__poster");
-        if (items.isEmpty()) {
-            items = doc.select("div.pure-g div.comics-card");
-        }
+        var items = doc.select("div.comics-card");
 
         if (!items.isEmpty()) {
             items.forEach(function(item) {
                 try {
                     var manga = SManga.create();
 
-                    // If item is an <a> tag
-                    if (item.tagName() === "a") {
-                        manga.url = item.attr("href");
-                        var img = item.selectFirst("img");
-                        if (img) {
-                            manga.thumbnailUrl = img.attr("data-src") || img.attr("src") || "";
-                        }
-                        var titleEl = item.selectFirst(".comics-card__title");
-                        manga.title = titleEl ? titleEl.text() : "";
-                    } else {
-                        // Card container
-                        var link = item.selectFirst("a");
-                        if (link) {
-                            manga.url = link.attr("href");
-                        }
-                        var img = item.selectFirst("img");
-                        if (img) {
-                            manga.thumbnailUrl = img.attr("data-src") || img.attr("src") || "";
-                        }
-                        var titleEl = item.selectFirst(".comics-card__title");
-                        manga.title = titleEl ? titleEl.text() : "";
+                    var link = item.selectFirst("a.comics-card__poster, a[href*='/comic/']");
+                    if (link) {
+                        manga.url = link.attr("href");
+                    }
+
+                    var img = item.selectFirst("a.comics-card__poster amp-img[src], a.comics-card__poster img, amp-img[src], img");
+                    if (img) {
+                        manga.thumbnailUrl = this._fixUrl(this._imageSrc(img));
+                    }
+
+                    var titleEl = item.selectFirst(".comics-card__title");
+                    manga.title = titleEl ? titleEl.text().trim() : "";
+                    if (!manga.title && link) {
+                        manga.title = link.attr("title") || link.attr("aria-label") || "";
                     }
 
                     if (manga.url && manga.title) {
@@ -112,34 +105,28 @@ var source = {
                 } catch(e) {
                     bridge.log("Baozi parse error: " + e);
                 }
-            });
+            }.bind(this));
         }
 
-        // Fallback: try other selectors
+        // Fallback: poster anchors without a parent card
         if (mangas.length === 0) {
-            var cards = doc.select(".pure-u-lg-1-6, .pure-u-md-1-4, .pure-u-sm-1-2");
-            cards.forEach(function(card) {
+            var posters = doc.select("a.comics-card__poster[href*='/comic/'], a[href*='/comic/']");
+            posters.forEach(function(link) {
                 try {
-                    var link = card.selectFirst("a[href*='/comic/']");
-                    if (!link) return;
-
                     var manga = SManga.create();
                     manga.url = link.attr("href");
+                    manga.title = link.attr("title") || link.attr("aria-label") || link.text().trim();
 
-                    var img = card.selectFirst("img");
+                    var img = link.selectFirst("amp-img[src], img");
                     if (img) {
-                        manga.thumbnailUrl = img.attr("data-src") || img.attr("src") || "";
+                        manga.thumbnailUrl = this._fixUrl(this._imageSrc(img));
                     }
-
-                    var title = card.selectFirst(".comics-card__title");
-                    if (!title) title = link;
-                    manga.title = title.text().trim();
 
                     if (manga.url && manga.title) {
                         mangas.push(manga);
                     }
                 } catch(e) {}
-            });
+            }.bind(this));
         }
 
         // Pagination
@@ -190,14 +177,14 @@ var source = {
         }
 
         // Cover
-        var coverMeta = doc.selectFirst("meta[property='og:image']");
+        var coverMeta = doc.selectFirst("meta[property='og:image'], meta[name='og:image']");
         if (coverMeta) {
-            result.thumbnailUrl = coverMeta.attr("content");
+            result.thumbnailUrl = this._fixUrl(coverMeta.attr("content"));
         }
         if (!result.thumbnailUrl) {
-            var coverImg = doc.selectFirst(".comics-detail__cover img, .l-content img");
+            var coverImg = doc.selectFirst(".comics-detail__cover amp-img[src], .comics-detail__cover img, .l-content amp-img[src], .l-content img");
             if (coverImg) {
-                result.thumbnailUrl = coverImg.attr("data-src") || coverImg.attr("src") || "";
+                result.thumbnailUrl = this._fixUrl(this._imageSrc(coverImg));
             }
         }
 
@@ -226,6 +213,19 @@ var source = {
 
         bridge.domReleaseAll();
         return result;
+    },
+
+    _imageSrc: function(img) {
+        if (!img) return "";
+        return img.attr("data-original") || img.attr("data-src") || img.attr("src") || "";
+    },
+
+    _fixUrl: function(url) {
+        if (!url) return "";
+        url = String(url).replace(/&amp;/g, "&").trim();
+        if (url.indexOf("//") === 0) return "https:" + url;
+        if (url.indexOf("/") === 0) return this.baseUrl + url;
+        return url;
     },
 
     // ======== Chapter List ========

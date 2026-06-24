@@ -6,6 +6,9 @@ var source = {
     supportsLatest: true,
     headers: {
         "Referer": "https://www.wnacg.com/",
+        "Origin": "https://www.wnacg.com",
+        "Accept": "*/*",
+        "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.8",
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
     },
 
@@ -113,7 +116,7 @@ var source = {
                     }
                 }
                 if (img) {
-                    manga.thumbnailUrl = img.attr("src") || "";
+                    manga.thumbnailUrl = img.attr("data-original") || img.attr("data-src") || img.attr("src") || "";
                     manga.thumbnailUrl = this._fixUrl(manga.thumbnailUrl);
                 }
 
@@ -211,7 +214,7 @@ var source = {
         // Cover: .uwthumb img
         var coverEl = doc.selectFirst(".uwthumb img");
         if (coverEl) {
-            result.thumbnailUrl = coverEl.attr("src") || "";
+            result.thumbnailUrl = coverEl.attr("data-original") || coverEl.attr("data-src") || coverEl.attr("src") || "";
             // Fix protocol-relative and extra slashes
             result.thumbnailUrl = this._fixUrl(result.thumbnailUrl);
         }
@@ -319,11 +322,15 @@ var source = {
 
     _fixUrl: function(url) {
         if (!url) return "";
+        url = String(url).replace(/&amp;/g, "&").trim();
         // Remove extra leading slashes (e.g. ////t4.qy0.ru -> //t4.qy0.ru)
         url = url.replace(/^\/\/\/+/, "//");
         // Add https: if protocol-relative
         if (url.indexOf("//") === 0) {
             url = "https:" + url;
+        }
+        if (url.indexOf("/") === 0) {
+            url = this.baseUrl + url;
         }
         return url;
     },
