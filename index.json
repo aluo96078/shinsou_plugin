@@ -19,6 +19,25 @@
     ]
   },
   {
+    "id": "all.nhentai",
+    "name": "NHentai",
+    "version": "2.0.1",
+    "versionCode": 3,
+    "lang": "all",
+    "nsfw": 1,
+    "scriptUrl": "plugins/all.nhentai.js",
+    "iconUrl": null,
+    "description": "NHentai doujinshi gallery (official API v2)",
+    "sources": [
+      {
+        "name": "NHentai",
+        "lang": "all",
+        "id": 7309872,
+        "baseUrl": "https://nhentai.net"
+      }
+    ]
+  },
+  {
     "id": "zh.jinmantiantang",
     "name": "禁漫天堂",
     "version": "1.0.7",
@@ -114,6 +133,25 @@
     ]
   },
   {
+    "id": "zh.mycomic",
+    "name": "MyComic",
+    "version": "1.0.0",
+    "versionCode": 1,
+    "lang": "zh",
+    "nsfw": 1,
+    "scriptUrl": "plugins/zh.mycomic.js",
+    "iconUrl": null,
+    "description": "MyComic - 繁體中文漫畫平台",
+    "sources": [
+      {
+        "name": "MyComic",
+        "lang": "zh",
+        "id": "9119537447562549661",
+        "baseUrl": "https://mycomic.com"
+      }
+    ]
+  },
+  {
     "id": "zh.dm5",
     "name": "動漫屋",
     "version": "1.3.0",
@@ -129,6 +167,44 @@
         "lang": "zh",
         "id": 3947628,
         "baseUrl": "https://www.dm5.com"
+      }
+    ]
+  },
+  {
+    "id": "zh.manhuaren",
+    "name": "漫画人",
+    "version": "1.0.0",
+    "versionCode": 1,
+    "lang": "zh",
+    "nsfw": 0,
+    "scriptUrl": "plugins/zh.manhuaren.js",
+    "iconUrl": null,
+    "description": "漫画人 (Manhuaren) - 中文漫畫平台",
+    "sources": [
+      {
+        "name": "漫画人",
+        "lang": "zh",
+        "id": 3616827811449702173,
+        "baseUrl": "https://www.manhuaren.com"
+      }
+    ]
+  },
+  {
+    "id": "zh.mangacopy",
+    "name": "拷貝漫畫",
+    "version": "1.0.0",
+    "versionCode": 1,
+    "lang": "zh",
+    "nsfw": 1,
+    "scriptUrl": "plugins/zh.mangacopy.js",
+    "iconUrl": null,
+    "description": "拷貝漫畫 (MangaCopy) - 中文漫畫平台",
+    "sources": [
+      {
+        "name": "拷貝漫畫",
+        "lang": "zh",
+        "id": 6696312508930833206,
+        "baseUrl": "https://www.mangacopy.com"
       }
     ]
   }
