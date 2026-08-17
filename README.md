@@ -10,6 +10,7 @@ Shinsou 社群插件集合，為 [Shinsou](https://github.com/aluoexpiry/shinsou
 | `all.nhentai` | NHentai | all | 2.0.1 | nhentai.net |
 | `eh.ehentai` | E-Hentai | all | 1.1.7 | e-hentai.org |
 | `zh.baozimh` | 包子漫画 | zh | 1.0.1 | baozimh.com |
+| `zh.bika` | 哔咔漫画 | zh | 1.0.3 | bikawebapp.com |
 | `zh.dm5` | 動漫屋 | zh | 1.3.0 | dm5.cn |
 | `zh.jinmantiantang` | 禁漫天堂 | zh | 1.0.7 | 18comic.vip |
 | `zh.komiic` | Komiic | zh | 1.2.0 | komiic.com |
