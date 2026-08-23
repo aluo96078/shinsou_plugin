@@ -1,0 +1,60 @@
+{
+  "format": "shinsou-extension-sidecar-v2",
+  "contractVersion": 2,
+  "packageId": "zh.manhuaren",
+  "name": "漫画人",
+  "version": "1.0.0",
+  "versionCode": 1,
+  "contract": "shinsou",
+  "lang": "zh",
+  "nsfw": false,
+  "installable": true,
+  "artifact": {
+    "scriptUrl": "plugins/zh.manhuaren.js",
+    "sha256": "3d16db2fee1044211b83d11d3d9ab9daae4b52e0d98817527bc99028fb07baa1",
+    "byteSize": 14587
+  },
+  "content": {
+    "contract": "extension-content-v2",
+    "contractVersion": 2,
+    "type": "manga",
+    "kinds": ["IMAGE_SEQUENCE"]
+  },
+  "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
+  "systemEvents": {
+    "protocol": "dev.shinsou.system",
+    "minVersion": 1,
+    "maxVersion": 1,
+    "required": [],
+    "optional": []
+  },
+  "requestedHostPermissions": [],
+  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"],
+  "sources": [{
+    "sourceKey": {
+      "contractVersion": 2,
+      "packageId": "zh.manhuaren",
+      "sourceId": "3616827811449702173",
+      "legacyLongId": "3616827811449702173"
+    },
+    "sourceId": "3616827811449702173",
+    "name": "漫画人",
+    "lang": "zh",
+    "baseUrl": "https://www.manhuaren.com",
+    "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
+    "contentKinds": ["IMAGE_SEQUENCE"],
+    "systemEvents": {
+      "protocol": "dev.shinsou.system",
+      "minVersion": 1,
+      "maxVersion": 1,
+      "required": [],
+      "optional": []
+    },
+    "requestedHostPermissions": [],
+    "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"]
+  }],
+  "migration": {
+    "legacyScriptUrl": "plugins/zh.manhuaren.js",
+    "legacyIndex": "index.json"
+  }
+}

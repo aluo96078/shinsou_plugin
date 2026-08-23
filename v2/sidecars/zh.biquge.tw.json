@@ -1,0 +1,60 @@
+{
+  "format": "shinsou-extension-sidecar-v2",
+  "contractVersion": 2,
+  "packageId": "zh.biquge.tw",
+  "name": "筆趣閣",
+  "version": "1.0.3",
+  "versionCode": 4,
+  "contract": "shuyue",
+  "lang": "zh",
+  "nsfw": false,
+  "installable": true,
+  "artifact": {
+    "scriptUrl": "plugins/zh.biquge.tw.js",
+    "sha256": "3ab9e37be7ed83e0a7cd65266f984146b60a138f57d85ced4298f8e804dbb151",
+    "byteSize": 23631
+  },
+  "content": {
+    "contract": "extension-content-v2",
+    "contractVersion": 2,
+    "type": "novel",
+    "kinds": ["PLAIN_TEXT"]
+  },
+  "capabilities": ["BROWSE", "SEARCH", "LATEST", "METADATA", "UNITS", "CONTENT"],
+  "systemEvents": {
+    "protocol": "dev.shinsou.system",
+    "minVersion": 1,
+    "maxVersion": 1,
+    "required": [],
+    "optional": []
+  },
+  "requestedHostPermissions": [],
+  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "BROWSER_CHALLENGE"],
+  "sources": [{
+    "sourceKey": {
+      "contractVersion": 2,
+      "packageId": "zh.biquge.tw",
+      "sourceId": "zh.biquge.tw",
+      "legacyLongId": null
+    },
+    "sourceId": "zh.biquge.tw",
+    "name": "筆趣閣",
+    "lang": "zh",
+    "baseUrl": "https://www.biquge.tw",
+    "capabilities": ["BROWSE", "SEARCH", "LATEST", "METADATA", "UNITS", "CONTENT"],
+    "contentKinds": ["PLAIN_TEXT"],
+    "systemEvents": {
+      "protocol": "dev.shinsou.system",
+      "minVersion": 1,
+      "maxVersion": 1,
+      "required": [],
+      "optional": []
+    },
+    "requestedHostPermissions": [],
+    "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "BROWSER_CHALLENGE"]
+  }],
+  "migration": {
+    "legacyScriptUrl": "merged-shuyue/shuyue/biquge-tw.js",
+    "legacyIndex": "merged-shuyue/index.json"
+  }
+}

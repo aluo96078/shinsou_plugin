@@ -1,0 +1,60 @@
+{
+  "format": "shinsou-extension-sidecar-v2",
+  "contractVersion": 2,
+  "packageId": "zh.bika",
+  "name": "哔咔漫画",
+  "version": "1.0.4",
+  "versionCode": 5,
+  "contract": "shinsou",
+  "lang": "zh",
+  "nsfw": true,
+  "installable": true,
+  "artifact": {
+    "scriptUrl": "plugins/zh.bika.js",
+    "sha256": "b7b40f7f9e55080812b444b19a358d4c3bed2513a2b5227c29a31c5ba984277a",
+    "byteSize": 26627
+  },
+  "content": {
+    "contract": "extension-content-v2",
+    "contractVersion": 2,
+    "type": "manga",
+    "kinds": ["IMAGE_SEQUENCE"]
+  },
+  "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH", "LOGIN"],
+  "systemEvents": {
+    "protocol": "dev.shinsou.system",
+    "minVersion": 1,
+    "maxVersion": 1,
+    "required": [],
+    "optional": ["command.auth.login.request"]
+  },
+  "requestedHostPermissions": ["REQUEST_LOGIN_UI"],
+  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS"],
+  "sources": [{
+    "sourceKey": {
+      "contractVersion": 2,
+      "packageId": "zh.bika",
+      "sourceId": "8123456",
+      "legacyLongId": "8123456"
+    },
+    "sourceId": "8123456",
+    "name": "哔咔漫画",
+    "lang": "zh",
+    "baseUrl": "https://bikawebapp.com",
+    "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH", "LOGIN"],
+    "contentKinds": ["IMAGE_SEQUENCE"],
+    "systemEvents": {
+      "protocol": "dev.shinsou.system",
+      "minVersion": 1,
+      "maxVersion": 1,
+      "required": [],
+      "optional": ["command.auth.login.request"]
+    },
+    "requestedHostPermissions": ["REQUEST_LOGIN_UI"],
+    "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS"]
+  }],
+  "migration": {
+    "legacyScriptUrl": "plugins/zh.bika.js",
+    "legacyIndex": "index.json"
+  }
+}

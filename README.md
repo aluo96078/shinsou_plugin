@@ -1,6 +1,6 @@
 # Shinsou Community Plugins (MCP)
 
-Shinsou 社群插件集合，為 [Shinsou](https://github.com/aluoexpiry/shinsou) 漫畫閱讀器提供多個漫畫來源的擴充支援。
+Shinsou 社群插件集合，為 [Shinsou X](https://github.com/aluo96078/shinsoux) 漫畫閱讀器提供多個漫畫來源的擴充支援。
 
 ## 可用插件
 
@@ -10,7 +10,7 @@ Shinsou 社群插件集合，為 [Shinsou](https://github.com/aluoexpiry/shinsou
 | `all.nhentai` | NHentai | all | 2.0.1 | nhentai.net |
 | `eh.ehentai` | E-Hentai | all | 1.1.7 | e-hentai.org |
 | `zh.baozimh` | 包子漫画 | zh | 1.0.1 | baozimh.com |
-| `zh.bika` | 哔咔漫画 | zh | 1.0.3 | bikawebapp.com |
+| `zh.bika` | 哔咔漫画 | zh | 1.0.4 | bikawebapp.com |
 | `zh.dm5` | 動漫屋 | zh | 1.3.0 | dm5.cn |
 | `zh.jinmantiantang` | 禁漫天堂 | zh | 1.0.7 | 18comic.vip |
 | `zh.komiic` | Komiic | zh | 1.2.0 | komiic.com |
@@ -29,11 +29,53 @@ shinsou_plugin/
 │   └── example.login/     # 範例插件（登入 / Cookie / 偏好設定）
 ├── plugins/                # 編譯後的插件檔案
 │   └── {plugin-id}.js
+├── v2/                     # reviewed extension-content-v2 index、scripts、sidecars
+├── merged-shuyue/          # 舊版來源與 ShuYue 遷移 fixture
+├── test/                   # 不連線的 deterministic smoke tests
 ├── icon/                   # 插件圖示
 ├── repo.json               # 倉庫元資料
 ├── index.json              # 插件索引清單
 └── total.json              # Tachiyomi 擴充參考資料庫
 ```
+
+## Extension content v2
+
+`v2/index.json` is the reviewed extension-content-v2 repository. It keeps the historical
+contracts available while exposing independently hashed v2 artifacts and sidecars. The three
+ShuYue sources are represented there, including the migrated legacy `zh.biquge.tw` (筆趣閣);
+its original script remains available through
+`merged-shuyue/shuyue/biquge-tw.js`'s migration binding.
+
+For local testing, serve this repository and add
+`http://127.0.0.1:18081/v2/index.json` in Shinsou X. The v2 repository must be published together
+with this directory before the default raw GitHub URL can serve it.
+
+完整的 v2 欄位、sidecar digest、SourceKey、system-event negotiation 與 legacy compatibility
+規則請見 [`v2/README.md`](v2/README.md)。`merged-shuyue/` 是可獨立掛載的合併 fixture；它不會
+改寫歷史 `index.json` 或 `plugins/` 契約。
+
+## 本地驗證與測試
+
+這些測試只使用本地 fixture，不會登入第三方網站或向正式來源發送請求：
+
+```bash
+node test/baozimh-app-fixture.js
+node test/bika-smoke.js
+node test/v2-migration-smoke.js
+node test/mangacopy-smoke.js
+node test/manhuaren-smoke.js
+node test/nhentai-smoke.js
+```
+
+若要測試本地 repository，從專案根目錄啟動靜態伺服器：
+
+```bash
+python3 -m http.server 18081 --directory .
+```
+
+Shinsou X 可加入 `http://127.0.0.1:18081/index.json`（歷史契約）、
+`http://127.0.0.1:18081/v2/index.json`（v2 契約），或
+`http://127.0.0.1:18081/merged-shuyue/`（合併 fixture）。
 
 ## 插件 API
 
@@ -113,6 +155,31 @@ var source = {
 - 無論插件是否宣告 `supportsLogin`，使用者都可在設定畫面儲存帳密
 - 當 `supportsLogin: true` 時，App 會呼叫 `source.login()` 並在成功後自動儲存帳密
 - 當 `supportsLogin: false` 時，App 僅儲存帳密，插件可自行在 `getPopularManga` 等方法中讀取使用
+
+### 應用 UI 請求
+
+需要登入才能存取內容的插件，可在發現尚未登入或伺服器回傳未授權時，請求應用顯示該來源的登入框。
+
+| 方法 | 說明 |
+|------|------|
+| `bridge.requestLogin()` | 請求應用顯示目前來源的登入框；此呼叫不會等待使用者完成登入 |
+
+插件發布後仍可能由未提供此方法的舊版客戶端執行，因此必須先檢查能力並完全忽略缺少介面或呼叫失敗的情況：
+
+```javascript
+function requestLoginIfSupported() {
+    try {
+        if (typeof bridge !== "undefined" && bridge &&
+            typeof bridge.requestLogin === "function") {
+            bridge.requestLogin();
+        }
+    } catch (e) {
+        // 舊版客戶端：不顯示登入框，也不得讓來源操作報錯
+    }
+}
+```
+
+`requestLogin()` 是 fire-and-forget 通知。插件應讓當次受保護操作安全回傳空結果，登入成功後再由應用或使用者重新載入；登入端點本身失敗時不可再次呼叫它，以免產生重複登入框。
 
 ### 偏好設定
 

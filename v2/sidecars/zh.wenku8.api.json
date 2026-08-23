@@ -1,0 +1,60 @@
+{
+  "format": "shinsou-extension-sidecar-v2",
+  "contractVersion": 2,
+  "packageId": "zh.wenku8.api",
+  "name": "輕小說文庫",
+  "version": "1.0.4",
+  "versionCode": 5,
+  "contract": "shuyue",
+  "lang": "zh",
+  "nsfw": false,
+  "installable": true,
+  "artifact": {
+    "scriptUrl": "plugins/zh.wenku8.api.js",
+    "sha256": "5a9d1ac0d8263629e82332a88b2a7ed4eb6efb857804a8ae6ae946b2eb23b627",
+    "byteSize": 35006
+  },
+  "content": {
+    "contract": "extension-content-v2",
+    "contractVersion": 2,
+    "type": "novel",
+    "kinds": ["PLAIN_TEXT"]
+  },
+  "capabilities": ["BROWSE", "SEARCH", "LATEST", "METADATA", "UNITS", "CONTENT", "LOGIN", "FAVORITE"],
+  "systemEvents": {
+    "protocol": "dev.shinsou.system",
+    "minVersion": 1,
+    "maxVersion": 1,
+    "required": ["command.auth.login.request"],
+    "optional": []
+  },
+  "requestedHostPermissions": ["REQUEST_LOGIN_UI"],
+  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS", "LOGIN_PROMPT", "FAVORITE_MUTATION"],
+  "sources": [{
+    "sourceKey": {
+      "contractVersion": 2,
+      "packageId": "zh.wenku8.api",
+      "sourceId": "zh.wenku8.api",
+      "legacyLongId": null
+    },
+    "sourceId": "zh.wenku8.api",
+    "name": "輕小說文庫",
+    "lang": "zh",
+    "baseUrl": "https://wenku8-relay.mewx.org/",
+    "capabilities": ["BROWSE", "SEARCH", "LATEST", "METADATA", "UNITS", "CONTENT", "LOGIN", "FAVORITE"],
+    "contentKinds": ["PLAIN_TEXT"],
+    "systemEvents": {
+      "protocol": "dev.shinsou.system",
+      "minVersion": 1,
+      "maxVersion": 1,
+      "required": ["command.auth.login.request"],
+      "optional": []
+    },
+    "requestedHostPermissions": ["REQUEST_LOGIN_UI"],
+    "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS", "LOGIN_PROMPT", "FAVORITE_MUTATION"]
+  }],
+  "migration": {
+    "legacyScriptUrl": "merged-shuyue/shuyue/wenku8-api.js",
+    "legacyIndex": "merged-shuyue/index.json"
+  }
+}

@@ -317,6 +317,12 @@ var source = {
 
     _request: function(path, method, body) {
         method = String(method || "GET").toUpperCase();
+        var isLoginRequest = this._isLoginRequest(path);
+        if (!isLoginRequest && !this._getToken()) {
+            this._requestLogin();
+            return null;
+        }
+
         var bases = [this.apiUrl].concat(this.apiMirrors || []);
         for (var i = 0; i < bases.length; i++) {
             try {
@@ -334,13 +340,36 @@ var source = {
                 var text = typeof raw === "string" ? raw :
                     (raw.body != null ? String(raw.body) : String(raw));
                 var response = JSON.parse(text);
-                if (response && (response.code === 200 || response.code === 201)) return response;
-                if (response && response.code === 401) return response;
+                var responseCode = Number(response && response.code);
+                if (response && (responseCode === 200 || responseCode === 201)) return response;
+                if (response && responseCode === 401) {
+                    if (!isLoginRequest) {
+                        this._setToken("");
+                        this._requestLogin();
+                    }
+                    return response;
+                }
             } catch (e) {
                 this._log("Bika API request failed for " + bases[i] + path, e);
             }
         }
         return null;
+    },
+
+    _isLoginRequest: function(path) {
+        return /^\/auth\/sign-in(?:[\/?#]|$)/.test(String(path || ""));
+    },
+
+    // New clients turn this into a source-scoped login dialog.  Older
+    // clients do not expose the method, so capability detection and a silent
+    // catch are both required for backwards-compatible plugin updates.
+    _requestLogin: function() {
+        try {
+            if (typeof bridge !== "undefined" && bridge &&
+                typeof bridge.requestLogin === "function") {
+                bridge.requestLogin();
+            }
+        } catch (e) {}
     },
 
     _requestHeaders: function(path, method, timestamp, nonce) {

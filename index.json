@@ -59,8 +59,8 @@
   {
     "id": "zh.baozimh",
     "name": "包子漫画",
-    "version": "1.0.2",
-    "versionCode": 3,
+    "version": "1.0.5",
+    "versionCode": 6,
     "lang": "zh",
     "nsfw": 0,
     "scriptUrl": "plugins/zh.baozimh.js",
@@ -78,8 +78,8 @@
   {
     "id": "zh.bika",
     "name": "哔咔漫画",
-    "version": "1.0.3",
-    "versionCode": 4,
+    "version": "1.0.4",
+    "versionCode": 5,
     "lang": "zh",
     "nsfw": 1,
     "scriptUrl": "plugins/zh.bika.js",

@@ -1,3 +1,10 @@
+/*
+ * Shinsou extension content v2 executable artifact.
+ *
+ * This is an independently hashed migration artifact. The legacy source remains in
+ * plugins/zh.bika.js; this file carries the v2 declaration consumed by the host admission layer.
+ */
+var __shinsouExtensionV2 = {"contractVersion":2,"contentContract":"extension-content-v2","packageId":"zh.bika","contentType":"manga","contentKinds":["IMAGE_SEQUENCE"],"systemEvents":{"protocol":"dev.shinsou.system","minVersion":1,"maxVersion":1,"required":[],"optional":["command.auth.login.request"]},"requestedHostPermissions":["REQUEST_LOGIN_UI"]};
 // Bika / Pica Web plugin for Shinsou.
 //
 // The web client is a signed API client.  This source mirrors the small
@@ -363,11 +370,19 @@ var source = {
     // New clients turn this into a source-scoped login dialog.  Older
     // clients do not expose the method, so capability detection and a silent
     // catch are both required for backwards-compatible plugin updates.
-    _requestLogin: function() {
+    _requestLogin: function(reason) {
         try {
-            if (typeof bridge !== "undefined" && bridge &&
-                typeof bridge.requestLogin === "function") {
-                bridge.requestLogin();
+            if (typeof bridge !== "undefined" && bridge) {
+                // V2 hosts expose login through the versioned system-event
+                // transport. Keep the legacy callback only as a compatibility
+                // fallback for older hosts that have not installed it yet.
+                if (bridge.system && typeof bridge.system.requestLogin === "function") {
+                    bridge.system.requestLogin(reason);
+                    return;
+                }
+                if (typeof bridge.requestLogin === "function") {
+                    bridge.requestLogin(reason);
+                }
             }
         } catch (e) {}
     },
@@ -598,3 +613,8 @@ var source = {
         return output;
     }
 };
+
+// Expose only bounded, host-audited v2 metadata; executable calls still cross the legacy adapter.
+if (typeof source === "object" && source) {
+    source.v2 = __shinsouExtensionV2;
+}

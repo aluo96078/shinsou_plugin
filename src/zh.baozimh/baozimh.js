@@ -3,10 +3,20 @@
 
 var source = {
     baseUrl: "https://www.baozimh.com",
+    // The Android app opens chapter pages on app.baozimh.com. appgb is used
+    // by the app for static assets and remains as a mirror fallback.
+    appBaseUrl: "https://app.baozimh.com",
+    appMirrorBaseUrl: "https://appgb.baozimh.com",
     supportsLatest: true,
     headers: {
         "Referer": "https://www.baozimh.com/",
         "Origin": "https://www.baozimh.com",
+        "Accept": "*/*",
+        "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.8"
+    },
+    appHeaders: {
+        "Referer": "https://app.baozimh.com/",
+        "Origin": "https://app.baozimh.com",
         "Accept": "*/*",
         "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.8"
     },
@@ -269,44 +279,192 @@ var source = {
     // ======== Page List ========
 
     getPageList: function(chapter) {
+        var info = this._chapterInfo(chapter.url);
+        var pages = [];
+
+        // Prefer the App source. It is the source that contains the actual
+        // latest chapter when the web reader serves promotional QR images.
+        if (info) {
+            var appUrls = this._appChapterUrls(info);
+            for (var i = 0; i < appUrls.length; i++) {
+                var appHtml = bridge.httpGetWithHeaders(appUrls[i], this.appHeaders);
+                if (!appHtml || appHtml.error) {
+                    bridge.log("Baozi: App request failed for " + appUrls[i] + ": " + (appHtml && appHtml.error ? appHtml.error : "empty response"));
+                    continue;
+                }
+                if (this._isBlockedResponse(appHtml)) {
+                    bridge.log("Baozi: App request blocked/challenged for " + appUrls[i]);
+                    continue;
+                }
+
+                pages = this._parsePageList(appHtml, info.slug);
+                if (pages.length > 0) {
+                    bridge.log("Baozi: using App chapter source for " + info.slug + " slot " + info.slot);
+                    return pages;
+                }
+            }
+        }
+
+        // Fall back to the web reader only when the App source is blocked or
+        // contains no usable pages.
         var url = chapter.url;
         if (url.indexOf("http") !== 0) {
             url = this.baseUrl + url;
         }
 
         var html = bridge.httpGetWithHeaders(url, this.headers);
+        if (html && !html.error) {
+            pages = this._parsePageList(html, info ? info.slug : "");
+            if (pages.length > 0) {
+                bridge.log("Baozi: using web chapter source for " + (info ? info.slug : "unknown chapter"));
+                return pages;
+            }
+        }
+
+        bridge.log("Baozi: no usable comic pages found for " + (info ? info.slug : "unknown chapter"));
+        return [];
+    },
+
+    _queryParam: function(url, name) {
+        if (!url) return "";
+        var match = String(url).match(new RegExp("[?&]" + name + "=([^&#]*)"));
+        if (!match) return "";
+        try {
+            return decodeURIComponent(match[1].replace(/\+/g, " "));
+        } catch(e) {
+            return match[1];
+        }
+    },
+
+    _chapterInfo: function(url) {
+        var value = String(url || "");
+        var slug = this._queryParam(value, "comic_id");
+        var section = this._queryParam(value, "section_slot");
+        var slot = this._queryParam(value, "chapter_slot");
+
+        // Also accept the normal /comic/chapter/{slug}/{section}_{slot}.html
+        // form used by Baozi's redirect target and older saved chapters.
+        if (!slug) {
+            var path = value.match(/\/comic\/chapter\/([^\/?#]+)\/([^_/?#]+)_([0-9]+)\.html/);
+            if (path) {
+                slug = path[1];
+                section = path[2];
+                slot = path[3];
+            }
+        }
+
+        if (!slug || slot === "") return null;
+        return {
+            slug: slug,
+            section: section || "0",
+            slot: slot
+        };
+    },
+
+    _appChapterUrls: function(info) {
+        var query = "?comic_id=" + encodeURIComponent(info.slug) +
+            "&section_slot=" + encodeURIComponent(info.section) +
+            "&chapter_slot=" + encodeURIComponent(info.slot);
+        var chapterPath = "/" + info.section + "_" + info.slot + ".html";
+        var paths = [
+            // This is the route used by the Android WebView. The captured
+            // page loads its Android assets from /baozimhapp/bzmh_android/.
+            "/baozimhapp/bzmh_android/comic/chapter/" + info.slug + chapterPath,
+            "/baozimhapp/bzmh_android/chapter" + query,
+            // Keep the non-Android routes as compatibility fallbacks for
+            // older app builds and mirrors.
+            "/baozimhapp/comic/chapter/" + info.slug + chapterPath,
+            "/baozimhapp/chapter" + query
+        ];
+        var bases = [this.appBaseUrl, this.appMirrorBaseUrl];
+        var urls = [];
+        var seen = {};
+        for (var i = 0; i < bases.length; i++) {
+            if (!bases[i]) continue;
+            for (var j = 0; j < paths.length; j++) {
+                var url = bases[i] + paths[j];
+                if (!seen[url]) {
+                    seen[url] = true;
+                    urls.push(url);
+                }
+            }
+        }
+        return urls;
+    },
+
+    _pageImageSrc: function(img) {
+        if (!img) return "";
+        // The Android App initially uses loading.gif in src and stores the
+        // actual comic URL in data-src. Its JS promotes data-src to w640.
+        return img.attr("data-src") || img.attr("data-original") || img.attr("src") || "";
+    },
+
+    _appImageUrl: function(url) {
+        if (!url) return "";
+        var value = String(url).replace(/&amp;/g, "&").trim();
+        // Match the Android App's loading_img():
+        //   https://s1.baozicdn.com/scomic/... ->
+        //   https://s1.baozicdn.com/w640/scomic/...
+        if (value.indexOf("/w640/scomic/") === -1) {
+            value = value.replace(".com/scomic/", ".com/w640/scomic/");
+        }
+        return value;
+    },
+
+    _isBlockedResponse: function(html) {
+        var text = String(html || "").slice(0, 16000).toLowerCase();
+        return text.indexOf("just a moment") !== -1 ||
+            text.indexOf("cf-mitigated") !== -1 ||
+            text.indexOf("challenge-platform") !== -1 ||
+            text.indexOf("enable javascript and cookies to continue") !== -1;
+    },
+
+    _isComicPageUrl: function(url, slug) {
+        if (!url || url.indexOf("data:image") === 0) return false;
+        var value = String(url).replace(/&amp;/g, "&").trim();
+        if (value.indexOf("/scomic/") === -1) return false;
+        if (!slug || value.indexOf("/scomic/" + slug + "/") === -1) return false;
+        return true;
+    },
+
+    _parsePageList: function(html, slug) {
         if (!html || html.error) return [];
 
         var doc = Jsoup.parse(html, this.baseUrl);
         var pages = [];
+        var seen = {};
 
         // Try to find all comic images
-        var imgs = doc.select(".comic-contain img, .comic-contain amp-img, img.comic-img");
-
+        var imgs = doc.select(".comic-contain__item, .comic-contain img, .comic-contain amp-img, img.comic-img");
         if (imgs.isEmpty()) {
             // Fallback: all images in reader area
             imgs = doc.select("#comic-reader img, .chapter-img img");
         }
 
-        var pageNum = 0;
         imgs.forEach(function(img) {
-            var src = img.attr("data-src") || img.attr("src") || img.attr("data-original") || "";
-            if (src && src.indexOf("data:image") === -1) {
-                pages.push(new Page(pageNum, "", src));
-                pageNum++;
-            }
-        });
+            var src = this._pageImageSrc(img);
+            if (!this._isComicPageUrl(src, slug)) return;
 
-        // If still no pages, look for next-page pattern and collect all pages
+            src = this._appImageUrl(this._fixUrl(src));
+            if (!seen[src]) {
+                seen[src] = true;
+                pages.push(new Page(pages.length, "", src));
+            }
+        }.bind(this));
+
+        // If still no pages, look for next-page pattern and collect all pages.
         if (pages.length === 0) {
-            // Some chapters split into multiple pages
             var allPages = doc.select("img[data-page]");
-            allPages.forEach(function(img, idx) {
-                var src = img.attr("data-src") || img.attr("src") || "";
-                if (src) {
-                    pages.push(new Page(idx, "", src));
+            allPages.forEach(function(img) {
+                var src = this._pageImageSrc(img);
+                if (!this._isComicPageUrl(src, slug)) return;
+
+                src = this._appImageUrl(this._fixUrl(src));
+                if (!seen[src]) {
+                    seen[src] = true;
+                    pages.push(new Page(pages.length, "", src));
                 }
-            });
+            }.bind(this));
         }
 
         bridge.domReleaseAll();
