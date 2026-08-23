@@ -1,0 +1,4 @@
+interface:
+  display_name: "Shinsou Extension Creator"
+  short_description: "Create and validate Shinsou v2 extension packages"
+  default_prompt: "Use $shinsou-extension-creator to create or update a Shinsou Extension v2 package."

@@ -1,0 +1,83 @@
+{
+  "format": "shinsou-extension-sidecar-v2",
+  "contractVersion": 2,
+  "packageId": "zh.bilimanga",
+  "name": "嗶哩輕小說／漫畫（Linovelib + BiliManga）",
+  "version": "1.0.0",
+  "versionCode": 1,
+  "contract": "shuyue",
+  "lang": "zh",
+  "nsfw": true,
+  "installable": true,
+  "artifact": {
+    "scriptUrl": "plugins/zh.bilimanga.js",
+    "sha256": "df3e9570ac875ec3990f615f38a96e26517b59c53064031c7c628527867f23c6",
+    "byteSize": 32757
+  },
+  "content": {
+    "contract": "extension-content-v2",
+    "contractVersion": 2,
+    "type": "both",
+    "kinds": ["PLAIN_TEXT", "IMAGE_SEQUENCE"]
+  },
+  "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
+  "systemEvents": {
+    "protocol": "dev.shinsou.system",
+    "minVersion": 1,
+    "maxVersion": 1,
+    "required": [],
+    "optional": []
+  },
+  "requestedHostPermissions": [],
+  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"],
+  "sources": [
+    {
+      "sourceKey": {
+        "contractVersion": 2,
+        "packageId": "zh.bilimanga",
+        "sourceId": "zh.bilimanga.novel",
+        "legacyLongId": null
+      },
+      "sourceId": "zh.bilimanga.novel",
+      "name": "嗶哩輕小說（Linovelib）",
+      "lang": "zh",
+      "baseUrl": "https://tw.linovelib.com",
+      "contentType": "novel",
+      "contentKinds": ["PLAIN_TEXT"],
+      "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
+      "requestedHostPermissions": [],
+      "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"]
+    },
+    {
+      "sourceKey": {
+        "contractVersion": 2,
+        "packageId": "zh.bilimanga",
+        "sourceId": "zh.bilimanga.manga",
+        "legacyLongId": "7289707411592168382"
+      },
+      "sourceId": "zh.bilimanga.manga",
+      "name": "嗶哩漫畫（BiliManga）",
+      "lang": "zh",
+      "baseUrl": "https://www.bilimanga.net",
+      "contentType": "manga",
+      "contentKinds": ["IMAGE_SEQUENCE"],
+      "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
+      "requestedHostPermissions": [],
+      "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"]
+    }
+  ]
+}

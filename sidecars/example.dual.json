@@ -1,0 +1,84 @@
+{
+  "format": "shinsou-extension-sidecar-v2",
+  "contractVersion": 2,
+  "packageId": "example.dual",
+  "name": "小說／漫畫雙平台範例",
+  "version": "1.0.0",
+  "versionCode": 1,
+  "contract": "shinsou",
+  "lang": "zh",
+  "nsfw": false,
+  "referenceOnly": true,
+  "installable": false,
+  "artifact": {
+    "scriptUrl": "plugins/example.dual.js",
+    "sha256": "cf98ffabc92de87de147f3edc09804ca0447ba7204044377e4e724170e671701",
+    "byteSize": 11436
+  },
+  "content": {
+    "contract": "extension-content-v2",
+    "contractVersion": 2,
+    "type": "both",
+    "kinds": ["PLAIN_TEXT", "IMAGE_SEQUENCE"]
+  },
+  "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
+  "systemEvents": {
+    "protocol": "dev.shinsou.system",
+    "minVersion": 1,
+    "maxVersion": 1,
+    "required": [],
+    "optional": []
+  },
+  "requestedHostPermissions": [],
+  "runtimePermissions": ["EXECUTE_SCRIPT"],
+  "sources": [
+    {
+      "sourceKey": {
+        "contractVersion": 2,
+        "packageId": "example.dual",
+        "sourceId": "example.dual.novel",
+        "legacyLongId": null
+      },
+      "sourceId": "example.dual.novel",
+      "name": "範例小說",
+      "lang": "zh",
+      "baseUrl": "https://example.invalid/novel",
+      "contentType": "novel",
+      "contentKinds": ["PLAIN_TEXT"],
+      "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
+      "requestedHostPermissions": [],
+      "runtimePermissions": ["EXECUTE_SCRIPT"]
+    },
+    {
+      "sourceKey": {
+        "contractVersion": 2,
+        "packageId": "example.dual",
+        "sourceId": "example.dual.manga",
+        "legacyLongId": null
+      },
+      "sourceId": "example.dual.manga",
+      "name": "範例漫畫",
+      "lang": "zh",
+      "baseUrl": "https://example.invalid/manga",
+      "contentType": "manga",
+      "contentKinds": ["IMAGE_SEQUENCE"],
+      "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
+      "requestedHostPermissions": [],
+      "runtimePermissions": ["EXECUTE_SCRIPT"]
+    }
+  ]
+}

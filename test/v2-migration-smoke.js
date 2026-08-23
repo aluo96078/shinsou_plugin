@@ -85,12 +85,12 @@ expect(index.format === "shinsou-extension-v2", "unexpected repository index for
 expect(index.contractVersion === 2, "unexpected v2 contract version");
 expect(index.contentContract === "extension-content-v2", "unexpected v2 content contract");
 expect(index.repository.unifiedSource === "merged-shuyue/index.json", "unexpected unified fixture path");
-expect(Array.isArray(index.packages) && index.packages.length === 17, "expected exactly 17 v2 packages");
-expect(new Set(index.packages.map((pkg) => pkg.id)).size === 17, "v2 package ids must be unique");
+expect(Array.isArray(index.packages) && index.packages.length === 19, "expected exactly 19 v2 packages");
+expect(new Set(index.packages.map((pkg) => pkg.id)).size === 19, "v2 package ids must be unique");
 expect(!fs.existsSync(path.join(repoRoot, "v2")), "the retired v2 subdirectory must be absent");
 expect(!fs.existsSync(path.join(repoRoot, "src")), "the retired v1 source tree must be absent");
 expect(merged.format === "shinsou-unified-v1", "merged ShuYue fixture format");
-expect(Array.isArray(merged.shuyue) && merged.shuyue.length === 3, "merged ShuYue index must retain 3 sources");
+expect(Array.isArray(merged.shuyue) && merged.shuyue.length === 4, "merged ShuYue index must retain 4 sources");
 
 const mergedIds = new Set(merged.shuyue.map((pkg) => pkg.id));
 const seenScriptUrls = new Set();
@@ -164,6 +164,33 @@ for (const pkg of index.packages) {
   if (pkg.id === "example.login") {
     expect(pkg.referenceOnly === true && pkg.installable === false, "example.login must remain reference-only");
   }
+  if (pkg.id === "example.dual") {
+    expect(pkg.referenceOnly === true && pkg.installable === false, "example.dual must remain reference-only");
+    expect(pkg.contentType === "both", "example.dual package content type");
+    expect(pkg.contentKinds.includes("PLAIN_TEXT") && pkg.contentKinds.includes("IMAGE_SEQUENCE"), "example.dual package content kinds");
+    expect(Array.isArray(pkg.sources) && pkg.sources.length === 2, "example.dual must expose two sources");
+    const dualSources = new Map(pkg.sources.map((source) => [source.sourceId, source]));
+    const dualNovel = dualSources.get("example.dual.novel");
+    const dualManga = dualSources.get("example.dual.manga");
+    expect(dualNovel && dualNovel.contentType === "novel", "example.dual novel source type");
+    expect(dualNovel && dualNovel.contentKinds.includes("PLAIN_TEXT"), "example.dual novel source kind");
+    expect(dualManga && dualManga.contentType === "manga", "example.dual manga source type");
+    expect(dualManga && dualManga.contentKinds.includes("IMAGE_SEQUENCE"), "example.dual manga source kind");
+  }
+  if (pkg.id === "zh.bilimanga") {
+    expect(pkg.referenceOnly !== true && pkg.installable === true, "zh.bilimanga must be installable after mixed runtime support");
+    expect(pkg.contentType === "both", "zh.bilimanga package content type");
+    expect(pkg.contentKinds.includes("PLAIN_TEXT") && pkg.contentKinds.includes("IMAGE_SEQUENCE"), "zh.bilimanga package content kinds");
+    expect(Array.isArray(pkg.sources) && pkg.sources.length === 2, "zh.bilimanga must expose novel and manga sources");
+    const biliSources = new Map(pkg.sources.map((entry) => [entry.sourceId, entry]));
+    const biliNovel = biliSources.get("zh.bilimanga.novel");
+    const biliManga = biliSources.get("zh.bilimanga.manga");
+    expect(biliNovel && biliNovel.contentType === "novel", "zh.bilimanga novel source type");
+    expect(biliNovel && biliNovel.baseUrl === "https://tw.linovelib.com", "zh.bilimanga novel domain");
+    expect(biliManga && biliManga.contentType === "manga", "zh.bilimanga manga source type");
+    expect(biliManga && biliManga.baseUrl === "https://www.bilimanga.net", "zh.bilimanga manga domain");
+    expect(pkg.capabilities.indexOf("LOGIN") < 0, "zh.bilimanga must not advertise login without a login implementation");
+  }
   if (pkg.id === "zh.wenku8") {
     expect(pkg.legacyCompatibilityOnly === true && pkg.installable === false, "zh.wenku8 must remain compatibility-only");
   }
@@ -181,4 +208,4 @@ for (const pkg of index.packages) {
 const mangadex = index.packages.find((pkg) => pkg.id === "all.mangadex");
 expect(mangadex && mangadex.unindexedLegacy === true && !mangadex.legacyScriptUrl, "MangaDex must not reference a removed v1 artifact");
 expect(index.packages.some((pkg) => pkg.id === "example.login" && pkg.referenceOnly === true), "reference-only login entry missing");
-console.log("root v2 migration smoke: 17 packages, scripts, sidecars, permissions, identities, and migration fixtures verified");
+console.log("root v2 migration smoke: 19 packages, scripts, sidecars, permissions, identities, and migration fixtures verified");
