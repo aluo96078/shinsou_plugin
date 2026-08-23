@@ -1,0 +1,60 @@
+{
+  "format": "shinsou-extension-sidecar-v2",
+  "contractVersion": 2,
+  "packageId": "zh.wnacg",
+  "name": "紳士漫畫",
+  "version": "1.3.2",
+  "versionCode": 6,
+  "contract": "shinsou",
+  "lang": "zh",
+  "nsfw": true,
+  "installable": true,
+  "artifact": {
+    "scriptUrl": "plugins/zh.wnacg.js",
+    "sha256": "36e4728f9207e640589fd0216eaa7cde2f5212341c5b78c6ab71d8a3d2972b9e",
+    "byteSize": 13311
+  },
+  "content": {
+    "contract": "extension-content-v2",
+    "contractVersion": 2,
+    "type": "manga",
+    "kinds": ["IMAGE_SEQUENCE"]
+  },
+  "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
+  "systemEvents": {
+    "protocol": "dev.shinsou.system",
+    "minVersion": 1,
+    "maxVersion": 1,
+    "required": [],
+    "optional": []
+  },
+  "requestedHostPermissions": [],
+  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"],
+  "sources": [{
+    "sourceKey": {
+      "contractVersion": 2,
+      "packageId": "zh.wnacg",
+      "sourceId": "5209831",
+      "legacyLongId": "5209831"
+    },
+    "sourceId": "5209831",
+    "name": "紳士漫畫",
+    "lang": "zh",
+    "baseUrl": "https://www.wnacg.com",
+    "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
+    "contentKinds": ["IMAGE_SEQUENCE"],
+    "systemEvents": {
+      "protocol": "dev.shinsou.system",
+      "minVersion": 1,
+      "maxVersion": 1,
+      "required": [],
+      "optional": []
+    },
+    "requestedHostPermissions": [],
+    "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"]
+  }],
+  "migration": {
+    "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.wnacg.js?v=1.3.2",
+    "legacyIndex": "merged-shuyue/index.json"
+  }
+}

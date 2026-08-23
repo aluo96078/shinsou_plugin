@@ -1,3 +1,10 @@
+/*
+ * Shinsou extension content v2 executable artifact.
+ *
+ * This is an independently hashed migration artifact. The legacy source remains in
+ * plugins/all.nhentai.js; this file carries the v2 declaration consumed by the host admission layer.
+ */
+var __shinsouExtensionV2 = {"contractVersion":2,"contentContract":"extension-content-v2","packageId":"all.nhentai","contentType":"manga","contentKinds":["IMAGE_SEQUENCE"],"systemEvents":{"protocol":"dev.shinsou.system","minVersion":1,"maxVersion":1,"required":[],"optional":[]},"requestedHostPermissions":[]};
 // NHentai source plugin for Shinsou
 // Uses the public NHentai API v2: https://nhentai.net/api/v2/docs
 
@@ -504,3 +511,8 @@ var source = {
         return String(value || "").replace(/^\s+|\s+$/g, "");
     }
 };
+
+// Expose only bounded, host-audited v2 metadata; executable calls still cross the legacy adapter.
+if (typeof source === "object" && source) {
+    source.v2 = __shinsouExtensionV2;
+}

@@ -1,3 +1,10 @@
+/*
+ * Shinsou extension content v2 executable artifact.
+ *
+ * This is an independently hashed migration artifact. The legacy source remains in
+ * plugins/zh.komiic.js; this file carries the v2 declaration consumed by the host admission layer.
+ */
+var __shinsouExtensionV2 = {"contractVersion":2,"contentContract":"extension-content-v2","packageId":"zh.komiic","contentType":"manga","contentKinds":["IMAGE_SEQUENCE"],"systemEvents":{"protocol":"dev.shinsou.system","minVersion":1,"maxVersion":1,"required":[],"optional":[]},"requestedHostPermissions":[]};
 // Komiic Plugin for Mihon iOS
 // Crawls https://komiic.com (GraphQL API)
 
@@ -272,3 +279,8 @@ var source = {
         return match ? match[1] : url;
     }
 };
+
+// Expose only bounded, host-audited v2 metadata; executable calls still cross the legacy adapter.
+if (typeof source === "object" && source) {
+    source.v2 = __shinsouExtensionV2;
+}

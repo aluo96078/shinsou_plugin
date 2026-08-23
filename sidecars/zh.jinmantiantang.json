@@ -1,0 +1,60 @@
+{
+  "format": "shinsou-extension-sidecar-v2",
+  "contractVersion": 2,
+  "packageId": "zh.jinmantiantang",
+  "name": "禁漫天堂",
+  "version": "1.0.7",
+  "versionCode": 8,
+  "contract": "shinsou",
+  "lang": "zh",
+  "nsfw": true,
+  "installable": true,
+  "artifact": {
+    "scriptUrl": "plugins/zh.jinmantiantang.js",
+    "sha256": "f45a1485ac720d9a1963c7cecde874926c3e727f209c5534e04b49b544ebfb27",
+    "byteSize": 21381
+  },
+  "content": {
+    "contract": "extension-content-v2",
+    "contractVersion": 2,
+    "type": "manga",
+    "kinds": ["IMAGE_SEQUENCE"]
+  },
+  "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
+  "systemEvents": {
+    "protocol": "dev.shinsou.system",
+    "minVersion": 1,
+    "maxVersion": 1,
+    "required": [],
+    "optional": []
+  },
+  "requestedHostPermissions": [],
+  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"],
+  "sources": [{
+    "sourceKey": {
+      "contractVersion": 2,
+      "packageId": "zh.jinmantiantang",
+      "sourceId": "1817081",
+      "legacyLongId": "1817081"
+    },
+    "sourceId": "1817081",
+    "name": "禁漫天堂",
+    "lang": "zh",
+    "baseUrl": "https://18comic.vip",
+    "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
+    "contentKinds": ["IMAGE_SEQUENCE"],
+    "systemEvents": {
+      "protocol": "dev.shinsou.system",
+      "minVersion": 1,
+      "maxVersion": 1,
+      "required": [],
+      "optional": []
+    },
+    "requestedHostPermissions": [],
+    "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"]
+  }],
+  "migration": {
+    "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.jinmantiantang.js?v=1.0.7",
+    "legacyIndex": "merged-shuyue/index.json"
+  }
+}

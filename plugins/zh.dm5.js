@@ -1,3 +1,10 @@
+/*
+ * Shinsou extension content v2 executable artifact.
+ *
+ * This is an independently hashed migration artifact. The legacy source remains in
+ * plugins/zh.dm5.js; this file carries the v2 declaration consumed by the host admission layer.
+ */
+var __shinsouExtensionV2 = {"contractVersion":2,"contentContract":"extension-content-v2","packageId":"zh.dm5","contentType":"manga","contentKinds":["IMAGE_SEQUENCE"],"systemEvents":{"protocol":"dev.shinsou.system","minVersion":1,"maxVersion":1,"required":[],"optional":[]},"requestedHostPermissions":[]};
 // 動漫屋 (Dm5) Plugin for Mihon iOS
 // Crawls https://www.dm5.com
 
@@ -498,3 +505,8 @@ var source = {
         ];
     }
 };
+
+// Expose only bounded, host-audited v2 metadata; executable calls still cross the legacy adapter.
+if (typeof source === "object" && source) {
+    source.v2 = __shinsouExtensionV2;
+}

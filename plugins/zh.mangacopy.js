@@ -1,3 +1,10 @@
+/*
+ * Shinsou extension content v2 executable artifact.
+ *
+ * This is an independently hashed migration artifact. The legacy source remains in
+ * plugins/zh.mangacopy.js; this file carries the v2 declaration consumed by the host admission layer.
+ */
+var __shinsouExtensionV2 = {"contractVersion":2,"contentContract":"extension-content-v2","packageId":"zh.mangacopy","contentType":"manga","contentKinds":["IMAGE_SEQUENCE"],"systemEvents":{"protocol":"dev.shinsou.system","minVersion":1,"maxVersion":1,"required":[],"optional":[]},"requestedHostPermissions":[]};
 // MangaCopy (拷貝漫畫) plugin for Shinsou
 // Uses MangaCopy's public v3 API, with the desktop site as a catalogue fallback.
 
@@ -1034,3 +1041,8 @@ var source = {
         23,43,4,126,186,119,214,38,225,105,20,99,85,33,12,125
     ]
 };
+
+// Expose only bounded, host-audited v2 metadata; executable calls still cross the legacy adapter.
+if (typeof source === "object" && source) {
+    source.v2 = __shinsouExtensionV2;
+}

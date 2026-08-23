@@ -1,0 +1,60 @@
+{
+  "format": "shinsou-extension-sidecar-v2",
+  "contractVersion": 2,
+  "packageId": "zh.dm5",
+  "name": "動漫屋",
+  "version": "1.3.0",
+  "versionCode": 4,
+  "contract": "shinsou",
+  "lang": "zh",
+  "nsfw": true,
+  "installable": true,
+  "artifact": {
+    "scriptUrl": "plugins/zh.dm5.js",
+    "sha256": "471cc497672fed7e66a3256aaf3fe7f366950ef32cb137ad3b7ae3cdc911e47d",
+    "byteSize": 19972
+  },
+  "content": {
+    "contract": "extension-content-v2",
+    "contractVersion": 2,
+    "type": "manga",
+    "kinds": ["IMAGE_SEQUENCE"]
+  },
+  "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
+  "systemEvents": {
+    "protocol": "dev.shinsou.system",
+    "minVersion": 1,
+    "maxVersion": 1,
+    "required": [],
+    "optional": []
+  },
+  "requestedHostPermissions": [],
+  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"],
+  "sources": [{
+    "sourceKey": {
+      "contractVersion": 2,
+      "packageId": "zh.dm5",
+      "sourceId": "3947628",
+      "legacyLongId": "3947628"
+    },
+    "sourceId": "3947628",
+    "name": "動漫屋",
+    "lang": "zh",
+    "baseUrl": "https://www.dm5.com",
+    "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
+    "contentKinds": ["IMAGE_SEQUENCE"],
+    "systemEvents": {
+      "protocol": "dev.shinsou.system",
+      "minVersion": 1,
+      "maxVersion": 1,
+      "required": [],
+      "optional": []
+    },
+    "requestedHostPermissions": [],
+    "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"]
+  }],
+  "migration": {
+    "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.dm5.js",
+    "legacyIndex": "merged-shuyue/index.json"
+  }
+}

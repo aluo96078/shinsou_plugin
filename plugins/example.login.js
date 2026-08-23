@@ -1,3 +1,10 @@
+/*
+ * Shinsou extension content v2 executable artifact.
+ *
+ * This is an independently hashed migration artifact. The legacy source remains in
+ * plugins/example.login.js; this file carries the v2 declaration consumed by the host admission layer.
+ */
+var __shinsouExtensionV2 = {"contractVersion":2,"contentContract":"extension-content-v2","packageId":"example.login","contentType":"manga","contentKinds":["IMAGE_SEQUENCE"],"systemEvents":{"protocol":"dev.shinsou.system","minVersion":1,"maxVersion":1,"required":[],"optional":[]},"requestedHostPermissions":[]};
 // ============================================================
 // 範例插件：展示登入、Cookie、偏好設定等進階 API
 // Example Plugin: demonstrates login, cookies, preferences
@@ -263,3 +270,8 @@ var source = {
         return [];
     }
 };
+
+// Expose only bounded, host-audited v2 metadata; executable calls still cross the legacy adapter.
+if (typeof source === "object" && source) {
+    source.v2 = __shinsouExtensionV2;
+}

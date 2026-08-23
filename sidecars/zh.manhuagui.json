@@ -1,0 +1,60 @@
+{
+  "format": "shinsou-extension-sidecar-v2",
+  "contractVersion": 2,
+  "packageId": "zh.manhuagui",
+  "name": "漫画柜",
+  "version": "1.1.6",
+  "versionCode": 8,
+  "contract": "shinsou",
+  "lang": "zh",
+  "nsfw": true,
+  "installable": true,
+  "artifact": {
+    "scriptUrl": "plugins/zh.manhuagui.js",
+    "sha256": "a984f5e3594b57a821f56137d3817f69487eb35ddde53f8175fc648b8a626e53",
+    "byteSize": 28351
+  },
+  "content": {
+    "contract": "extension-content-v2",
+    "contractVersion": 2,
+    "type": "manga",
+    "kinds": ["IMAGE_SEQUENCE"]
+  },
+  "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
+  "systemEvents": {
+    "protocol": "dev.shinsou.system",
+    "minVersion": 1,
+    "maxVersion": 1,
+    "required": [],
+    "optional": []
+  },
+  "requestedHostPermissions": [],
+  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"],
+  "sources": [{
+    "sourceKey": {
+      "contractVersion": 2,
+      "packageId": "zh.manhuagui",
+      "sourceId": "6301748",
+      "legacyLongId": "6301748"
+    },
+    "sourceId": "6301748",
+    "name": "漫画柜",
+    "lang": "zh",
+    "baseUrl": "https://tw.manhuagui.com",
+    "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
+    "contentKinds": ["IMAGE_SEQUENCE"],
+    "systemEvents": {
+      "protocol": "dev.shinsou.system",
+      "minVersion": 1,
+      "maxVersion": 1,
+      "required": [],
+      "optional": []
+    },
+    "requestedHostPermissions": [],
+    "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"]
+  }],
+  "migration": {
+    "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.manhuagui.js",
+    "legacyIndex": "merged-shuyue/index.json"
+  }
+}
