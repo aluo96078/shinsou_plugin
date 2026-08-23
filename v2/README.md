@@ -3,6 +3,10 @@
 This directory is a parallel, host-consumable view of the repository.  The historical
 `index.json`, `plugins/`, and `merged-shuyue/index.json` contracts remain unchanged.
 
+This v2 repository includes the reviewed ShuYue novel extensions `zh.wenku8`, `zh.wenku8.api`,
+and migrated legacy `zh.biquge.tw`. The historical v1 scripts remain available only for client
+compatibility and migration; v1 is frozen and will not receive new feature development.
+
 `index.json` is an `shinsou-extension-v2` package index.  Its `scriptUrl` values are
 relative to the `/v2` repository root and point at independently hashed V2 executable
 artifacts under `plugins/`.  The `legacyScriptUrl` and `migration` fields retain the

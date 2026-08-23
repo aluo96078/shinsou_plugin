@@ -2,6 +2,10 @@
 
 Shinsou 社群插件集合，為 [Shinsou X](https://github.com/aluo96078/shinsoux) 漫畫閱讀器提供多個漫畫來源的擴充支援。
 
+本倉庫同時包含歷史 Shinsou v1 插件與 ShuYue 小說擴充（`zh.wenku8`、`zh.wenku8.api`、
+`zh.biquge.tw`）。v1 的 `index.json`／`plugins/` 只保留既有客戶端相容與遷移用途，**不再新增
+功能、不再持續開發**；後續來源、權限與內容型別請使用 `v2/` 的 reviewed repository。
+
 ## 可用插件
 
 | 插件 ID | 名稱 | 語言 | 版本 | 來源網站 |
@@ -41,9 +45,9 @@ shinsou_plugin/
 ## Extension content v2
 
 `v2/index.json` is the reviewed extension-content-v2 repository. It keeps the historical
-contracts available while exposing independently hashed v2 artifacts and sidecars. The three
-ShuYue sources are represented there, including the migrated legacy `zh.biquge.tw` (筆趣閣);
-its original script remains available through
+contracts available while exposing independently hashed v2 artifacts and sidecars. It includes
+the ShuYue novel extensions `zh.wenku8`, `zh.wenku8.api`, and the migrated legacy
+`zh.biquge.tw` (筆趣閣); the original scripts remain available through
 `merged-shuyue/shuyue/biquge-tw.js`'s migration binding.
 
 For local testing, serve this repository and add
