@@ -569,6 +569,10 @@ var novelSource = {
     return [{ index: 0, url: String(input.url || ""), imageUrl: null, text: text, content: text }];
   },
 
+  chapterText: function(chapter) {
+    return BiliMangaShared.novelText(this, chapter || {});
+  },
+
   getFilterList: function() {
     return [
       { type: "select", name: "排序", values: novelSortLabels, state: 0 },
