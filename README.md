@@ -18,8 +18,9 @@
 
 `zh.bilimanga` 將 `tw.linovelib.com`（小說）與 `www.bilimanga.net`（漫畫）
 整合為單一雙來源 reviewed v2 套件，分別提供 `PLAIN_TEXT` 與 `IMAGE_SEQUENCE`，並包含
-站方的排行榜、搜尋、分類篩選、作品詳情、目錄、章節內容與漫畫圖片解析。兩個來源不實作
-登入或帳號密碼欄位；宿主會依每個來源的內容型別建立文字或圖片閱讀內容。
+站方的排行榜、搜尋、分類篩選、作品詳情、目錄、章節內容與漫畫圖片解析。兩個來源皆支援
+站方帳號登入與隔離的 Cookie 工作階段；BiliManga 會員頁遇到 Cloudflare 驗證時會使用受審核的
+瀏覽器挑戰橋接。宿主會依每個來源的內容型別建立文字或圖片閱讀內容。
 
 `example.login` 是登入 API 參考實作，同樣標示為不可安裝。`example.dual` 是一個離線的小說／漫畫雙來源參考套件：同一個 package export `example.dual.novel`（`PLAIN_TEXT`）與 `example.dual.manga`（`IMAGE_SEQUENCE`），並示範來源篩選、章節與內容頁格式。它刻意標示為 `referenceOnly: true`、`installable: false`，因為目前 host 的 generic legacy adapter 與 reviewed ShuYue install path 尚不能保證 mixed package 的完整執行。所有套件的 executable artifact、sidecar 與權限宣告都由根目錄 `index.json` 綁定。
 

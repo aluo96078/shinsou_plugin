@@ -342,11 +342,11 @@
     {
       "id": "zh.bilimanga",
       "name": "嗶哩輕小說／漫畫（Linovelib + BiliManga）",
-      "version": "1.0.0",
-      "versionCode": 1,
+      "version": "1.5.5",
+      "versionCode": 11,
       "lang": "zh",
       "nsfw": 1,
-      "scriptUrl": "shuyue/zh.bilimanga.js",
+      "scriptUrl": "../plugins/zh.bilimanga.js?v=1.5.5",
       "description": "Linovelib 小說與 BiliManga 漫畫雙來源套件。",
       "type": "both",
       "sources": [
@@ -355,7 +355,7 @@
           "name": "嗶哩輕小說（Linovelib）",
           "lang": "zh",
           "baseUrl": "https://tw.linovelib.com",
-          "supportsLogin": false,
+          "supportsLogin": true,
           "supportsLatest": true,
           "supportsFavorites": false,
           "type": "novel"
@@ -365,7 +365,7 @@
           "name": "嗶哩漫畫（BiliManga）",
           "lang": "zh",
           "baseUrl": "https://www.bilimanga.net",
-          "supportsLogin": false,
+          "supportsLogin": true,
           "supportsLatest": true,
           "supportsFavorites": false,
           "type": "manga"

@@ -189,7 +189,11 @@ for (const pkg of index.packages) {
     expect(biliNovel && biliNovel.baseUrl === "https://tw.linovelib.com", "zh.bilimanga novel domain");
     expect(biliManga && biliManga.contentType === "manga", "zh.bilimanga manga source type");
     expect(biliManga && biliManga.baseUrl === "https://www.bilimanga.net", "zh.bilimanga manga domain");
-    expect(pkg.capabilities.indexOf("LOGIN") < 0, "zh.bilimanga must not advertise login without a login implementation");
+    expect(pkg.capabilities.includes("LOGIN"), "zh.bilimanga must advertise its implemented member login");
+    expect(/supportsLogin:\s*true/.test(scriptText), "zh.bilimanga sources must expose login controls");
+    expect(/login:\s*function\s*\(username, password\)/.test(scriptText), "zh.bilimanga login implementation missing");
+    expect(/errorMessage/.test(scriptText), "zh.bilimanga login error message support missing");
+    expect(/logout:\s*function\s*\(\)/.test(scriptText), "zh.bilimanga logout implementation missing");
   }
   if (pkg.id === "zh.wenku8") {
     expect(pkg.legacyCompatibilityOnly === true && pkg.installable === false, "zh.wenku8 must remain compatibility-only");

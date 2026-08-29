@@ -3,16 +3,16 @@
   "contractVersion": 2,
   "packageId": "zh.bilimanga",
   "name": "嗶哩輕小說／漫畫（Linovelib + BiliManga）",
-  "version": "1.0.0",
-  "versionCode": 1,
+  "version": "1.5.5",
+  "versionCode": 11,
   "contract": "shuyue",
   "lang": "zh",
   "nsfw": true,
   "installable": true,
   "artifact": {
     "scriptUrl": "plugins/zh.bilimanga.js",
-    "sha256": "11b26d91cb6b174d4e335e4b49abeb9f64aed5133529dcb94614bbf18006340f",
-    "byteSize": 32857
+    "sha256": "c2481811290f18ce91d8274c76081faa04f1ca29b091f0205e842c37a0d1f0e8",
+    "byteSize": 45679
   },
   "content": {
     "contract": "extension-content-v2",
@@ -20,16 +20,16 @@
     "type": "both",
     "kinds": ["PLAIN_TEXT", "IMAGE_SEQUENCE"]
   },
-  "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
+  "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH", "LOGIN"],
   "systemEvents": {
     "protocol": "dev.shinsou.system",
     "minVersion": 1,
     "maxVersion": 1,
-    "required": [],
+    "required": ["command.auth.login.request"],
     "optional": []
   },
-  "requestedHostPermissions": [],
-  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"],
+  "requestedHostPermissions": ["REQUEST_LOGIN_UI"],
+  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS", "LOGIN_PROMPT", "BROWSER_CHALLENGE"],
   "sources": [
     {
       "sourceKey": {
@@ -44,16 +44,16 @@
       "baseUrl": "https://tw.linovelib.com",
       "contentType": "novel",
       "contentKinds": ["PLAIN_TEXT"],
-      "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
+      "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH", "LOGIN"],
       "systemEvents": {
         "protocol": "dev.shinsou.system",
         "minVersion": 1,
         "maxVersion": 1,
-        "required": [],
+        "required": ["command.auth.login.request"],
         "optional": []
       },
-      "requestedHostPermissions": [],
-      "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"]
+      "requestedHostPermissions": ["REQUEST_LOGIN_UI"],
+      "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS", "LOGIN_PROMPT", "BROWSER_CHALLENGE"]
     },
     {
       "sourceKey": {
@@ -68,16 +68,16 @@
       "baseUrl": "https://www.bilimanga.net",
       "contentType": "manga",
       "contentKinds": ["IMAGE_SEQUENCE"],
-      "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
+      "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH", "LOGIN"],
       "systemEvents": {
         "protocol": "dev.shinsou.system",
         "minVersion": 1,
         "maxVersion": 1,
-        "required": [],
+        "required": ["command.auth.login.request"],
         "optional": []
       },
-      "requestedHostPermissions": [],
-      "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"]
+      "requestedHostPermissions": ["REQUEST_LOGIN_UI"],
+      "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS", "LOGIN_PROMPT", "BROWSER_CHALLENGE"]
     }
   ]
 }
