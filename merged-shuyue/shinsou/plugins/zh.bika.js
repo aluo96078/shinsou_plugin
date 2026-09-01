@@ -1,20 +1,22 @@
 // Bika / Pica Web plugin for Shinsou.
 //
 // The web client is a signed API client.  This source mirrors the small
-// request envelope used by https://bikawebapp.com rather than scraping the
+// request envelope used by https://manhuabika.com rather than scraping the
 // client-rendered HTML shell.
 
 var source = {
-    baseUrl: "https://bikawebapp.com",
+    baseUrl: "https://manhuabika.com",
+    webChallengeUrl: "https://manhuabika.com/",
+    webChallengeLocalStorageKeys: ["token", "nonce"],
+    requiredWebChallengeLocalStorageKeys: ["token", "nonce"],
     apiUrl: "https://picaapi.go2778.com",
-    apiMirrors: ["https://picaapi.acbbb.com"],
+    apiMirrors: [],
     supportsLatest: true,
     supportsLogin: true,
     headers: {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
         "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.7",
-        "Origin": "https://bikawebapp.com",
-        "Referer": "https://bikawebapp.com/"
+        "Origin": "https://manhuabika.com",
+        "Referer": "https://manhuabika.com/"
     },
 
     _appHeaders: {
@@ -42,15 +44,12 @@ var source = {
 
     // ======== Authentication ========
 
-    login: function(username, password) {
-        if (!username || !password) return false;
-        var response = this._request("/auth/sign-in", "POST", {
-            email: String(username),
-            password: String(password)
-        });
-        if (!response || !response.data || !response.data.token) return false;
-        this._setToken(String(response.data.token));
-        return true;
+    login: function() {
+        if (this._getToken()) return { loggedIn: true };
+        return {
+            loggedIn: false,
+            errorMessage: "嗶咔已停用直接帳密登入以避免觸發 API 限流。請使用「在瀏覽器登入」並匯入瀏覽器工作階段。"
+        };
     },
 
     logout: function() {
@@ -112,6 +111,7 @@ var source = {
     },
 
     _mangasPageFromResponse: function(response, fallbackPage) {
+        this._requireApiData(response, "comics", "漫畫目錄");
         var data = response && response.data;
         var comics = data && data.comics;
         var docs = comics && this._isArray(comics.docs) ? comics.docs : [];
@@ -219,6 +219,7 @@ var source = {
         var id = this._comicId(manga && manga.url);
         if (!id) return manga;
         var response = this._request("/comics/" + encodeURIComponent(id), "GET");
+        this._requireApiData(response, "comic", "漫畫詳情");
         var item = response && response.data && response.data.comic;
         if (!item) return manga;
 
@@ -245,6 +246,7 @@ var source = {
         var pages = 1;
         while (page <= pages && page <= 1000) {
             var response = this._request("/comics/" + encodeURIComponent(id) + "/eps?page=" + page, "GET");
+            this._requireApiData(response, "eps", "章節列表");
             var eps = response && response.data && response.data.eps;
             var docs = eps && this._isArray(eps.docs) ? eps.docs : [];
             for (var i = 0; i < docs.length; i++) {
@@ -284,6 +286,7 @@ var source = {
             var path = "/comics/" + encodeURIComponent(parts.comicId) +
                 "/order/" + encodeURIComponent(parts.order) + "/pages?page=" + apiPage;
             var response = this._request(path, "GET");
+            this._requireApiData(response, "pages", "漫畫頁面");
             var data = response && response.data;
             var pageData = data && data.pages;
             var docs = pageData && this._isArray(pageData.docs) ? pageData.docs : [];
@@ -324,6 +327,7 @@ var source = {
         }
 
         var bases = [this.apiUrl].concat(this.apiMirrors || []);
+        var lastError = null;
         for (var i = 0; i < bases.length; i++) {
             try {
                 var timestamp = String(Math.floor(new Date().getTime() / 1000));
@@ -331,29 +335,79 @@ var source = {
                 var headers = this._requestHeaders(path, method, timestamp, nonce);
                 var raw;
                 var url = bases[i] + path;
-                if (method === "GET") {
+                if (typeof bridge.browserSessionRequest === "function") {
+                    raw = bridge.browserSessionRequest(
+                        url,
+                        method,
+                        body == null ? "" : JSON.stringify(body),
+                        headers
+                    );
+                } else if (method === "GET" && typeof bridge.httpGetResponse === "function") {
+                    raw = bridge.httpGetResponse(url, headers);
+                } else if (method === "GET") {
                     raw = bridge.httpGetWithHeaders(url, headers);
+                } else if (typeof bridge.httpPostResponse === "function") {
+                    raw = bridge.httpPostResponse(url, body == null ? "" : JSON.stringify(body), headers);
                 } else {
                     raw = bridge.httpPost(url, body == null ? "" : JSON.stringify(body), headers);
                 }
-                if (!raw || raw.error) continue;
+                if (!raw) {
+                    lastError = { transportError: "API 未返回任何回應。" };
+                    continue;
+                }
+                if (raw && typeof raw === "object" && raw.error) {
+                    lastError = { transportError: this._safeErrorText(raw.error) };
+                    continue;
+                }
+                var httpStatus = raw && typeof raw === "object" ? Number(raw.status) : 0;
                 var text = typeof raw === "string" ? raw :
                     (raw.body != null ? String(raw.body) : String(raw));
-                var response = JSON.parse(text);
+                if (!text && httpStatus > 0) {
+                    lastError = { transportError: "HTTP " + httpStatus, httpStatus: httpStatus };
+                    continue;
+                }
+                var response;
+                try {
+                    response = JSON.parse(text);
+                } catch (parseError) {
+                    lastError = {
+                        transportError: this._safeErrorText(text, httpStatus),
+                        httpStatus: httpStatus
+                    };
+                    continue;
+                }
+                if (response && typeof response === "object" && httpStatus > 0) {
+                    response.httpStatus = httpStatus;
+                }
                 var responseCode = Number(response && response.code);
-                if (response && (responseCode === 200 || responseCode === 201)) return response;
+                var httpSucceeded = !httpStatus || (httpStatus >= 200 && httpStatus < 300);
+                if (response && httpSucceeded && (responseCode === 200 || responseCode === 201)) return response;
                 if (response && responseCode === 401) {
                     if (!isLoginRequest) {
                         this._setToken("");
-                        this._requestLogin();
+                        this._requestLogin("嗶咔瀏覽器工作階段已失效，請重新登入並匯入。");
                     }
-                    return response;
+                    throw new Error("嗶咔瀏覽器工作階段已失效，請重新登入並匯入。");
                 }
+                if (response && (!isNaN(responseCode) && responseCode > 0 ||
+                    response.message || response.error || response.data)) {
+                    throw new Error(this._apiErrorMessage(response, httpStatus));
+                }
+                lastError = {
+                    transportError: "嗶咔 API 回應格式不完整" +
+                        (httpStatus > 0 ? "（HTTP " + httpStatus + "）" : "") + "。",
+                    httpStatus: httpStatus
+                };
             } catch (e) {
+                var caught = this._safeErrorText(e && e.message ? e.message : e, httpStatus);
+                lastError = {
+                    transportError: caught || "嗶咔 API 請求失敗。",
+                    httpStatus: httpStatus
+                };
                 this._log("Bika API request failed for " + bases[i] + path, e);
             }
         }
-        return null;
+        throw new Error(this._apiErrorMessage(lastError));
     },
 
     _isLoginRequest: function(path) {
@@ -363,11 +417,16 @@ var source = {
     // New clients turn this into a source-scoped login dialog.  Older
     // clients do not expose the method, so capability detection and a silent
     // catch are both required for backwards-compatible plugin updates.
-    _requestLogin: function() {
+    _requestLogin: function(reason) {
         try {
-            if (typeof bridge !== "undefined" && bridge &&
-                typeof bridge.requestLogin === "function") {
-                bridge.requestLogin();
+            if (typeof bridge !== "undefined" && bridge) {
+                if (bridge.system && typeof bridge.system.requestLogin === "function") {
+                    bridge.system.requestLogin(reason);
+                    return;
+                }
+                if (typeof bridge.requestLogin === "function") {
+                    bridge.requestLogin(reason);
+                }
             }
         } catch (e) {}
     },
@@ -393,12 +452,79 @@ var source = {
     },
 
     _requestNonce: function() {
-        if (this._nonce) return this._nonce;
-        var alphabet = "abcdefghijklmnopqrstuvwxyz0123456789";
+        try {
+            var stored = bridge.getPreference("nonce");
+            if (stored && /^[A-Za-z0-9]{32}$/.test(String(stored))) {
+                this._nonce = String(stored);
+                return this._nonce;
+            }
+        } catch (e) {}
+        if (this._nonce && /^[a-z0-9]{32}$/.test(this._nonce)) return this._nonce;
+        var alphabet = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678";
         var nonce = "";
         for (var i = 0; i < 32; i++) nonce += alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-        this._nonce = nonce;
-        return nonce;
+        this._nonce = nonce.toLowerCase();
+        try { bridge.setPreference("nonce", this._nonce); } catch (e) {}
+        return this._nonce;
+    },
+
+    _requireApiData: function(response, field, operation) {
+        var data = response && response.data;
+        if (data && data[field] != null) return data[field];
+        if (response && (Number(response.code) !== 200 && Number(response.code) !== 201 ||
+            response.message || response.error || response.transportError)) {
+            throw new Error(this._apiErrorMessage(response, response.httpStatus));
+        }
+        throw new Error("嗶咔 API 成功回應缺少" + operation + "資料，請重新匯入瀏覽器工作階段後再試。");
+    },
+
+    _apiErrorMessage: function(response, httpStatus) {
+        if (!response || typeof response !== "object") return "嗶咔 API 請求失敗。";
+        var data = response.data && typeof response.data === "object" ? response.data : null;
+        var status = Number(httpStatus || response.httpStatus);
+        var candidates = [
+            response.message, response.detail, response.error, response.transportError,
+            data && data.message, data && data.detail, data && data.error
+        ];
+        for (var i = 0; i < candidates.length; i++) {
+            var message = this._safeErrorText(candidates[i], status);
+            if (message) return message;
+        }
+        var code = Number(response.code);
+        if (!isNaN(code) && code > 0) {
+            return "嗶咔 API 錯誤代碼：" + String(code).slice(0, 40) +
+                (!isNaN(status) && status > 0 && status !== code ? "（HTTP " + status + "）" : "") + "。";
+        }
+        if (!isNaN(status) && status > 0) return "嗶咔 API HTTP " + status + "。";
+        return "嗶咔 API 請求失敗。";
+    },
+
+    _safeErrorText: function(value, httpStatus) {
+        if (value == null) return "";
+        var original = String(value);
+        var status = Number(httpStatus);
+        var statusLabel = !isNaN(status) && status > 0 ? "HTTP " + String(status).slice(0, 3) : "";
+        if (/too many requests/i.test(original)) {
+            if (status === 400) {
+                return "嗶咔 API 以 HTTP 400 回傳限流訊息（too many requests）。這不是 Cloudflare Worker Proxy 的 HTTP 429；請稍候後再試。";
+            }
+            return "嗶咔 API 回傳請求過於頻繁" +
+                (statusLabel ? "（" + statusLabel + "：too many requests）" : "（too many requests）") +
+                "。請稍候後再試。";
+        }
+        if (/NSURLErrorDomain[\s\S]*Code=-1003|specified hostname could not be found/i.test(original)) {
+            return "找不到嗶咔 API 主機（DNS -1003）。請檢查網路或 DNS 後再試。";
+        }
+        if (/<!doctype\s+html|<html\b/i.test(original)) {
+            return "嗶咔 API 返回了網頁而非 JSON" +
+                (statusLabel ? "（" + statusLabel + "）" : "") + "。";
+        }
+        var message = original
+            .replace(/[\u0000-\u001f\u007f]+/g, " ")
+            .replace(/\s+/g, " ")
+            .replace(/\b(authorization|cookie|set-cookie|password)\s*[:=]\s*[^,;\s]+/gi, "$1=[redacted]")
+            .trim();
+        return message.slice(0, 200);
     },
 
     _getToken: function() {

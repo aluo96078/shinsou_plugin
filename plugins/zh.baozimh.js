@@ -289,8 +289,24 @@ var source = {
         var info = this._chapterInfo(chapter.url);
         var pages = [];
 
-        // Prefer the App source. It is the source that contains the actual
-        // latest chapter when the web reader serves promotional QR images.
+        // The public chapter route currently redirects to twmanga.com, whose
+        // AMP reader contains the real bzcdn.net image URLs. Resolve that
+        // route first: the app hosts are often protected by Cloudflare and
+        // otherwise make every chapter wait through several failed requests.
+        var webUrls = this._webChapterUrls(chapter.url, info);
+        for (var w = 0; w < webUrls.length; w++) {
+            var html = bridge.httpGetWithHeaders(webUrls[w], this.headers);
+            if (!html || html.error || this._isBlockedResponse(html)) continue;
+
+            pages = this._parsePageList(html, info ? info.slug : "");
+            if (pages.length > 0) {
+                bridge.log("Baozi: using web chapter source for " + (info ? info.slug : "unknown chapter"));
+                return pages;
+            }
+        }
+
+        // Retain the Android app routes only as compatibility fallbacks for
+        // mirrors that do not expose a working public reader.
         if (info) {
             var appUrls = this._appChapterUrls(info);
             for (var i = 0; i < appUrls.length; i++) {
@@ -312,24 +328,31 @@ var source = {
             }
         }
 
-        // Fall back to the web reader only when the App source is blocked or
-        // contains no usable pages.
-        var url = chapter.url;
-        if (url.indexOf("http") !== 0) {
-            url = this.baseUrl + url;
-        }
-
-        var html = bridge.httpGetWithHeaders(url, this.headers);
-        if (html && !html.error) {
-            pages = this._parsePageList(html, info ? info.slug : "");
-            if (pages.length > 0) {
-                bridge.log("Baozi: using web chapter source for " + (info ? info.slug : "unknown chapter"));
-                return pages;
-            }
-        }
-
         bridge.log("Baozi: no usable comic pages found for " + (info ? info.slug : "unknown chapter"));
         return [];
+    },
+
+    _webChapterUrls: function(chapterUrl, info) {
+        var urls = [];
+        var seen = {};
+        var original = this._fixUrl(chapterUrl);
+        if (original) {
+            seen[original] = true;
+            urls.push(original);
+        }
+        if (info) {
+            var direct = this.baseUrl + "/user/page_direct?comic_id=" + encodeURIComponent(info.slug) +
+                "&section_slot=" + encodeURIComponent(info.section) +
+                "&chapter_slot=" + encodeURIComponent(info.slot);
+            if (!seen[direct]) {
+                seen[direct] = true;
+                urls.push(direct);
+            }
+            var canonical = "https://www.twmanga.com/comic/chapter/" + encodeURIComponent(info.slug) +
+                "/" + encodeURIComponent(info.section) + "_" + encodeURIComponent(info.slot) + ".html";
+            if (!seen[canonical]) urls.push(canonical);
+        }
+        return urls;
     },
 
     _queryParam: function(url, name) {
@@ -430,7 +453,10 @@ var source = {
         if (!url || url.indexOf("data:image") === 0) return false;
         var value = String(url).replace(/&amp;/g, "&").trim();
         if (value.indexOf("/scomic/") === -1) return false;
-        if (!slug || value.indexOf("/scomic/" + slug + "/") === -1) return false;
+        // CDN directory names do not always match comic_id. For example, a
+        // current Baozi chapter can redirect to a bzcdn.net /scomic/ path
+        // inherited from a different internal slug. Reader-area selection is
+        // the reliable boundary; requiring comic_id here drops valid pages.
         return true;
     },
 

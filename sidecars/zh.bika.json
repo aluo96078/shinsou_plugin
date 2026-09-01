@@ -3,16 +3,16 @@
   "contractVersion": 2,
   "packageId": "zh.bika",
   "name": "哔咔漫画",
-  "version": "1.0.4",
-  "versionCode": 5,
+  "version": "1.0.12",
+  "versionCode": 13,
   "contract": "shinsou",
   "lang": "zh",
   "nsfw": true,
   "installable": true,
   "artifact": {
     "scriptUrl": "plugins/zh.bika.js",
-    "sha256": "b7b40f7f9e55080812b444b19a358d4c3bed2513a2b5227c29a31c5ba984277a",
-    "byteSize": 26627
+    "sha256": "cd09553432d85389de169017aeeadd776f539183f13598c2259b4fec738cbdf1",
+    "byteSize": 35431
   },
   "content": {
     "contract": "extension-content-v2",
@@ -29,7 +29,7 @@
     "optional": ["command.auth.login.request"]
   },
   "requestedHostPermissions": ["REQUEST_LOGIN_UI"],
-  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS"],
+  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS", "BROWSER_CHALLENGE"],
   "sources": [{
     "sourceKey": {
       "contractVersion": 2,
@@ -40,7 +40,8 @@
     "sourceId": "8123456",
     "name": "哔咔漫画",
     "lang": "zh",
-    "baseUrl": "https://bikawebapp.com",
+    "baseUrl": "https://manhuabika.com",
+    "browserSessionOrigins": ["https://picaapi.go2778.com"],
     "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH", "LOGIN"],
     "contentKinds": ["IMAGE_SEQUENCE"],
     "systemEvents": {
@@ -51,7 +52,7 @@
       "optional": ["command.auth.login.request"]
     },
     "requestedHostPermissions": ["REQUEST_LOGIN_UI"],
-    "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS"]
+    "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS", "BROWSER_CHALLENGE"]
   }],
   "migration": {
     "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.bika.js",

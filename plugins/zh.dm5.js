@@ -4,17 +4,55 @@
  * This is an independently hashed migration artifact. The legacy source remains in
  * plugins/zh.dm5.js; this file carries the v2 declaration consumed by the host admission layer.
  */
-var __shinsouExtensionV2 = {"contractVersion":2,"contentContract":"extension-content-v2","packageId":"zh.dm5","contentType":"manga","contentKinds":["IMAGE_SEQUENCE"],"systemEvents":{"protocol":"dev.shinsou.system","minVersion":1,"maxVersion":1,"required":[],"optional":[]},"requestedHostPermissions":[]};
+var __shinsouExtensionV2 = {"contractVersion":2,"contentContract":"extension-content-v2","packageId":"zh.dm5","contentType":"manga","contentKinds":["IMAGE_SEQUENCE"],"systemEvents":{"protocol":"dev.shinsou.system","minVersion":1,"maxVersion":1,"required":[],"optional":[]},"requestedHostPermissions":["REQUEST_LOGIN_UI"]};
 // 動漫屋 (Dm5) Plugin for Mihon iOS
 // Crawls https://www.dm5.com
 
 var source = {
     baseUrl: "https://www.dm5.com",
+    webChallengeUrl: "https://www.dm5.com/login/",
     supportsLatest: true,
+    supportsLogin: true,
     headers: {
         "Referer": "https://www.dm5.com/",
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
         "Cookie": "isAdult=1;fastshow=true;ComicHistoryitem_zh=ViewType%3D1"
+    },
+
+    // ======== Authentication ========
+
+    // DM5's login.ashx requires a rotating-image CAPTCHA. The app cannot
+    // truthfully complete that challenge with only a username and password,
+    // so accept a member session imported from the isolated web challenge.
+    login: function(username, password) {
+        if (this._hasMemberSession()) return { loggedIn: true };
+        return {
+            loggedIn: false,
+            errorMessage: "動漫屋登入需要完成旋轉驗證碼。請開啟「Web 驗證／Cloudflare」，在網站完成登入並匯入 Cookie，再回來按登入。"
+        };
+    },
+
+    logout: function() {
+        try {
+            if (typeof bridge.clearCookies === "function") bridge.clearCookies();
+        } catch(e) {}
+        return true;
+    },
+
+    _hasMemberSession: function() {
+        try {
+            var raw = bridge.httpGetWithHeaders(
+                this.baseUrl + "/dm5.ashx?action=getuserinfo&t=" + new Date().getTime(),
+                { "Referer": this.baseUrl + "/" }
+            );
+            if (!raw || raw.error) return false;
+            var text = typeof raw === "string" ? raw :
+                (raw.body != null ? String(raw.body) : String(raw));
+            var result = JSON.parse(text);
+            return !!(result && result.isSuccess === true);
+        } catch(e) {
+            return false;
+        }
     },
 
     // ======== Popular ========

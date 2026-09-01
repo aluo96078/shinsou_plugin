@@ -3,16 +3,16 @@
   "contractVersion": 2,
   "packageId": "zh.wenku8.api",
   "name": "輕小說文庫",
-  "version": "1.0.4",
-  "versionCode": 5,
+  "version": "1.0.5",
+  "versionCode": 6,
   "contract": "shuyue",
   "lang": "zh",
   "nsfw": false,
   "installable": true,
   "artifact": {
     "scriptUrl": "plugins/zh.wenku8.api.js",
-    "sha256": "5a9d1ac0d8263629e82332a88b2a7ed4eb6efb857804a8ae6ae946b2eb23b627",
-    "byteSize": 35006
+    "sha256": "75e67a5937b9a93956f71e1f97f8738fbdabce6b7e7090c90779479e32cae56c",
+    "byteSize": 33589
   },
   "content": {
     "contract": "extension-content-v2",
@@ -20,7 +20,7 @@
     "type": "novel",
     "kinds": ["PLAIN_TEXT"]
   },
-  "capabilities": ["BROWSE", "SEARCH", "LATEST", "METADATA", "UNITS", "CONTENT", "LOGIN", "FAVORITE"],
+  "capabilities": ["BROWSE", "SEARCH", "LATEST", "METADATA", "UNITS", "CONTENT", "LOGIN"],
   "systemEvents": {
     "protocol": "dev.shinsou.system",
     "minVersion": 1,
@@ -29,7 +29,7 @@
     "optional": []
   },
   "requestedHostPermissions": ["REQUEST_LOGIN_UI"],
-  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS", "LOGIN_PROMPT", "FAVORITE_MUTATION"],
+  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS", "LOGIN_PROMPT"],
   "sources": [{
     "sourceKey": {
       "contractVersion": 2,
@@ -41,7 +41,7 @@
     "name": "輕小說文庫",
     "lang": "zh",
     "baseUrl": "https://wenku8-relay.mewx.org/",
-    "capabilities": ["BROWSE", "SEARCH", "LATEST", "METADATA", "UNITS", "CONTENT", "LOGIN", "FAVORITE"],
+    "capabilities": ["BROWSE", "SEARCH", "LATEST", "METADATA", "UNITS", "CONTENT", "LOGIN"],
     "contentKinds": ["PLAIN_TEXT"],
     "systemEvents": {
       "protocol": "dev.shinsou.system",
@@ -51,7 +51,7 @@
       "optional": []
     },
     "requestedHostPermissions": ["REQUEST_LOGIN_UI"],
-    "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS", "LOGIN_PROMPT", "FAVORITE_MUTATION"]
+    "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS", "LOGIN_PROMPT"]
   }],
   "migration": {
     "legacyScriptUrl": "merged-shuyue/shuyue/wenku8-api.js",

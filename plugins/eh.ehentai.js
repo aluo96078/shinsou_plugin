@@ -510,6 +510,7 @@ var source = {
         if (!url) return null;
         url = this._decodeHtml(url);
         if (url.indexOf("http") === 0) return url;
+        if (url.indexOf("//") === 0) return "https:" + url;
         if (url.charAt(0) === "/") return this.baseUrl + url;
         return this.baseUrl + "/" + url;
     },
@@ -649,11 +650,12 @@ var source = {
             url = this.baseUrl + url;
         }
 
-        var pages = [];
-        var pageNum = 0;
         var currentUrl = url;
+        var viewerUrls = [];
 
-        // Collect all viewer page URLs from gallery pages (fast — no image resolution)
+        // Viewer pages are intentionally returned unresolved. The host resolves
+        // each #img only when that page is displayed, so a 300-500 page gallery
+        // does not block the reader while every original image URL is fetched.
         while (currentUrl) {
             var html = bridge.httpGetWithHeaders(currentUrl, this.headers);
             if (!html || html.error) break;
@@ -663,11 +665,8 @@ var source = {
             var thumbs = doc.select("#gdt a");
             thumbs.forEach(function(thumb) {
                 var pageUrl = thumb.attr("href");
-                if (pageUrl) {
-                    pages.push(new Page(pageNum, pageUrl, null));
-                    pageNum++;
-                }
-            });
+                if (pageUrl) viewerUrls.push(this._absoluteUrl(pageUrl));
+            }.bind(this));
 
             // Next gallery page
             var nextLink = doc.selectFirst("table.ptb td.ptds + td a");
@@ -680,25 +679,117 @@ var source = {
             bridge.domReleaseAll();
         }
 
+        var pages = [];
+        for (var index = 0; index < viewerUrls.length; index++) {
+            pages.push(new Page(index, viewerUrls[index], null));
+        }
         return pages;
     },
 
     // Called by Swift to resolve a single page's image URL (parallel-friendly)
     resolveImageUrl: function(pageUrl) {
+        var details = this._resolveViewerDetails(pageUrl);
+        var imageUrl = details && details.imageUrl;
+        return imageUrl ? this._imageRequestUrl(imageUrl, pageUrl) : null;
+    },
+
+    _resolveViewerImage: function(pageUrl) {
+        var details = this._resolveViewerDetails(pageUrl);
+        return details && details.imageUrl ? details.imageUrl : null;
+    },
+
+    _resolveViewerDetails: function(pageUrl) {
         try {
             var html = bridge.httpGetWithHeaders(pageUrl, this.headers);
             if (!html || html.error) return null;
 
             var doc = Jsoup.parse(html, this.baseUrl);
             var img = doc.selectFirst("#img");
-            var imageUrl = img ? img.attr("src") : null;
+            var imageUrl = img ? this._absoluteUrl(img.attr("src")) : null;
+            var showkeyMatch = String(html).match(/\bshowkey\s*=\s*["']([^"']+)["']/);
 
             bridge.domReleaseAll();
-            return imageUrl;
+            return { imageUrl: imageUrl, showkey: showkeyMatch ? showkeyMatch[1] : "" };
         } catch(e) {
             bridge.log("Error resolving image: " + e);
             return null;
         }
+    },
+
+    _resolveViewerPages: function(viewerUrls) {
+        if (!viewerUrls || viewerUrls.length === 0) return [];
+        var resolved = [];
+        var first = this._resolveViewerDetails(viewerUrls[0]);
+        if (first && first.imageUrl) resolved[0] = first.imageUrl;
+
+        // E-Hentai's showpage API returns the same #img markup as a viewer
+        // page. The host limits each batch to 32 in-flight requests; keeping
+        // that boundary here also avoids an oversized JavaScript result.
+        if (first && first.showkey && typeof bridge.httpPostBatch === "function") {
+            for (var start = 1; start < viewerUrls.length; start += 32) {
+                var end = Math.min(start + 32, viewerUrls.length);
+                var urls = [], bodies = [], indexes = [];
+                for (var i = start; i < end; i++) {
+                    var parts = this._viewerParts(viewerUrls[i]);
+                    if (!parts) continue;
+                    urls.push("https://api.e-hentai.org/api.php");
+                    bodies.push(JSON.stringify({
+                        method: "showpage",
+                        gid: parts.gid,
+                        page: parts.page,
+                        imgkey: parts.imgkey,
+                        showkey: first.showkey
+                    }));
+                    indexes.push(i);
+                }
+                if (!urls.length) continue;
+                try {
+                    var raw = bridge.httpPostBatch(urls, bodies, {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "Referer": viewerUrls[0]
+                    });
+                    var responses = JSON.parse(raw || "[]");
+                    for (var r = 0; r < responses.length && r < indexes.length; r++) {
+                        var imageUrl = this._showPageImageUrl(responses[r]);
+                        if (imageUrl) resolved[indexes[r]] = imageUrl;
+                    }
+                } catch(e) {
+                    bridge.log("E-Hentai showpage batch failed: " + e);
+                }
+            }
+        }
+
+        var pages = [];
+        for (var index = 0; index < viewerUrls.length; index++) {
+            var imageUrl = resolved[index] || this._resolveViewerImage(viewerUrls[index]);
+            if (!imageUrl) continue;
+            pages.push(new Page(pages.length, viewerUrls[index], this._imageRequestUrl(imageUrl, viewerUrls[index])));
+        }
+        return pages;
+    },
+
+    _viewerParts: function(pageUrl) {
+        var match = String(pageUrl || "").match(/\/s\/([^\/?#]+)\/(\d+)-(\d+)/);
+        if (!match) return null;
+        return { imgkey: match[1], gid: parseInt(match[2]), page: parseInt(match[3]) };
+    },
+
+    _showPageImageUrl: function(raw) {
+        try {
+            var response = typeof raw === "string" ? JSON.parse(raw) : raw;
+            var markup = response && response.i3 ? String(response.i3) : "";
+            var match = markup.match(/<img\b[^>]*\bid=["']img["'][^>]*\bsrc=["']([^"']+)/i);
+            if (!match) match = markup.match(/<img\b[^>]*\bsrc=["']([^"']+)["'][^>]*\bid=["']img["']/i);
+            return match ? this._absoluteUrl(this._decodeHtml(match[1])) : null;
+        } catch(e) {
+            return null;
+        }
+    },
+
+    _imageRequestUrl: function(imageUrl, viewerUrl) {
+        if (!imageUrl) return null;
+        return imageUrl + "#Referer=" + encodeURIComponent(viewerUrl || this.baseUrl + "/");
     },
 
     // ======== Filters (Advanced Search) ========

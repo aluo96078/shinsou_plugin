@@ -12,7 +12,7 @@ var source = {
   htmlBaseUrl: "https://www.wenku8.net",
   supportsLogin: true,
   supportsLatest: true,
-  supportsFavorites: true,
+  supportsFavorites: false,
   _lastLoginRequestAt: 0,
   _appverCache: "",
   _appverMinute: 0,
@@ -86,20 +86,13 @@ var source = {
       { id: "rank:goodnum", title: "總收藏榜", group: "排行榜" },
       { id: "rank:size", title: "字數排行", group: "排行榜" },
       { id: "article:0", title: "全部作品", group: "作品列表" },
-      { id: "article:1", title: "完結作品", group: "作品列表" },
-      { id: "bookcase", title: "我的收藏庫", group: "個人" }
+      { id: "article:1", title: "完結作品", group: "作品列表" }
     ].concat(this.fallbackTagOptions());
   },
 
   browse: function(optionId, page) {
     var id = String(optionId || "");
     var currentPage = page || 1;
-    if (id === "bookcase") {
-      if (currentPage > 1) return [];
-      var bookcaseResponse = this.relay("action=bookcase&do=list&t=" + this.languageFlag());
-      if (this.handleAuth(bookcaseResponse, "收藏庫需要登入，登入可能已失效。")) return [];
-      return this.parseBookcase(bookcaseResponse);
-    }
     if (id.indexOf("rank:") === 0) return this.list(id.substring(5), currentPage, false);
     if (id === "article:0" || id === "article:1") return this.browseHtmlArticle(id.substring(8), currentPage);
     if (id.indexOf("tag:") === 0) return this.browseTag(id, currentPage);
@@ -231,15 +224,6 @@ var source = {
     return /challenge-form|cf_chl_|Just a moment|Checking your browser|Enable JavaScript and cookies|Attention Required|Sorry, you have been blocked/i.test(String(html || ""));
   },
 
-  favorite: function(book) {
-    var aid = this.aidFromText(book && book.url);
-    if (!aid) return false;
-    var response = this.relay("action=bookcase&do=add&aid=" + aid);
-    if (this.handleAuth(response, "收藏書籍需要登入，登入可能已失效。")) return false;
-    var status = this.statusCode(response);
-    return status === 1 || status === 5;
-  },
-
   chapters: function(book) {
     var aid = this.aidFromText(book && book.url);
     if (!aid) return [];
@@ -317,25 +301,6 @@ var source = {
     }
     var infos = this.bookInfoBatch(aids);
     for (var i = 0; i < aids.length; i++) rows.push(this.toBook(aids[i], infos[aids[i]] || {}));
-    return rows;
-  },
-
-  parseBookcase: function(xml) {
-    var rows = [];
-    var seen = {};
-    var aids = [];
-    var match;
-    var pattern = /<book\b[^>]*\baid\s*=\s*["'](\d+)["'][^>]*\/?\s*>/gi;
-    while ((match = pattern.exec(String(xml || ""))) !== null) {
-      var aid = match[1];
-      if (seen[aid]) continue;
-      seen[aid] = true;
-      aids.push(aid);
-    }
-    var infos = this.bookInfoBatch(aids);
-    for (var i = 0; i < aids.length; i++) {
-      rows.push(this.toBook(aids[i], infos[aids[i]] || {}));
-    }
     return rows;
   },
 
@@ -722,10 +687,6 @@ var source = {
 
   target.getLatestUpdates = function(page) {
     return legacyPage(target.latest(pageNumber(page)));
-  };
-
-  target.getFavoriteManga = function(page) {
-    return legacyPage(target.browse("bookcase", pageNumber(page)), false);
   };
 
   target.getSearchManga = function(page, query, filters) {

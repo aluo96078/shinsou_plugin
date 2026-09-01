@@ -1,13 +1,12 @@
 /*
- * Linovelib / 嗶哩輕小說 content v2 package.
+ * BiliManga / 嗶哩漫畫 Shinsou content v2 package.
  *
- * BiliManga is published separately as zh.bilimanga.manga so it can use the
- * generic Shinsou manga detail and reader flow.  This reviewed ShuYue package
- * intentionally retains only Linovelib plain-text content.
+ * This package intentionally uses the generic legacy Shinsou manga contract,
+ * matching Bika's host path for catalogue, details, chapters and image pages.
  */
-var __shinsouExtensionV2 = {"contractVersion":2,"contentContract":"extension-content-v2","packageId":"zh.bilimanga","contentType":"novel","contentKinds":["PLAIN_TEXT"],"systemEvents":{"protocol":"dev.shinsou.system","minVersion":1,"maxVersion":1,"required":["command.auth.login.request"],"optional":[]},"requestedHostPermissions":["REQUEST_LOGIN_UI"]};
+var __shinsouExtensionV2 = {"contractVersion":2,"contentContract":"extension-content-v2","packageId":"zh.bilimanga.manga","contentType":"manga","contentKinds":["IMAGE_SEQUENCE"],"systemEvents":{"protocol":"dev.shinsou.system","minVersion":1,"maxVersion":1,"required":["command.auth.login.request"],"optional":[]},"requestedHostPermissions":["REQUEST_LOGIN_UI"]};
 
-var BiliMangaShared = {
+var BiliManga = {
   pageNumber: function(value) {
     var number = Number(value);
     return isFinite(number) && number >= 0 ? Math.floor(number) + 1 : 1;
@@ -63,12 +62,6 @@ var BiliMangaShared = {
       .replace(/\n[ \t]+/g, "\n")
       .replace(/\n{3,}/g, "\n\n")
       .trim();
-  },
-
-  attr: function(tag, name) {
-    var pattern = new RegExp("\\b" + this.escapeRegExp(name) + "\\s*=\\s*[\\\"']([^\\\"']*)[\\\"']", "i");
-    var match = pattern.exec(String(tag || ""));
-    return match ? this.decodeEntities(match[1]).trim() : "";
   },
 
   absolute: function(value, baseUrl) {
@@ -127,7 +120,7 @@ var BiliMangaShared = {
       }
     } catch (error) {
       if (typeof bridge !== "undefined" && bridge && typeof bridge.log === "function") {
-        try { bridge.log("zh.bilimanga request failed: " + error); } catch (ignored) {}
+        try { bridge.log("zh.bilimanga.manga request failed: " + error); } catch (ignored) {}
       }
     }
     return "";
@@ -149,7 +142,7 @@ var BiliMangaShared = {
       }
     } catch (error) {
       if (typeof bridge !== "undefined" && bridge && typeof bridge.log === "function") {
-        try { bridge.log("zh.bilimanga POST failed: " + error); } catch (ignored) {}
+        try { bridge.log("zh.bilimanga.manga POST failed: " + error); } catch (ignored) {}
       }
     }
     return "";
@@ -167,10 +160,6 @@ var BiliMangaShared = {
 
   isLoggedIn: function(html) {
     var text = String(html || "");
-    // The current Linovelib/BiliManga mobile header replaces the guest
-    // /login.php link with an account-avatar link to /user.php.  The public
-    // footer always contains /bookcase.php, so that link alone is not proof of
-    // authentication.
     return /href\s*=\s*["'][^"']*\/user\.php(?:[?#][^"']*)?["']/i.test(text)
       || /login\.php\?do=logout|logout(?:\.php)?|退出(?:登入|登錄|登录)|登出|登入成功|登錄成功|登录成功/i.test(text);
   },
@@ -201,9 +190,7 @@ var BiliMangaShared = {
       .split(/[\r\n。.!?]+/);
     for (var i = 0; i < fragments.length; i++) {
       var candidate = this.safeLoginMessage(fragments[i], username, password);
-      if (candidate && candidate.length <= 300 && this.isAuthenticationFailureMessage(candidate)) {
-        return candidate;
-      }
+      if (candidate && candidate.length <= 300 && this.isAuthenticationFailureMessage(candidate)) return candidate;
     }
     return "";
   },
@@ -216,10 +203,6 @@ var BiliMangaShared = {
       var markedMessage = this.authenticationFailureFragment(match[2], username, password);
       if (markedMessage) return markedMessage;
     }
-
-    // Only accept a short authentication-failure sentence from otherwise unstructured
-    // responses. Splitting at block boundaries prevents an unrelated site announcement from
-    // being joined to a login form elsewhere in the document.
     return this.authenticationFailureFragment(text, username, password);
   },
 
@@ -227,7 +210,6 @@ var BiliMangaShared = {
     var now = new Date().getTime();
     var last = Number(sourceObject && sourceObject._lastLoginRequestAt || 0);
     if (isFinite(last) && now - last < 10000) return true;
-
     var message = String(reason || "此來源需要登入才能繼續。");
     try {
       if (typeof bridge !== "undefined" && bridge) {
@@ -265,9 +247,6 @@ var BiliMangaShared = {
     if (!user || !secret) return { loggedIn: false, errorMessage: fallback };
 
     var loginUrl = sourceObject.baseUrl + "/login.php";
-    // A browser-completed member login can be imported into the host cookie jar even when
-    // Cloudflare binds its clearance to the browser's TLS fingerprint. Check that session on the
-    // public home page before attempting the protected POST endpoint.
     var existingSession = this.request(sourceObject, sourceObject.baseUrl + "/", {
       "Referer": loginUrl
     }, null);
@@ -276,9 +255,6 @@ var BiliMangaShared = {
       return { loggedIn: true };
     }
 
-    // Keep this identical to the Linovelib member flow: submit the site's own
-    // form directly and let the host network layer retain Set-Cookie headers.
-    // BiliManga's submit button has no value attribute, so submit is empty.
     var body = [
       "username=" + this.encode(user),
       "password=" + this.encode(secret),
@@ -299,13 +275,8 @@ var BiliMangaShared = {
         errorMessage: "網站登入端點受 Cloudflare 瀏覽器指紋保護。請開啟「Web 驗證／Cloudflare」，在同一視窗完成網站會員登入，看到會員頁後按「Import cookies」，再回來按登入。"
       };
     }
-    if (this.isLoginPage(response)) {
-      return { loggedIn: false, errorMessage: responseMessage || fallback };
-    }
+    if (this.isLoginPage(response)) return { loggedIn: false, errorMessage: responseMessage || fallback };
 
-    // POST redirects are followed by the host transport. Some deployments
-    // return a generic success page without the logout link, so verify the
-    // resulting session with the public home page as the novel source does.
     var account = this.request(sourceObject, sourceObject.baseUrl + "/", {
       "Referer": loginUrl
     }, null);
@@ -338,12 +309,6 @@ var BiliMangaShared = {
     var pattern = new RegExp("<([a-z0-9]+)\\b[^>]*class=[\\\"'][^\\\"']*\\b" + this.escapeRegExp(className) + "\\b[^\\\"']*[\\\"'][^>]*>([\\s\\S]*?)<\\/\\1>", "i");
     var match = pattern.exec(String(block || ""));
     return match ? this.cleanText(match[2]) : "";
-  },
-
-  elementText: function(block, tagName, className) {
-    var pattern = new RegExp("<" + tagName + "\\b[^>]*class=[\\\"'][^\\\"']*\\b" + this.escapeRegExp(className) + "\\b[^\\\"']*[\\\"'][^>]*>([\\s\\S]*?)<\\/" + tagName + ">", "i");
-    var match = pattern.exec(String(block || ""));
-    return match ? this.cleanText(match[1]) : "";
   },
 
   firstText: function(block, patterns) {
@@ -401,129 +366,81 @@ var BiliMangaShared = {
       }
     }
     return 0;
-  },
-
-  readParam: function(html, name) {
-    var pattern = new RegExp("\\b" + this.escapeRegExp(name) + "\\s*:\\s*['\\\"]([^'\\\"]*)['\\\"]", "i");
-    var match = pattern.exec(String(html || ""));
-    return match ? this.decodeEntities(match[1]) : "";
-  },
-
-  chapterKey: function(url, kind) {
-    var pattern = kind === "novel"
-      ? /\/novel\/\d+\/([^/?#]+)\.html/i
-      : /\/read\/\d+\/([^/?#]+)\.html/i;
-    var match = pattern.exec(String(url || ""));
-    if (!match) return "";
-    return match[1].replace(/_\d+$/, "");
-  },
-
-  sameChapter: function(first, second, kind) {
-    var a = this.chapterKey(first, kind);
-    var b = this.chapterKey(second, kind);
-    return !!a && !!b && a === b;
-  },
-
-  novelContent: function(html) {
-    var match = /<div\b[^>]*id=["']acontent["'][^>]*>([\s\S]*?)<\/div>/i.exec(String(html || ""));
-    return match ? this.cleanContent(match[1]) : "";
-  },
-
-  novelText: function(sourceObject, chapter) {
-    var current = this.absolute(chapter && chapter.url, sourceObject.baseUrl);
-    var seen = {};
-    var chunks = [];
-    for (var i = 0; i < 32 && current; i++) {
-      if (seen[current]) break;
-      seen[current] = true;
-      var html = this.request(sourceObject, current, null, "小說章節內容需要登入才能閱讀。");
-      if (!html) break;
-      var content = this.novelContent(html);
-      if (content) chunks.push(content);
-
-      var next = this.readParam(html, "url_next");
-      if (!next) {
-        var prerender = /<link\b[^>]*rel=["']prerender["'][^>]*href=["']([^"']+)["']/i.exec(html);
-        next = prerender ? prerender[1] : "";
-      }
-      next = this.absolute(next, current);
-      if (!next || !this.sameChapter(current, next, "novel")) break;
-      current = next;
-    }
-    return chunks.join("\n\n");
   }
 };
 
-function novelBook(sourceObject, id, block, url) {
-  var tags = BiliMangaShared.tagTexts(block);
-  var title = BiliMangaShared.firstText(block, [
+function mangaBook(sourceObject, block, url) {
+  var tags = BiliManga.tagTexts(block);
+  var title = BiliManga.firstText(block, [
     /<h1\b[^>]*class=["'][^"']*\bbook-title\b[^"']*["'][^>]*>([\s\S]*?)<\/h1>/i,
     /<h[2-4]\b[^>]*class=["'][^"']*\bbook-title\b[^"']*["'][^>]*>([\s\S]*?)<\/h[2-4]>/i,
     /<figcaption\b[^>]*>([\s\S]*?)<\/figcaption>/i,
     /<img\b[^>]*alt=["']([^"']+)["'][^>]*>/i
   ]);
   if (!title) return null;
-  var author = (BiliMangaShared.classText(block, "authorname") || BiliMangaShared.classText(block, "book-author")).replace(/^作者\s*[:：]?\s*/, "");
-  var description = BiliMangaShared.classText(block, "book-intro") || BiliMangaShared.classText(block, "book-desc");
-  var status = BiliMangaShared.status(block);
+  var author = BiliManga.classText(block, "authorname").replace(/^作者\s*[:：]?\s*/, "");
+  if (!author) author = BiliManga.classText(block, "book-author").replace(/^作者\s*[:：]?\s*/, "");
+  var artist = BiliManga.classText(block, "illname").replace(/^作者\s*[:：]?\s*/, "");
+  var description = BiliManga.classText(block, "book-desc") || BiliManga.classText(block, "book-intro");
   return {
     sourceId: sourceObject.id,
     url: url,
     title: title,
     author: author || null,
-    artist: null,
+    artist: artist || author || null,
     description: description || null,
     genre: tags.length ? tags.join(" ") : null,
-    status: status,
-    thumbnailUrl: BiliMangaShared.image(block, sourceObject.baseUrl) || null,
+    status: BiliManga.status(block),
+    thumbnailUrl: BiliManga.image(block, sourceObject.baseUrl) || null,
     initialized: true
   };
 }
 
-function parseNovelList(sourceObject, html, pageNumber) {
+function parseMangaList(sourceObject, html, pageNumber) {
   var results = [];
   var seen = {};
-  var pattern = /<a\b[^>]*href=["']([^"']*\/novel\/(\d+)\.html[^"']*)["'][^>]*>[\s\S]*?<\/a>/gi;
+  var pattern = /<a\b[^>]*href=["']([^"']*\/detail\/(\d+)\.html[^"']*)["'][^>]*>[\s\S]*?<\/a>/gi;
   var match;
   while ((match = pattern.exec(String(html || ""))) !== null) {
+    if (!/class=["'][^"']*\b(?:book-layout|module-slide-a)\b/i.test(match[0])) continue;
     var id = match[2];
     if (!id || seen[id]) continue;
-    var url = BiliMangaShared.absolute(match[1], sourceObject.baseUrl);
-    var book = novelBook(sourceObject, id, match[0], url);
+    var url = BiliManga.absolute(match[1], sourceObject.baseUrl);
+    var book = mangaBook(sourceObject, match[0], url);
     if (book) {
       results.push(book);
       seen[id] = true;
     }
   }
-  return BiliMangaShared.result(results, BiliMangaShared.hasNextPage(html, pageNumber, results.length));
+  return BiliManga.result(results, BiliManga.hasNextPage(html, pageNumber, results.length));
 }
 
-function novelDetails(sourceObject, id, html, url) {
-  var book = novelBook(sourceObject, id, html, url);
+function mangaDetails(sourceObject, html, url) {
+  var book = mangaBook(sourceObject, html, url);
   if (!book) return null;
   var content = /<content\b[^>]*>([\s\S]*?)<\/content>/i.exec(String(html || ""));
-  var author = BiliMangaShared.classText(html, "authorname").replace(/^作者\s*[:：]?\s*/, "");
-  var illustrator = BiliMangaShared.classText(html, "illname").replace(/^作者\s*[:：]?\s*/, "");
+  var author = BiliManga.classText(html, "authorname").replace(/^作者\s*[:：]?\s*/, "");
+  var illustrator = BiliManga.classText(html, "illname").replace(/^作者\s*[:：]?\s*/, "");
   book.author = author || book.author;
-  book.artist = illustrator || null;
-  book.description = content ? BiliMangaShared.cleanContent(content[1]) : book.description;
-  book.status = BiliMangaShared.status(html);
-  book.genre = BiliMangaShared.tagTexts(html).join(" ") || book.genre;
-  book.thumbnailUrl = BiliMangaShared.image(html, sourceObject.baseUrl) || book.thumbnailUrl;
+  book.artist = illustrator || book.artist;
+  book.description = content ? BiliManga.cleanContent(content[1]) : book.description;
+  book.status = BiliManga.status(html);
+  book.genre = BiliManga.tagTexts(html).join(" ") || book.genre;
+  book.thumbnailUrl = BiliManga.image(html, sourceObject.baseUrl) || book.thumbnailUrl;
   return book;
 }
 
-function novelId(value) {
-  var match = /\/novel\/(\d+)(?:\.html|\/)/i.exec(String(value || ""));
+function mangaId(value) {
+  var match = /\/(?:detail|read)\/(\d+)(?:\.html|\/)/i.exec(String(value || ""));
   return match ? match[1] : (/^\d+$/.test(String(value || "").trim()) ? String(value).trim() : "");
 }
 
-function novelBookUrl(sourceObject, id) {
-  return sourceObject.baseUrl + "/novel/" + id + ".html";
+function mangaBookUrl(sourceObject, id) {
+  return sourceObject.baseUrl + "/detail/" + id + ".html";
 }
 
-function novelCatalogUrl(sourceObject, id) {
-  return sourceObject.baseUrl + "/novel/" + id + "/catalog";
+function mangaCatalogUrl(sourceObject, id) {
+  return sourceObject.baseUrl + "/read/" + id + "/catalog";
 }
 
 function chapterDate(html) {
@@ -532,56 +449,99 @@ function chapterDate(html) {
   return new Date(parseInt(match[1], 10), parseInt(match[2], 10) - 1, parseInt(match[3], 10)).getTime();
 }
 
-function parseNovelChapters(sourceObject, id, html) {
-  var text = String(html || "");
-  var result = [];
-  var hasCatalogVolumes = /<div\b[^>]*class=["'][^"']*\bcatalog-volume\b[^"']*["']/i.test(text);
-  var pattern = hasCatalogVolumes
-    ? /<div\b[^>]*class=["'][^"']*\bcatalog-volume\b[^"']*["'][^>]*>|<a\b[^>]*href=["'][^"']+["'][^>]*>[\s\S]*?<\/a>/gi
-    : /<h[1-6]\b[^>]*>[\s\S]*?<\/h[1-6]>|<a\b[^>]*href=["'][^"']+["'][^>]*>[\s\S]*?<\/a>/gi;
+function predictedMangaChapterUrl(sourceObject, id, entries, index) {
+  var before = entries[index - 1] && /\/read\/\d+\/(\d+)\.html/i.exec(entries[index - 1].url);
+  var after = entries[index + 1] && /\/read\/\d+\/(\d+)\.html/i.exec(entries[index + 1].url);
+  var chapter;
+  if (before) chapter = parseInt(before[1], 10) + 1;
+  else if (after) chapter = parseInt(after[1], 10) - 1;
+  if (!isFinite(chapter) || chapter <= 0) return "";
+  return sourceObject.baseUrl + "/read/" + id + "/" + chapter + ".html";
+}
+
+function parseMangaChapters(sourceObject, id, html) {
+  var entries = [];
+  var pattern = /<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
   var match;
-  var volumeNumber = 0;
-  while ((match = pattern.exec(text)) !== null) {
-    var token = match[0];
-    if (/^<div\b/i.test(token)) {
-      volumeNumber += 1;
-      continue;
-    }
-    if (/^<h[1-6]\b/i.test(token)) {
-      if (/(?:卷|volume)/i.test(BiliMangaShared.cleanText(token))) volumeNumber += 1;
-      continue;
-    }
-    if (!/class=["'][^"']*\bchapter-li-a\b[^"']*["']/i.test(token)) continue;
-    var href = /href=["']([^"']+)["']/i.exec(token);
-    var body = /<a\b[^>]*>([\s\S]*?)<\/a>/i.exec(token);
-    var url = BiliMangaShared.absolute(href && href[1], sourceObject.baseUrl);
-    var name = BiliMangaShared.cleanText(body && body[1]);
-    if (!url || !name) continue;
-    if (volumeNumber > 0) name = "第" + volumeNumber + "卷 · " + name;
-    result.push({ sourceId: sourceObject.id, url: url, name: name, scanlator: null, dateUpload: chapterDate(html), chapterNumber: result.length + 1 });
+  while ((match = pattern.exec(String(html || ""))) !== null) {
+    if (!/class=["'][^"']*\bchapter-li-a\b[^"']*["']/i.test(match[0])) continue;
+    var href = /javascript:/i.test(match[1]) ? match[1] : BiliManga.absolute(match[1], sourceObject.baseUrl);
+    entries.push({ url: href, name: BiliManga.cleanText(match[2]) });
   }
-  // Linovelib exposes the catalogue in story order (oldest first), including
-  // across volume boundaries. Prefixing the DOM-positioned volume number makes
-  // repeated labels such as "插圖" and "序章" unambiguous without reordering.
+  var result = [];
+  for (var i = 0; i < entries.length; i++) {
+    var entry = entries[i];
+    if (!entry.url || !entry.name) continue;
+    if (/javascript:/i.test(entry.url)) entry.url = predictedMangaChapterUrl(sourceObject, id, entries, i);
+    if (!entry.url) continue;
+    result.push({
+      sourceId: sourceObject.id,
+      url: entry.url,
+      name: entry.name,
+      scanlator: null,
+      dateUpload: chapterDate(html),
+      chapterNumber: result.length + 1
+    });
+  }
   return result;
 }
 
-var novelSortCodes = ["lastupdate", "postdate", "weekvisit", "monthvisit", "allvisit", "goodnum"];
-var novelSortLabels = ["最新更新", "最新入庫", "週點擊", "月點擊", "總點擊", "收藏榜"];
-var novelTagIds = ["0", "15", "61", "96", "18", "13", "14", "16", "17", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60"];
-var novelTagLabels = ["全部", "奇幻", "冒險", "魔法", "戰鬥", "愛情", "校園", "青春", "科幻", "懸疑", "推理", "治癒", "日常", "搞笑", "後宮", "異世界", "轉生", "龍傲天", "黑暗", "大逃殺", "犯罪", "歷史", "武俠", "都市", "職場", "群像", "女性視角", "百合", "耽美", "輕文學", "音樂", "美食", "旅行", "病嬌", "青梅竹馬", "妹妹", "大小姐", "人外", "末日", "超自然", "遊戲", "異能", "戰爭", "經營", "歡樂", "溫馨", "蘿莉", "正太", "性轉", "偽娘", "獵奇", "神鬼", "偵探", "冒險譚", "校園戀愛", "戀愛喜劇", "日本輕小說", "電擊文庫", "角川文庫", "GA文庫", "MF文庫", "富士見文庫"];
+function imagePages(sourceObject, chapter) {
+  var url = BiliManga.absolute(chapter && chapter.url, sourceObject.baseUrl);
+  var html = BiliManga.request(sourceObject, url, { "Cookie": "night=1" }, "漫畫章節內容需要登入才能閱讀。");
+  if (!html) return [];
+  var container = /<(?:div|section)\b[^>]*class=["'][^"']*\bimagecontent\b[^"']*["'][^>]*>([\s\S]*?)<\/(?:div|section)>/i.exec(html);
+  var block = container ? container[1] : "";
+  if (!block) {
+    var standalone = [];
+    var standalonePattern = /<img\b[^>]*class=["'][^"']*\bimagecontent\b[^"']*["'][^>]*>/gi;
+    var standaloneMatch;
+    while ((standaloneMatch = standalonePattern.exec(html)) !== null) standalone.push(standaloneMatch[0]);
+    block = standalone.join("\n");
+  }
+  var pattern = /<img\b[^>]*(?:data-src|data-original|src)=["']([^"']+)["'][^>]*>/gi;
+  var pages = [];
+  var seen = {};
+  var match;
+  while ((match = pattern.exec(block || "")) !== null) {
+    var imageUrl = BiliManga.absolute(match[1], url);
+    if (!imageUrl || seen[imageUrl] || /book-cover-no\.svg|transparent\.gif|spacer\.(?:gif|png)/i.test(imageUrl)) continue;
+    seen[imageUrl] = true;
+    // Referer is carried as bounded legacy page metadata. User-Agent is supplied by the host so
+    // each device uses the same identity as its own browser/Web Challenge session.
+    var requestUrl = imageUrl + "#Referer=" + BiliManga.encode(sourceObject.baseUrl);
+    pages.push({ index: pages.length, url: requestUrl, imageUrl: requestUrl });
+  }
+  return pages;
+}
 
-var novelSource = {
-  id: "zh.bilimanga.novel",
-  name: "嗶哩輕小說（Linovelib）",
+var mangaThemeLabels = ["不限", "奇幻", "冒險", "異世界", "龍傲天", "魔法", "仙俠", "戰爭", "熱血", "戰鬥", "競技", "懸疑", "驚悚", "獵奇", "神鬼", "偵探", "校園", "日常", "JK", "JC", "青梅竹馬", "妹妹", "大小姐", "女兒", "愛情", "耽美", "百合", "NTR", "後宮", "職場", "經營", "犯罪", "旅行", "群像", "女性視角", "歷史", "武俠", "東方", "勵志", "宅系", "科幻", "機戰", "遊戲", "異能", "腦洞", "病嬌", "人外", "復仇", "鬥智", "惡役", "間諜", "治癒", "歡樂", "萌系", "末日", "大逃殺", "音樂", "美食", "性轉", "偽娘", "穿越", "童話", "轉生", "黑暗", "溫馨", "超自然", "青春"];
+var mangaTypeLabels = ["全部", "奇幻冒險", "戰鬥熱血", "懸疑驚悚", "校園青春", "愛情浪漫", "職場都市", "歷史文化", "科幻未來", "奇異幻想", "治癒溫馨", "末日生存", "其他分類"];
+var mangaRegionLabels = ["不限", "日本", "韓國", "港台", "歐美", "大陸"];
+var mangaYearLabels = ["全部", "2026年", "2025年", "2024年", "2023年", "2022年", "2021年", "2020年", "2019年", "2018年", "2017年", "2016年", "2015年", "2014年", "2013年", "2012年", "2011年", "2010年", "00年代", "90年代", "80年代", "更早"];
+var mangaSortLabels = ["最近更新", "月點擊", "周點擊", "月推薦", "周推薦", "月鮮花", "周鮮花", "字數", "收藏數", "最新入庫"];
+var mangaAwardLabels = ["不限", "2027", "2026", "2025", "2024", "2023", "2022", "2021", "2020", "2019", "2018", "2017", "2016", "2015", "2014", "2013", "2012", "2011", "2010", "2009", "2008", "2007", "2006"];
+var mangaAnimeLabels = ["不限", "已動畫化", "未動畫化"];
+var mangaNovelLabels = ["不限", "輕改漫畫", "普通漫畫"];
+var mangaStatusLabels = ["不限", "連載", "完結"];
+var mangaTimeLabels = ["不限", "三日內", "七日內", "半月內", "一月內"];
+var mangaSortCodes = ["lastupdate", "monthvisit", "weekvisit", "monthvote", "weekvote", "monthflower", "weekflower", "words", "goodnum", "postdate"];
+var mangaThemeCodes = mangaThemeLabels.map(function(_, index) { return String(index); });
+var mangaTypeCodes = mangaTypeLabels.map(function(_, index) { return String(index); });
+var mangaRegionCodes = ["0", "1", "2", "3", "4", "5"];
+var mangaYearCodes = ["0", "2026", "2025", "2024", "2023", "2022", "2021", "2020", "2019", "2018", "2017", "2016", "2015", "2014", "2013", "2012", "2011", "2010", "2000", "1990", "1980", "1970"];
+var mangaAwardCodes = ["0", "2027", "2026", "2025", "2024", "2023", "2022", "2021", "2020", "2019", "2018", "2017", "2016", "2015", "2014", "2013", "2012", "2011", "2010", "2009", "2008", "2007", "2006"];
+var mangaAnimeCodes = ["0", "1", "2"];
+var mangaNovelCodes = ["0", "1", "2"];
+var mangaStatusCodes = ["0", "1", "2"];
+var mangaTimeCodes = ["0", "1", "2", "3", "4"];
+
+var source = {
+  id: "7289707411592168382",
+  name: "嗶哩漫畫（BiliManga）",
   lang: "zh",
-  baseUrl: "https://tw.linovelib.com",
-  // The public home page is large and injects Cloudflare's JavaScript detector. JavaFX WebKit
-  // can remain in RUNNING state on that document even though the dedicated member page loads
-  // immediately, so start the isolated browser at the smaller same-origin login endpoint.
-  webChallengeUrl: "https://tw.linovelib.com/login.php",
-  contentType: "novel",
-  contentKinds: ["PLAIN_TEXT"],
+  baseUrl: "https://www.bilimanga.net",
+  webChallengeUrl: "https://www.bilimanga.net/login.php",
   supportsLatest: true,
   supportsLogin: true,
   supportsFavorites: false,
@@ -589,98 +549,101 @@ var novelSource = {
   headers: {
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
     "Accept-Language": "zh-TW,zh-CN;q=0.9,en;q=0.8",
-    "Referer": "https://tw.linovelib.com",
+    "Referer": "https://www.bilimanga.net",
+    "Cookie": "night=1",
     "Cache-Control": "no-cache"
   },
 
   login: function(username, password) {
-    return BiliMangaShared.login(this, username, password);
+    return BiliManga.login(this, username, password);
   },
 
   logout: function() {
-    BiliMangaShared.logout(this);
+    BiliManga.logout(this);
   },
 
   getPopularManga: function(page) {
-    var current = BiliMangaShared.pageNumber(page);
-    var url = this.baseUrl + "/topfull/weekvisit/" + current + ".html";
-    return parseNovelList(this, BiliMangaShared.request(this, url, null, "小說排行榜需要登入才能載入。"), current);
+    var current = BiliManga.pageNumber(page);
+    return parseMangaList(this, BiliManga.request(this, this.baseUrl + "/top/weekvisit/" + current + ".html", { "Cookie": "night=1" }, "漫畫排行榜需要登入才能載入。"), current);
   },
 
   getLatestUpdates: function(page) {
-    var current = BiliMangaShared.pageNumber(page);
-    var url = this.baseUrl + "/top/lastupdate/" + current + ".html";
-    var html = BiliMangaShared.request(this, url, null, "小說更新列表需要登入才能載入。");
-    if (!html) html = BiliMangaShared.request(this, this.baseUrl + "/topfull/postdate/" + current + ".html", null, "小說更新列表需要登入才能載入。");
-    return parseNovelList(this, html, current);
+    var current = BiliManga.pageNumber(page);
+    return parseMangaList(this, BiliManga.request(this, this.baseUrl + "/top/lastupdate/" + current + ".html", { "Cookie": "night=1" }, "漫畫更新列表需要登入才能載入。"), current);
   },
 
   getSearchManga: function(page, query, filters) {
-    var current = BiliMangaShared.pageNumber(page);
+    var current = BiliManga.pageNumber(page);
     var keyword = String(query || "").trim();
-    var directId = novelId(keyword);
-    if (directId && /^\d+$/.test(keyword)) {
-      var direct = this.getMangaDetails({ url: novelBookUrl(this, directId), title: keyword });
-      return BiliMangaShared.result(direct && direct.title ? [direct] : [], false);
-    }
-
     var url;
     if (keyword) {
-      url = this.baseUrl + "/search.php?keyword=" + BiliMangaShared.encode(keyword) + "&page=" + current;
-      var html = BiliMangaShared.request(this, url, null, "小說搜尋需要登入才能載入。");
-      var result = parseNovelList(this, html, current);
-      if (result.mangas.length) return result;
-      // Some deployments use the path form; keep it as a safe fallback.
-      url = this.baseUrl + "/search/" + BiliMangaShared.encode(keyword) + "_" + current + ".html";
-      return parseNovelList(this, BiliMangaShared.request(this, url, null, "小說搜尋需要登入才能載入。"), current);
-    }
-
-    var sortState = BiliMangaShared.filterState(filters, "排序");
-    var tagState = BiliMangaShared.filterState(filters, "小說類型");
-    var sort = novelSortCodes[sortState] || novelSortCodes[0];
-    if (tagState > 0 && novelTagIds[tagState]) {
-      var offset = current - 1;
-      url = this.baseUrl + "/wenku/" + sort + "_" + novelTagIds[tagState] + "_0_0_0_0_0_0_1_" + offset + ".html";
+      url = this.baseUrl + "/search/" + BiliManga.encode(keyword) + "_" + current + ".html";
     } else {
-      url = this.baseUrl + "/topfull/" + sort + "/" + current + ".html";
+      var theme = BiliManga.filterState(filters, "作品主題");
+      var type = BiliManga.filterState(filters, "作品分類");
+      var region = BiliManga.filterState(filters, "作品地區");
+      var year = BiliManga.filterState(filters, "發表年代");
+      var sort = BiliManga.filterState(filters, "排序方式");
+      var anime = BiliManga.filterState(filters, "是否動畫");
+      var novel = BiliManga.filterState(filters, "是否輕改");
+      var award = BiliManga.filterState(filters, "這本漫畫真厲害");
+      var status = BiliManga.filterState(filters, "連載狀態");
+      var time = BiliManga.filterState(filters, "更新時間");
+      url = this.baseUrl + "/filter/" +
+        (mangaSortCodes[sort] || mangaSortCodes[0]) + "_" +
+        (mangaThemeCodes[theme] || "0") + "_" +
+        (mangaStatusCodes[status] || "0") + "_" +
+        (mangaAnimeCodes[anime] || "0") + "_" +
+        (mangaRegionCodes[region] || "0") + "_" +
+        (mangaTypeCodes[type] || "0") + "_" +
+        (mangaTimeCodes[time] || "0") + "_" +
+        (mangaNovelCodes[novel] || "0") + "_" + current + "_0_" +
+        (mangaYearCodes[year] || "0") + "_" +
+        (mangaAwardCodes[award] || "0") + ".html";
     }
-    return parseNovelList(this, BiliMangaShared.request(this, url, null, "小說分類需要登入才能載入。"), current);
+    var html = BiliManga.request(this, url, { "Cookie": "night=1" }, keyword ? "漫畫搜尋需要登入才能載入。" : "漫畫分類需要登入才能載入。");
+    if (/\/detail\/\d+\.html/i.test(url)) {
+      var detailId = mangaId(url);
+      var detail = mangaDetails(this, html, mangaBookUrl(this, detailId));
+      return BiliManga.result(detail ? [detail] : [], false);
+    }
+    return parseMangaList(this, html, current);
   },
 
   getMangaDetails: function(manga) {
     var input = manga || {};
-    var id = novelId(input.url || input.title);
+    var id = mangaId(input.url || input.title);
     if (!id) return input;
-    var url = novelBookUrl(this, id);
-    var details = novelDetails(this, id, BiliMangaShared.request(this, url, null, "小說作品詳情需要登入才能載入。"), url);
+    var url = mangaBookUrl(this, id);
+    var details = mangaDetails(this, BiliManga.request(this, url, { "Cookie": "night=1" }, "漫畫作品詳情需要登入才能載入。"), url);
     return details || input;
   },
 
   getChapterList: function(manga) {
-    var id = novelId(manga && manga.url);
+    var id = mangaId(manga && manga.url);
     if (!id) return [];
-    var url = novelCatalogUrl(this, id);
-    return parseNovelChapters(this, id, BiliMangaShared.request(this, url, null, "小說章節列表需要登入才能載入。"));
+    return parseMangaChapters(this, id, BiliManga.request(this, mangaCatalogUrl(this, id), { "Cookie": "night=1" }, "漫畫章節列表需要登入才能載入。"));
   },
 
   getPageList: function(chapter) {
-    var input = chapter || {};
-    var text = BiliMangaShared.novelText(this, input);
-    if (!text) return [];
-    return [{ index: 0, url: String(input.url || ""), imageUrl: null, text: text, content: text }];
-  },
-
-  chapterText: function(chapter) {
-    return BiliMangaShared.novelText(this, chapter || {});
+    return imagePages(this, chapter || {});
   },
 
   getFilterList: function() {
     return [
-      { type: "select", name: "排序", values: novelSortLabels, state: 0 },
-      { type: "select", name: "小說類型", values: novelTagLabels, state: 0 }
+      { type: "header", name: "篩選條件（搜尋關鍵字時無效）" },
+      { type: "select", name: "作品主題", values: mangaThemeLabels, state: 0 },
+      { type: "select", name: "作品分類", values: mangaTypeLabels, state: 0 },
+      { type: "select", name: "作品地區", values: mangaRegionLabels, state: 0 },
+      { type: "select", name: "發表年代", values: mangaYearLabels, state: 0 },
+      { type: "select", name: "排序方式", values: mangaSortLabels, state: 0 },
+      { type: "select", name: "是否動畫", values: mangaAnimeLabels, state: 0 },
+      { type: "select", name: "是否輕改", values: mangaNovelLabels, state: 0 },
+      { type: "select", name: "這本漫畫真厲害", values: mangaAwardLabels, state: 0 },
+      { type: "select", name: "連載狀態", values: mangaStatusLabels, state: 0 },
+      { type: "select", name: "更新時間", values: mangaTimeLabels, state: 0 }
     ];
   }
 };
 
-var source = novelSource;
 source.v2 = __shinsouExtensionV2;

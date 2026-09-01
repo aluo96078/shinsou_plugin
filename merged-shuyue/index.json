@@ -2,6 +2,28 @@
   "format": "shinsou-unified-v1",
   "shinsou": [
     {
+      "id": "zh.bilimanga.manga",
+      "name": "嗶哩漫畫（BiliManga）",
+      "version": "1.0.0",
+      "versionCode": 1,
+      "lang": "zh",
+      "nsfw": 1,
+      "scriptUrl": "shinsou/plugins/zh.bilimanga.manga.js",
+      "iconUrl": null,
+      "description": "BiliManga 漫畫來源，使用 Shinsou 漫畫詳情與閱讀器。",
+      "sources": [
+        {
+          "name": "嗶哩漫畫（BiliManga）",
+          "lang": "zh",
+          "id": "7289707411592168382",
+          "baseUrl": "https://www.bilimanga.net",
+          "type": "manga"
+        }
+      ],
+      "type": "manga",
+      "contract": "shinsou"
+    },
+    {
       "id": "eh.ehentai",
       "name": "E-Hentai",
       "version": "1.1.7",
@@ -92,8 +114,8 @@
     {
       "id": "zh.bika",
       "name": "哔咔漫画",
-      "version": "1.0.4",
-      "versionCode": 5,
+      "version": "1.0.12",
+      "versionCode": 13,
       "lang": "zh",
       "nsfw": 1,
       "scriptUrl": "shinsou/plugins/zh.bika.js",
@@ -104,8 +126,11 @@
           "name": "哔咔漫画",
           "lang": "zh",
           "id": 8123456,
-          "baseUrl": "https://bikawebapp.com",
-          "type": "manga"
+          "baseUrl": "https://manhuabika.com",
+          "type": "manga",
+          "browserSessionOrigins": [
+            "https://picaapi.go2778.com"
+          ]
         }
       ],
       "type": "manga",
@@ -294,12 +319,12 @@
     {
       "id": "zh.wenku8.api",
       "name": "輕小說文庫",
-      "version": "1.0.4",
-      "versionCode": 5,
+      "version": "1.0.5",
+      "versionCode": 6,
       "lang": "zh",
       "nsfw": 0,
-      "scriptUrl": "shuyue/wenku8-api.js?v=1.0.4",
-      "description": "Wenku8 官方 relay 來源，支援登入、收藏庫、搜尋、排行榜、章節目錄與正文；建議使用此維護中的來源。",
+      "scriptUrl": "shuyue/wenku8-api.js?v=1.0.5",
+      "description": "Wenku8 官方 relay 來源，支援登入、搜尋、排行榜、章節目錄與正文；收藏只使用 Shinsou X 本地收藏庫。",
       "type": "novel",
       "sources": [
         {
@@ -309,7 +334,7 @@
           "baseUrl": "https://wenku8-relay.mewx.org/",
           "supportsLogin": true,
           "supportsLatest": true,
-          "supportsFavorites": true,
+          "supportsFavorites": false,
           "type": "novel"
         }
       ],
@@ -341,14 +366,14 @@
     },
     {
       "id": "zh.bilimanga",
-      "name": "嗶哩輕小說／漫畫（Linovelib + BiliManga）",
-      "version": "1.5.5",
-      "versionCode": 11,
+      "name": "嗶哩輕小說（Linovelib）",
+      "version": "1.6.0",
+      "versionCode": 12,
       "lang": "zh",
       "nsfw": 1,
-      "scriptUrl": "../plugins/zh.bilimanga.js?v=1.5.5",
-      "description": "Linovelib 小說與 BiliManga 漫畫雙來源套件。",
-      "type": "both",
+      "scriptUrl": "../plugins/zh.bilimanga.js?v=1.6.0",
+      "description": "Linovelib 輕小說來源；BiliManga 漫畫已拆分為獨立 Shinsou 套件。",
+      "type": "novel",
       "sources": [
         {
           "id": "zh.bilimanga.novel",
@@ -359,16 +384,6 @@
           "supportsLatest": true,
           "supportsFavorites": false,
           "type": "novel"
-        },
-        {
-          "id": "zh.bilimanga.manga",
-          "name": "嗶哩漫畫（BiliManga）",
-          "lang": "zh",
-          "baseUrl": "https://www.bilimanga.net",
-          "supportsLogin": true,
-          "supportsLatest": true,
-          "supportsFavorites": false,
-          "type": "manga"
         }
       ],
       "contract": "shuyue"

@@ -3,16 +3,16 @@
   "contractVersion": 2,
   "packageId": "zh.baozimh",
   "name": "包子漫画",
-  "version": "1.0.5",
-  "versionCode": 6,
+  "version": "1.0.6",
+  "versionCode": 7,
   "contract": "shinsou",
   "lang": "zh",
   "nsfw": false,
   "installable": true,
   "artifact": {
     "scriptUrl": "plugins/zh.baozimh.js",
-    "sha256": "a80b30a6cdc949d16a083b4c0970766c741686759251cbc4b0e90a1a82bed60f",
-    "byteSize": 18411
+    "sha256": "6dbafe5e7bc81fdf90a565e8a7f6dfd396de833cadfea6009530b95726e880e6",
+    "byteSize": 19793
   },
   "content": {
     "contract": "extension-content-v2",
