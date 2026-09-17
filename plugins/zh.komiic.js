@@ -35,11 +35,10 @@ var source = {
 
     getSearchManga: function(page, query, filters) {
         if (query && query.trim()) {
-            var keyword = query.trim().replace(/\\/g, '\\\\').replace(/"/g, '\\"');
-            var searchQuery = '{"query":"query { searchComicsAndAuthors(keyword: \\"' + keyword + '\\") { comics { id title status dateUpdated imageUrl authors { id name } categories { id name } } } }"}';
+            var keyword = JSON.stringify(query.trim());
+            var searchQuery = JSON.stringify({query: "query { searchComicsAndAuthors(keyword: " + keyword + ") { comics { id title status dateUpdated imageUrl authors { id name } categories { id name } } } }"});
 
-            var json = bridge.httpPost(this.apiUrl, searchQuery, this.headers);
-            if (!json || json.error) return new MangasPage([], false);
+            var json = this._requestGraphQL(searchQuery);
 
             try {
                 var resp = JSON.parse(json);
@@ -72,8 +71,8 @@ var source = {
             }
         }
 
-        var statusFilter = status ? ', status: "' + status + '"' : '';
-        var browseQuery = '{"query":"query { hotComics(pagination: {limit: 30, offset: ' + (page * 30) + ', orderBy: ' + orderBy + ', asc: false' + statusFilter + '}) { id title status dateUpdated imageUrl authors { id name } categories { id name } } }"}';
+        var statusFilter = status ? ", status: " + JSON.stringify(status) : "";
+        var browseQuery = JSON.stringify({query: "query { hotComics(pagination: {limit: 30, offset: " + (page * 30) + ", orderBy: " + orderBy + ", asc: false" + statusFilter + "}) { id title status dateUpdated imageUrl authors { id name } categories { id name } } }"});
 
         return this._fetchComicList(browseQuery);
     },
@@ -81,8 +80,7 @@ var source = {
     // ======== Fetch & Parse Comics ========
 
     _fetchComicList: function(query) {
-        var json = bridge.httpPost(this.apiUrl, query, this.headers);
-        if (!json || json.error) return new MangasPage([], false);
+        var json = this._requestGraphQL(query);
 
         try {
             var resp = JSON.parse(json);
@@ -133,8 +131,7 @@ var source = {
         var comicId = this._extractComicId(manga.url);
         var query = '{"query":"query { comicById(comicId: \\"' + comicId + '\\") { id title status dateUpdated imageUrl authors { id name } categories { id name } } }"}';
 
-        var json = bridge.httpPost(this.apiUrl, query, this.headers);
-        if (!json || json.error) return manga;
+        var json = this._requestGraphQL(query);
 
         try {
             var resp = JSON.parse(json);
@@ -193,8 +190,7 @@ var source = {
         var comicId = this._extractComicId(manga.url);
         var query = '{"query":"query { chaptersByComicId(comicId: \\"' + comicId + '\\") { id serial type dateCreated dateUpdated size } }"}';
 
-        var json = bridge.httpPost(this.apiUrl, query, this.headers);
-        if (!json || json.error) return [];
+        var json = this._requestGraphQL(query);
 
         try {
             var resp = JSON.parse(json);
@@ -236,8 +232,7 @@ var source = {
         // Use imageTickets API to get CDN URLs with auth tickets
         var query = '{"query":"query { imageTicketsByChapterId(chapterId: \\"' + chapterId + '\\") { url ticket kid width height } }"}';
 
-        var json = bridge.httpPost(this.apiUrl, query, this.headers);
-        if (!json || json.error) return [];
+        var json = this._requestGraphQL(query);
 
         try {
             var resp = JSON.parse(json);
@@ -268,6 +263,31 @@ var source = {
     },
 
     // ======== Helpers ========
+
+    // A failed API operation is not an empty catalogue/chapter. Keep remote messages
+    // and image tickets out of errors; the user can retry without losing source data.
+    _requestGraphQL: function(body) {
+        var response = bridge.httpPost(this.apiUrl, body, this.headers);
+        if (!response || response.error) throw new Error("Komiic API request failed; please retry.");
+        if (typeof response === "object" && typeof response.body === "string") response = response.body;
+        var parsed;
+        try { parsed = JSON.parse(response); }
+        catch (ignored) { throw new Error("Komiic API returned an invalid response; please retry."); }
+        var errors = parsed && parsed.errors;
+        if (Array.isArray(errors)) {
+            for (var i = 0; i < errors.length; i++) {
+                if (errors[i] && errors[i].extensions && errors[i].extensions.code === "QUOTA_EXCEEDED") {
+                    // A successful HTTP response can still refuse image tickets. Keep the
+                    // server's diagnostic private and expose only the host-owned guidance.
+                    throw new Error("SHINSOU_SOURCE_QUOTA_EXCEEDED");
+                }
+            }
+        }
+        if (!parsed || (parsed.errors && parsed.errors.length) || !parsed.data) {
+            throw new Error("Komiic API could not complete this operation; please retry.");
+        }
+        return response;
+    },
 
     _extractComicId: function(url) {
         var match = url.match(/\/comic\/(\d+)/);

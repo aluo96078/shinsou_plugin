@@ -102,27 +102,67 @@ var BiliManga = {
     var key;
     for (key in (sourceObject.headers || {})) headers[key] = sourceObject.headers[key];
     for (key in (extraHeaders || {})) headers[key] = extraHeaders[key];
+    var publicRequest = !!loginReason;
     try {
       if (typeof bridge !== "undefined" && bridge) {
-        var response = typeof bridge.httpGetWithHeaders === "function"
+        var structured = publicRequest && typeof bridge.httpGetResponse === "function";
+        var response;
+        if (structured) {
+          // A structured response is authoritative. Retrying it through the legacy bridge
+          // can duplicate a request and hide the original status or transport failure.
+          response = bridge.httpGetResponse(url, headers);
+          if (response && response.error) {
+            if (publicRequest) throw "SHINSOU_SOURCE_HTTP_UNAVAILABLE";
+            return "";
+          }
+          var rawStatus = response && (response.status != null ? response.status : response.statusCode);
+          var status = Number(rawStatus);
+          var rawBody = response && (response.body != null ? response.body : response.text);
+          var body = typeof rawBody === "string" ? rawBody : "";
+
+          if (publicRequest) {
+            if (!response || !isFinite(status) || status <= 0 || Math.floor(status) !== status) {
+              throw "SHINSOU_SOURCE_HTTP_UNAVAILABLE";
+            }
+            if (!body.trim()) throw "SHINSOU_SOURCE_HTTP_UNAVAILABLE";
+            if (this.isBlockedResponse(body)) throw "SHINSOU_SOURCE_HTTP_BLOCKED";
+            if (this.isHttpChallenge(body)) throw "SHINSOU_SOURCE_HTTP_CHALLENGE";
+            if (status === 403) throw "SHINSOU_SOURCE_HTTP_FORBIDDEN";
+            if (status < 200 || status >= 300) throw "SHINSOU_SOURCE_HTTP_UNAVAILABLE";
+          }
+
+          if (typeof rawBody !== "string") return "";
+          if (loginReason) this.handleLoginResponse(sourceObject, body, loginReason);
+          return body;
+        }
+
+        response = typeof bridge.httpGetWithHeaders === "function"
           ? bridge.httpGetWithHeaders(url, headers)
           : (typeof bridge.httpGet === "function" ? bridge.httpGet(url) : "");
         if (response && typeof response === "object") {
-          if (response.error) return "";
-          if (typeof response.body === "string") {
-            if (loginReason) this.handleLoginResponse(sourceObject, response.body, loginReason);
-            return response.body;
+          if (response.error) {
+            if (publicRequest) throw "SHINSOU_SOURCE_HTTP_UNAVAILABLE";
+            return "";
           }
+          if (typeof response.body === "string") response = response.body;
         }
         var body = String(response || "");
+        if (publicRequest) {
+          if (!body.trim()) throw "SHINSOU_SOURCE_HTTP_UNAVAILABLE";
+          if (this.isBlockedResponse(body)) throw "SHINSOU_SOURCE_HTTP_BLOCKED";
+          if (this.isHttpChallenge(body)) throw "SHINSOU_SOURCE_HTTP_CHALLENGE";
+        }
         if (loginReason) this.handleLoginResponse(sourceObject, body, loginReason);
         return body;
       }
     } catch (error) {
+      if (this.isSourceHttpFailure(error)) throw error;
       if (typeof bridge !== "undefined" && bridge && typeof bridge.log === "function") {
         try { bridge.log("zh.bilimanga.manga request failed: " + error); } catch (ignored) {}
       }
+      if (publicRequest) throw "SHINSOU_SOURCE_HTTP_UNAVAILABLE";
     }
+    if (publicRequest) throw "SHINSOU_SOURCE_HTTP_UNAVAILABLE";
     return "";
   },
 
@@ -150,6 +190,31 @@ var BiliManga = {
 
   isChallenge: function(html) {
     return /challenge-form|cf_chl_|Just a moment|Checking your browser|Enable JavaScript and cookies|Attention Required|Sorry, you have been blocked/i.test(String(html || ""));
+  },
+
+  isBlockedResponse: function(html) {
+    var text = String(html || "").toLowerCase();
+    return text.indexOf("sorry, you have been blocked") !== -1 ||
+      (text.indexOf("cloudflare") !== -1 && text.indexOf("cf-error-details") !== -1);
+  },
+
+  isHttpChallenge: function(html) {
+    var text = String(html || "");
+    var lower = text.toLowerCase();
+    // These markers identify an interstitial itself. Generic challenge-platform, JSD and
+    // Turnstile asset references can also be present on otherwise valid HTML pages.
+    return lower.indexOf("_cf_chl_opt") !== -1 ||
+      lower.indexOf("cf_chl_") !== -1 ||
+      lower.indexOf("challenge-form") !== -1 ||
+      /<title\b[^>]*>[^<]*(?:just a moment|checking your browser|attention required|enable javascript and cookies)[^<]*<\/title>/i.test(text) ||
+      /<(?:form|div)\b[^>]*(?:id|class)\s*=\s*["'][^"']*(?:challenge|cf-chl)[^"']*["']/i.test(text);
+  },
+
+  isSourceHttpFailure: function(error) {
+    return error === "SHINSOU_SOURCE_HTTP_UNAVAILABLE" ||
+      error === "SHINSOU_SOURCE_HTTP_FORBIDDEN" ||
+      error === "SHINSOU_SOURCE_HTTP_BLOCKED" ||
+      error === "SHINSOU_SOURCE_HTTP_CHALLENGE";
   },
 
   isLoginPage: function(html) {
@@ -490,6 +555,9 @@ function imagePages(sourceObject, chapter) {
   var url = BiliManga.absolute(chapter && chapter.url, sourceObject.baseUrl);
   var html = BiliManga.request(sourceObject, url, { "Cookie": "night=1" }, "漫畫章節內容需要登入才能閱讀。");
   if (!html) return [];
+  if (html.indexOf("章節不支持桌面電腦端瀏覽器顯示") !== -1) {
+    throw "SHINSOU_SOURCE_HTTP_UNAVAILABLE";
+  }
   var container = /<(?:div|section)\b[^>]*class=["'][^"']*\bimagecontent\b[^"']*["'][^>]*>([\s\S]*?)<\/(?:div|section)>/i.exec(html);
   var block = container ? container[1] : "";
   if (!block) {

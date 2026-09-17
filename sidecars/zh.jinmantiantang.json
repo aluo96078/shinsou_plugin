@@ -3,16 +3,16 @@
   "contractVersion": 2,
   "packageId": "zh.jinmantiantang",
   "name": "禁漫天堂",
-  "version": "1.0.7",
-  "versionCode": 8,
+  "version": "1.0.9",
+  "versionCode": 10,
   "contract": "shinsou",
   "lang": "zh",
   "nsfw": true,
   "installable": true,
   "artifact": {
     "scriptUrl": "plugins/zh.jinmantiantang.js",
-    "sha256": "f45a1485ac720d9a1963c7cecde874926c3e727f209c5534e04b49b544ebfb27",
-    "byteSize": 21381
+    "sha256": "1cee1cf231775b8b622b855dc3d9e3269e52550201c88408c895537fec6880a8",
+    "byteSize": 24107
   },
   "content": {
     "contract": "extension-content-v2",
@@ -29,7 +29,7 @@
     "optional": []
   },
   "requestedHostPermissions": [],
-  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"],
+  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "BROWSER_CHALLENGE"],
   "sources": [{
     "sourceKey": {
       "contractVersion": 2,
@@ -51,7 +51,7 @@
       "optional": []
     },
     "requestedHostPermissions": [],
-    "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"]
+    "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "BROWSER_CHALLENGE"]
   }],
   "migration": {
     "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.jinmantiantang.js?v=1.0.7",

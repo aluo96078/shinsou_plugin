@@ -3,24 +3,34 @@
   "contractVersion": 2,
   "packageId": "zh.baozimh",
   "name": "包子漫画",
-  "version": "1.0.6",
-  "versionCode": 7,
+  "version": "1.0.9",
+  "versionCode": 10,
   "contract": "shinsou",
   "lang": "zh",
   "nsfw": false,
   "installable": true,
   "artifact": {
     "scriptUrl": "plugins/zh.baozimh.js",
-    "sha256": "6dbafe5e7bc81fdf90a565e8a7f6dfd396de833cadfea6009530b95726e880e6",
-    "byteSize": 19793
+    "sha256": "850c81d90644a3933fa0d6e5113c057c54d2c22f23b1c5c41dff83003c10f7a9",
+    "byteSize": 23123
   },
   "content": {
     "contract": "extension-content-v2",
     "contractVersion": 2,
     "type": "manga",
-    "kinds": ["IMAGE_SEQUENCE"]
+    "kinds": [
+      "IMAGE_SEQUENCE"
+    ]
   },
-  "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
+  "capabilities": [
+    "CATALOGUE",
+    "LATEST",
+    "BROWSE",
+    "METADATA",
+    "UNITS",
+    "CONTENT",
+    "SEARCH"
+  ],
   "systemEvents": {
     "protocol": "dev.shinsou.system",
     "minVersion": 1,
@@ -29,30 +39,48 @@
     "optional": []
   },
   "requestedHostPermissions": [],
-  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"],
-  "sources": [{
-    "sourceKey": {
-      "contractVersion": 2,
-      "packageId": "zh.baozimh",
+  "runtimePermissions": [
+    "EXECUTE_SCRIPT",
+    "NETWORK"
+  ],
+  "sources": [
+    {
+      "sourceKey": {
+        "contractVersion": 2,
+        "packageId": "zh.baozimh",
+        "sourceId": "4502917",
+        "legacyLongId": "4502917"
+      },
       "sourceId": "4502917",
-      "legacyLongId": "4502917"
-    },
-    "sourceId": "4502917",
-    "name": "包子漫画",
-    "lang": "zh",
-    "baseUrl": "https://www.baozimh.com",
-    "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
-    "contentKinds": ["IMAGE_SEQUENCE"],
-    "systemEvents": {
-      "protocol": "dev.shinsou.system",
-      "minVersion": 1,
-      "maxVersion": 1,
-      "required": [],
-      "optional": []
-    },
-    "requestedHostPermissions": [],
-    "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"]
-  }],
+      "name": "包子漫画",
+      "lang": "zh",
+      "baseUrl": "https://www.baozimh.com",
+      "capabilities": [
+        "CATALOGUE",
+        "LATEST",
+        "BROWSE",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "SEARCH"
+      ],
+      "contentKinds": [
+        "IMAGE_SEQUENCE"
+      ],
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
+      "requestedHostPermissions": [],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK"
+      ]
+    }
+  ],
   "migration": {
     "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.baozimh.js",
     "legacyIndex": "merged-shuyue/index.json"

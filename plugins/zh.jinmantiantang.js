@@ -10,6 +10,7 @@ var __shinsouExtensionV2 = {"contractVersion":2,"contentContract":"extension-con
 
 var source = {
     baseUrl: "https://18comic.vip",
+    webChallengeUrl: "https://18comic.vip/",
     cdnBaseUrl: "https://cdn-msp.18comic.vip",
     supportsLatest: true,
     headers: {
@@ -100,7 +101,7 @@ var source = {
 
     getPopularManga: function(page) {
         var url = this.baseUrl + "/albums?o=mv&page=" + (page + 1);
-        var html = bridge.httpGetWithHeaders(url, this.headers);
+        var html = this._requestPage(url);
         if (!html || html.error) return new MangasPage([], false);
         return this._parseList(html);
     },
@@ -109,7 +110,7 @@ var source = {
 
     getLatestUpdates: function(page) {
         var url = this.baseUrl + "/albums?o=mr&page=" + (page + 1);
-        var html = bridge.httpGetWithHeaders(url, this.headers);
+        var html = this._requestPage(url);
         if (!html || html.error) return new MangasPage([], false);
         return this._parseList(html);
     },
@@ -162,7 +163,7 @@ var source = {
             }
         }
 
-        var html = bridge.httpGetWithHeaders(url, this.headers);
+        var html = this._requestPage(url);
         if (!html || html.error) return new MangasPage([], false);
         return this._parseList(html);
     },
@@ -254,7 +255,7 @@ var source = {
             url = this.baseUrl + url;
         }
 
-        var html = bridge.httpGetWithHeaders(url, this.headers);
+        var html = this._requestPage(url);
         if (!html || html.error) return manga;
 
         var doc = Jsoup.parse(html, this.baseUrl);
@@ -390,7 +391,7 @@ var source = {
             url = this.baseUrl + url;
         }
 
-        var html = bridge.httpGetWithHeaders(url, this.headers);
+        var html = this._requestPage(url);
         if (!html || html.error) return [];
 
         var doc = Jsoup.parse(html, this.baseUrl);
@@ -439,7 +440,7 @@ var source = {
             url = this.baseUrl + url;
         }
 
-        var html = bridge.httpGetWithHeaders(url, this.headers);
+        var html = this._requestPage(url);
         if (!html || html.error) return [];
 
         var doc = Jsoup.parse(html, this.baseUrl);
@@ -526,6 +527,54 @@ var source = {
             values.push(item.label);
         });
         return values;
+    },
+
+    _requestPage: function(url) {
+        var structured = typeof bridge.httpGetResponse === "function";
+        var response = structured
+            ? bridge.httpGetResponse(url, this.headers)
+            : bridge.httpGetWithHeaders(url, this.headers);
+        var rawStatus = structured && response
+            ? (response.status != null ? response.status : response.statusCode)
+            : null;
+        var status = structured ? Number(rawStatus) : 0;
+        var html = structured
+            ? response && (response.body != null ? response.body : response.text)
+            : response;
+        if (structured && (!response || response.error)) {
+            throw "SHINSOU_SOURCE_HTTP_UNAVAILABLE";
+        }
+        // Validate the structured status before inspecting the body. A malformed status must not
+        // be reclassified as a Cloudflare challenge merely because the body contains its markers.
+        if (structured && (!isFinite(status) || status <= 0 || Math.floor(status) !== status)) {
+            throw "SHINSOU_SOURCE_HTTP_UNAVAILABLE";
+        }
+        if (typeof html !== "string" || !html.trim()) throw "SHINSOU_SOURCE_HTTP_UNAVAILABLE";
+
+        var responseLower = typeof html === "string" ? html.toLowerCase() : "";
+        if (responseLower.indexOf("sorry, you have been blocked") !== -1) throw "SHINSOU_SOURCE_HTTP_BLOCKED";
+
+        // Do not treat a normal page's Cloudflare JSD/Turnstile resources as an interstitial.
+        // The explicit cf_chl markers are challenge DOM; challenge-platform/cf-mitigated need
+        // either a transient denial status or separate interstitial title/form evidence.
+        var explicitChallenge = responseLower.indexOf("_cf_chl_opt") !== -1 ||
+            responseLower.indexOf("cf-chl") !== -1 ||
+            responseLower.indexOf("challenge-form") !== -1;
+        var interstitialTitle = /<title\b[^>]*>[^<]*(?:just a moment|checking your browser|attention required|enable javascript and cookies)[^<]*<\/title>/i.test(html);
+        var interstitialForm = /<(?:form|div)\b[^>]*(?:id|class)\s*=\s*["'][^"']*(?:challenge|cf-chl)[^"']*["']/i.test(html);
+        var challengePlatform = responseLower.indexOf("challenge-platform") !== -1;
+        var cfMitigated = responseLower.indexOf("cf-mitigated") !== -1;
+        var transientChallengeStatus = structured && (status === 403 || status === 503);
+        if (explicitChallenge ||
+            ((challengePlatform || cfMitigated) && (transientChallengeStatus || interstitialTitle || interstitialForm))) {
+            throw "SHINSOU_SOURCE_HTTP_CHALLENGE";
+        }
+
+        if (status === 403) {
+            throw "SHINSOU_SOURCE_HTTP_FORBIDDEN";
+        }
+        if (structured && (status < 200 || status >= 300)) throw "SHINSOU_SOURCE_HTTP_UNAVAILABLE";
+        return html;
     }
 };
 

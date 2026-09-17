@@ -454,7 +454,7 @@ var source = {
                 if (jsCode && !jsCode.error) {
                     // The response is JavaScript that returns an array of image URLs
                     // eval the code to get the array
-                    var imgUrls = this._evalImageScript(jsCode);
+                    var imgUrls = this._evalImageScript(jsCode, url);
                     if (imgUrls && imgUrls.length > 0) {
                         for (var j = 0; j < imgUrls.length; j++) {
                             var imgUrl = imgUrls[j];
@@ -474,11 +474,15 @@ var source = {
     },
 
     // Evaluate the JS code returned by chapterfun.ashx to extract image URLs
-    _evalImageScript: function(jsCode) {
+    _evalImageScript: function(jsCode, referer) {
         try {
             // Response is eval(function(p,a,c,k,e,d){...}('...',a,c,'...'.split('|'),0,{}))
             // After unpacking: function dm5imagefun(){var pix="https://..."; var pvalue=["img1","img2"]; ...}
-            var packedMatch = jsCode.match(/\}\s*\(\s*'([^']+)'\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*'([^']+)'\.split\s*\(\s*'([^']+)'\s*\)/);
+            // DM5 now embeds escaped single quotes inside the packed program (for example
+            // key=\'...\'). A plain [^']+ capture truncates at the first escaped quote and
+            // rejects the response. Decode only the packer's string arguments; never evaluate
+            // response JavaScript.
+            var packedMatch = jsCode.match(/\}\s*\(\s*'((?:\\.|[^'])*)'\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*'((?:\\.|[^'])*)'\.split\s*\(\s*'((?:\\.|[^'])*)'\s*\)/);
             if (!packedMatch) return [];
 
             var p = packedMatch[1];
@@ -499,12 +503,23 @@ var source = {
             var pvalueMatch = p.match(/pvalue\s*=\s*\[([^\]]+)\]/);
             if (pixMatch && pvalueMatch) {
                 var pix = pixMatch[1];
+                // Current image shards require the literal chapter id and key appended by the
+                // unpacked function. The packed program retains escaped single quotes because
+                // it is decoded as data rather than evaluated.
+                var imageCidMatch = p.match(/cid\s*=\s*(\d+)/);
+                var imageKeyMatch = p.match(/key\s*=\s*\\?'([^'\\]+)\\?'/);
+                var imageQuery = imageCidMatch && imageKeyMatch
+                    ? "?cid=" + encodeURIComponent(imageCidMatch[1])
+                        + "&key=" + encodeURIComponent(imageKeyMatch[1])
+                    : "";
                 var paths = pvalueMatch[1].match(/"([^"]+)"/g);
                 if (paths) {
                     var urls = [];
                     for (var i = 0; i < paths.length; i++) {
                         var imgPath = paths[i].replace(/"/g, "");
-                        urls.push(pix + imgPath);
+                        var imageUrl = pix + imgPath + imageQuery;
+                        if (referer) imageUrl += "#Referer=" + encodeURIComponent(referer);
+                        urls.push(imageUrl);
                     }
                     return urls;
                 }

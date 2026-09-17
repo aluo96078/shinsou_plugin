@@ -159,6 +159,41 @@ assert.strictEqual(dm5.source.login("member", "secret").loggedIn, true);
 dm5.source.logout();
 assert.strictEqual(dm5Cleared, true);
 
+// DM5's public chapterfun endpoint embeds escaped single quotes in its Dean Edwards packed
+// program. The parser must treat them as part of the captured payload and extract the literal
+// image URLs without evaluating the returned JavaScript.
+const dm5ChapterfunFixture = String.raw`eval(function(p,a,c,k,e,d){e=function(c){return(c<a?"":e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--)d[e(c)]=k[c]||e(c);k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1;};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p;}('o 8(){1 4=3;1 a=\'9\';1 7="6://g.h.c/j/f/3";1 2=["/b.5","/e.5"];k(1 i=0;i<2.q;i++){p(/^(6?:)?\\/\\//i.l(2[i])){m}2[i]=7+2[i]+\'?4=3&a=9\'}n 2}1 d;d=8();',27,27,'|var|pvalue|1829655|cid|jpg|https|pix|dm5imagefun|b1b4e80ef94c99d47bf97f99f7ba3d4a|key|1_8524|com||2_9820|96433|manhua1041zjcdn63|cdndm5||97|for|test|continue|return|function|if|length'.split('|'),0,{}))`;
+assert.deepStrictEqual(Array.from(dm5.source._evalImageScript(dm5ChapterfunFixture, "https://www.dm5.com/m1829655/")), [
+  "https://manhua1041zjcdn63.cdndm5.com/97/96433/1829655/1_8524.jpg?cid=1829655&key=b1b4e80ef94c99d47bf97f99f7ba3d4a#Referer=https%3A%2F%2Fwww.dm5.com%2Fm1829655%2F",
+  "https://manhua1041zjcdn63.cdndm5.com/97/96433/1829655/2_9820.jpg?cid=1829655&key=b1b4e80ef94c99d47bf97f99f7ba3d4a#Referer=https%3A%2F%2Fwww.dm5.com%2Fm1829655%2F",
+]);
+
+// Manhuagui detail pages now hide their chapter anchors in LZString-compressed __VIEWSTATE.
+// Exercise the exact host flow with a deterministic decompressor fixture; the source must append
+// the decoded inert markup before selecting chapters, without executing first-party scripts.
+const manhuagui = loadSource("zh.manhuagui.js", {
+  httpGetWithHeaders() { return '<input id="__VIEWSTATE" value="fixture-base64">'; },
+  domReleaseAll() {},
+  log() {},
+}, {
+  Jsoup: {
+    parse(html) {
+      const anchors = html.includes("/comic/12912/87209.html") ? [{
+        attr(name) { return name === "href" ? "/comic/12912/87209.html" : name === "title" ? "第01卷" : ""; },
+        text() { return "第01卷"; },
+      }] : [];
+      return { select() { return elements(anchors); } };
+    },
+  },
+  SChapter: { create() { return {}; } },
+});
+manhuagui.source._lzDecompress = (value) => {
+  assert.strictEqual(value, "fixture-base64");
+  return '<div id="chapter-list-1"><ul><li><a href="/comic/12912/87209.html" title="第01卷">第01卷</a></li></ul></div>';
+};
+const manhuaguiChapters = manhuagui.source.getChapterList({ url: "/comic/12912/" });
+assert.deepStrictEqual(Array.from(manhuaguiChapters, (chapter) => chapter.url), ["/comic/12912/87209.html"]);
+
 // Bika login is browser-session-only: it must never call the rate-limited password endpoint or
 // clear a token that Web Challenge already imported from the website's localStorage.
 function bikaBridge(response, initialPreferences = {}) {

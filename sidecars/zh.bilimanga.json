@@ -6,6 +6,7 @@
   "version": "1.6.0",
   "versionCode": 12,
   "contract": "shuyue",
+  "runtime": "reviewed-shuyue-adapter-v2",
   "lang": "zh",
   "nsfw": true,
   "installable": true,

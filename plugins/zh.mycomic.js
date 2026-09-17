@@ -10,6 +10,7 @@ var __shinsouExtensionV2 = {"contractVersion":2,"contentContract":"extension-con
 
 var source = {
     baseUrl: "https://mycomic.com",
+    webChallengeUrl: "https://mycomic.com/comics",
     supportsLatest: true,
     headers: {
         "Referer": "https://mycomic.com/",
@@ -132,7 +133,7 @@ var source = {
 
     getSearchManga: function(page, query, filters) {
         var url = this._buildListUrl(page, query, filters || [], null);
-        var html = bridge.httpGetWithHeaders(url, this.headers);
+        var html = this._requestPage(url);
         if (!html || html.error || this._isBlocked(html)) {
             return new MangasPage([], false);
         }
@@ -140,7 +141,7 @@ var source = {
     },
 
     _fetchList: function(url) {
-        var html = bridge.httpGetWithHeaders(url, this.headers);
+        var html = this._requestPage(url);
         if (!html || html.error || this._isBlocked(html)) {
             return new MangasPage([], false);
         }
@@ -259,7 +260,7 @@ var source = {
     // ======== Manga Details ========
 
     getMangaDetails: function(manga) {
-        var html = bridge.httpGetWithHeaders(this._absoluteUrl(manga.url), this.headers);
+        var html = this._requestPage(this._absoluteUrl(manga.url));
         if (!html || html.error || this._isBlocked(html)) return manga;
 
         var doc = Jsoup.parse(html, this.baseUrl);
@@ -314,7 +315,7 @@ var source = {
     // ======== Chapter List ========
 
     getChapterList: function(manga) {
-        var html = bridge.httpGetWithHeaders(this._absoluteUrl(manga.url), this.headers);
+        var html = this._requestPage(this._absoluteUrl(manga.url));
         if (!html || html.error || this._isBlocked(html)) return [];
 
         var doc = Jsoup.parse(html, this.baseUrl);
@@ -390,7 +391,7 @@ var source = {
     // ======== Page List ========
 
     getPageList: function(chapter) {
-        var html = bridge.httpGetWithHeaders(this._absoluteUrl(chapter.url), this.headers);
+        var html = this._requestPage(this._absoluteUrl(chapter.url));
         if (!html || html.error || this._isBlocked(html)) return [];
 
         var doc = Jsoup.parse(html, this.baseUrl);
@@ -503,6 +504,54 @@ var source = {
             bridge.log("MyComic is blocked by Cloudflare. Complete browser verification or enable the source proxy, then retry.");
         }
         return blocked;
+    },
+
+    _requestPage: function(url) {
+        var structured = typeof bridge.httpGetResponse === "function";
+        var response = structured
+            ? bridge.httpGetResponse(url, this.headers)
+            : bridge.httpGetWithHeaders(url, this.headers);
+        var rawStatus = structured && response
+            ? (response.status != null ? response.status : response.statusCode)
+            : null;
+        var status = structured ? Number(rawStatus) : 0;
+        var html = structured
+            ? response && (response.body != null ? response.body : response.text)
+            : response;
+        if (structured && (!response || response.error)) {
+            throw "SHINSOU_SOURCE_HTTP_UNAVAILABLE";
+        }
+        // Status is part of the structured response contract. Validate it before reading body
+        // markers so malformed transport data cannot be upgraded into challenge authority.
+        if (structured && (!isFinite(status) || status <= 0 || Math.floor(status) !== status)) {
+            throw "SHINSOU_SOURCE_HTTP_UNAVAILABLE";
+        }
+        if (typeof html !== "string" || !html.trim()) throw "SHINSOU_SOURCE_HTTP_UNAVAILABLE";
+
+        var responseLower = typeof html === "string" ? html.toLowerCase() : "";
+        var blocked = responseLower.indexOf("sorry, you have been blocked") !== -1 ||
+            (responseLower.indexOf("cloudflare") !== -1 && responseLower.indexOf("cf-error-details") !== -1);
+        if (blocked) throw "SHINSOU_SOURCE_HTTP_BLOCKED";
+
+        // Passive Cloudflare JSD and Turnstile assets can occur on normal catalogue pages. The
+        // explicit cf_chl DOM markers are sufficient; generic platform/mitigation markers also
+        // require a transient denial status or independent interstitial title/form evidence.
+        var explicitChallenge = responseLower.indexOf("_cf_chl_opt") !== -1 ||
+            responseLower.indexOf("cf-chl") !== -1 ||
+            responseLower.indexOf("challenge-form") !== -1;
+        var interstitialTitle = /<title\b[^>]*>[^<]*(?:just a moment|checking your browser|attention required|enable javascript and cookies)[^<]*<\/title>/i.test(html);
+        var interstitialForm = /<(?:form|div)\b[^>]*(?:id|class)\s*=\s*["'][^"']*(?:challenge|cf-chl)[^"']*["']/i.test(html);
+        var challengePlatform = responseLower.indexOf("challenge-platform") !== -1;
+        var cfMitigated = responseLower.indexOf("cf-mitigated") !== -1;
+        var transientChallengeStatus = structured && (status === 403 || status === 503);
+        if (explicitChallenge ||
+            ((challengePlatform || cfMitigated) && (transientChallengeStatus || interstitialTitle || interstitialForm))) {
+            throw "SHINSOU_SOURCE_HTTP_CHALLENGE";
+        }
+
+        if (status === 403) throw "SHINSOU_SOURCE_HTTP_FORBIDDEN";
+        if (structured && (status < 200 || status >= 300)) throw "SHINSOU_SOURCE_HTTP_UNAVAILABLE";
+        return html;
     }
 };
 

@@ -3,16 +3,16 @@
   "contractVersion": 2,
   "packageId": "zh.mycomic",
   "name": "MyComic",
-  "version": "1.0.0",
-  "versionCode": 1,
+  "version": "1.0.2",
+  "versionCode": 3,
   "contract": "shinsou",
   "lang": "zh",
   "nsfw": true,
   "installable": true,
   "artifact": {
     "scriptUrl": "plugins/zh.mycomic.js",
-    "sha256": "7bc6502b5b418c0d640f84adc1fd44a83f38fa533603591300798fe45d798ad0",
-    "byteSize": 21121
+    "sha256": "d79fbcd04e3398f57d73af021691fa368ae3d7702dc3ef62d00cc67144fd7eba",
+    "byteSize": 23990
   },
   "content": {
     "contract": "extension-content-v2",
@@ -29,7 +29,7 @@
     "optional": []
   },
   "requestedHostPermissions": [],
-  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"],
+  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "BROWSER_CHALLENGE"],
   "sources": [{
     "sourceKey": {
       "contractVersion": 2,
@@ -51,7 +51,7 @@
       "optional": []
     },
     "requestedHostPermissions": [],
-    "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"]
+    "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "BROWSER_CHALLENGE"]
   }],
   "migration": {
     "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.mycomic.js",

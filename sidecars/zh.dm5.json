@@ -3,16 +3,16 @@
   "contractVersion": 2,
   "packageId": "zh.dm5",
   "name": "動漫屋",
-  "version": "1.4.0",
-  "versionCode": 5,
+  "version": "1.4.1",
+  "versionCode": 6,
   "contract": "shinsou",
   "lang": "zh",
   "nsfw": true,
   "installable": true,
   "artifact": {
     "scriptUrl": "plugins/zh.dm5.js",
-    "sha256": "947a6a2e75f3415432a45ac84ea50a50ff70ed26b0eb993419a56bad84850642",
-    "byteSize": 21448
+    "sha256": "88618e4c1e6df4a7955c40e5c24a879c6d04baf945d5a89fea25f2b27ca4e133",
+    "byteSize": 22580
   },
   "content": {
     "contract": "extension-content-v2",

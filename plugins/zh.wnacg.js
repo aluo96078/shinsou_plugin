@@ -280,6 +280,15 @@ var source = {
         var jsContent = bridge.httpGetWithHeaders(galleryUrl, this.headers);
         if (!jsContent || jsContent.error) return [];
 
+        // Decode only quoted document.write literals, never execute remote JavaScript.
+        var written = [];
+        var writePattern = /document\.writeln?\(\s*("(?:\\.|[^"\\])*")\s*\)\s*;?/g;
+        var writeMatch;
+        while ((writeMatch = writePattern.exec(jsContent)) !== null) {
+            try { written.push(JSON.parse(writeMatch[1].replace(/\t/g, "\\t"))); } catch (_) {}
+        }
+        if (written.length) jsContent = written.join("\n");
+
         var pages = [];
 
         // Gallery page returns JavaScript with imglist array:
@@ -311,7 +320,7 @@ var source = {
 
         // Fallback: try regex for any image-like URLs
         if (pages.length === 0) {
-            var fallbackPattern = /\/\/[^\s"']+?\.(jpg|png|webp|gif)/gi;
+            var fallbackPattern = /\/\/[^\s"']+?\.(jpg|png|webp|gif)(?:\?[^\s"'<>]*)?/gi;
             var seen = {};
             while ((match = fallbackPattern.exec(jsContent)) !== null) {
                 var fallbackUrl = "https:" + match[0];

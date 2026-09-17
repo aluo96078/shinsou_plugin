@@ -183,11 +183,11 @@
     {
       "id": "zh.wnacg",
       "name": "紳士漫畫",
-      "version": "1.3.2",
-      "versionCode": 6,
+      "version": "1.3.3",
+      "versionCode": 7,
       "lang": "zh",
       "nsfw": 1,
-      "scriptUrl": "shinsou/plugins/zh.wnacg.js?v=1.3.2",
+      "scriptUrl": "shinsou/plugins/zh.wnacg.js?v=1.3.3",
       "iconUrl": null,
       "description": "紳士漫畫 (WNACG) - 同人漫畫平台",
       "sources": [

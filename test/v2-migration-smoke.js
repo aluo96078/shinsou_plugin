@@ -156,6 +156,9 @@ for (const pkg of index.packages) {
   const sidecar = readJson(path.join(repoRoot, pkg.sidecarUrl));
   expect(sidecar.format === "shinsou-extension-sidecar-v2", pkg.id + " sidecar format");
   expect(sidecar.contractVersion === 2, pkg.id + " sidecar contract version");
+  if (pkg.contract === "shuyue" && pkg.installable !== false) {
+    expect(sidecar.runtime === pkg.runtime, pkg.id + " reviewed sidecar runtime binding");
+  }
   expect(sidecar.packageId === pkg.id, pkg.id + " sidecar package identity");
   expect(sidecar.version === pkg.version && sidecar.versionCode === pkg.versionCode, pkg.id + " sidecar version identity");
   expect(!Object.prototype.hasOwnProperty.call(sidecar, "hostPermissions"), pkg.id + " sidecar must not self-grant host permissions");

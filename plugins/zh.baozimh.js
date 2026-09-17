@@ -32,8 +32,7 @@ var source = {
 
     getPopularManga: function(page) {
         var url = this.baseUrl + "/classify?type=all&region=all&state=all&filter=*&page=" + (page + 1);
-        var html = bridge.httpGetWithHeaders(url, this.headers);
-        if (!html || html.error) return new MangasPage([], false);
+        var html = this._requestPage(url);
         return this._parseList(html);
     },
 
@@ -41,8 +40,7 @@ var source = {
 
     getLatestUpdates: function(page) {
         var url = this.baseUrl + "/classify?type=all&region=all&state=all&filter=*&page=" + (page + 1);
-        var html = bridge.httpGetWithHeaders(url, this.headers);
-        if (!html || html.error) return new MangasPage([], false);
+        var html = this._requestPage(url);
         return this._parseList(html);
     },
 
@@ -81,8 +79,7 @@ var source = {
             url = this.baseUrl + "/classify?type=" + type + "&region=" + region + "&state=" + state + "&filter=*&page=" + (page + 1);
         }
 
-        var html = bridge.httpGetWithHeaders(url, this.headers);
-        if (!html || html.error) return new MangasPage([], false);
+        var html = this._requestPage(url);
         return this._parseList(html);
     },
 
@@ -169,8 +166,7 @@ var source = {
             url = this.baseUrl + url;
         }
 
-        var html = bridge.httpGetWithHeaders(url, this.headers);
-        if (!html || html.error) return manga;
+        var html = this._requestPage(url);
 
         var doc = Jsoup.parse(html, this.baseUrl);
         var result = SManga.create();
@@ -237,11 +233,20 @@ var source = {
         return img.attr("data-original") || img.attr("data-src") || img.attr("src") || "";
     },
 
-    _fixUrl: function(url) {
+    _fixUrl: function(url, baseUrl) {
         if (!url) return "";
         url = String(url).replace(/&amp;/g, "&").trim();
         if (url.indexOf("//") === 0) return "https:" + url;
-        if (url.indexOf("/") === 0) return this.baseUrl + url;
+        if (url.indexOf("/") === 0) {
+            var originMatch = String(baseUrl || this.baseUrl).match(/^(https?:\/\/[^\/?#]+)/i);
+            return (originMatch ? originMatch[1] : this.baseUrl) + url;
+        }
+        if (url.indexOf("http://") === 0 || url.indexOf("https://") === 0) return url;
+        if (baseUrl && url.indexOf("/") !== 0) {
+            var pathBase = String(baseUrl).replace(/[?#].*$/, "");
+            var slash = pathBase.lastIndexOf("/");
+            if (slash >= 0) return pathBase.slice(0, slash + 1) + url;
+        }
         return url;
     },
 
@@ -253,33 +258,19 @@ var source = {
             url = this.baseUrl + url;
         }
 
-        var html = bridge.httpGetWithHeaders(url, this.headers);
-        if (!html || html.error) return [];
+        var html = this._requestPage(url);
 
-        var doc = Jsoup.parse(html, this.baseUrl);
+        // One bounded host parse avoids two bridge calls for every chapter of long series.
+        var rows = bridge.parseHtml(html, "#chapter-items a, #chapters_other_list a, .comics-chapters a, a.comics-chapters__item, a[href*='/chapter/']");
+        if (typeof rows === "string") rows = JSON.parse(rows);
         var chapters = [];
-
-        // Chapter links
-        var chapterEls = doc.select("#chapter-items a, #chapters_other_list a, .comics-chapters a, a.comics-chapters__item, a[href*='/chapter/']");
-
-        var chapterNum = chapterEls.size();
-        chapterEls.forEach(function(el) {
-            try {
-                var chapter = SChapter.create();
-                chapter.url = el.attr("href");
-                chapter.name = el.text().trim();
-                chapter.chapterNumber = chapterNum;
-                chapterNum--;
-
-                if (chapter.url && chapter.name) {
-                    chapters.push(chapter);
-                }
-            } catch(e) {
-                bridge.log("Baozi chapter error: " + e);
-            }
-        });
-
-        bridge.domReleaseAll();
+        for (var i = 0; rows && i < rows.length; i++) {
+            var row = rows[i];
+            var url = String(row.attr_href || "");
+            var name = String(row.text || "").trim();
+            if (!url || !name) continue;
+            chapters.push({url: url, name: name, chapterNumber: rows.length - i});
+        }
         return chapters;
     },
 
@@ -288,6 +279,8 @@ var source = {
     getPageList: function(chapter) {
         var info = this._chapterInfo(chapter.url);
         var pages = [];
+        var lastFailure = null;
+        var terminalFailure = null;
 
         // The public chapter route currently redirects to twmanga.com, whose
         // AMP reader contains the real bzcdn.net image URLs. Resolve that
@@ -295,10 +288,20 @@ var source = {
         // otherwise make every chapter wait through several failed requests.
         var webUrls = this._webChapterUrls(chapter.url, info);
         for (var w = 0; w < webUrls.length; w++) {
-            var html = bridge.httpGetWithHeaders(webUrls[w], this.headers);
-            if (!html || html.error || this._isBlockedResponse(html)) continue;
-
-            pages = this._parsePageList(html, info ? info.slug : "");
+            var html;
+            try {
+                html = this._requestPage(webUrls[w], this.headers);
+            } catch (e) {
+                if (!this._isSourceFailure(e)) throw e;
+                lastFailure = e;
+                bridge.log("Baozi: reader request failed (" + e + ")");
+                if (this._isTerminalSourceFailure(e)) {
+                    terminalFailure = e;
+                    break;
+                }
+                continue;
+            }
+            pages = this._parsePageList(html, info ? info.slug : "", webUrls[w]);
             if (pages.length > 0) {
                 bridge.log("Baozi: using web chapter source for " + (info ? info.slug : "unknown chapter"));
                 return pages;
@@ -307,20 +310,23 @@ var source = {
 
         // Retain the Android app routes only as compatibility fallbacks for
         // mirrors that do not expose a working public reader.
-        if (info) {
+        if (info && !terminalFailure) {
             var appUrls = this._appChapterUrls(info);
             for (var i = 0; i < appUrls.length; i++) {
-                var appHtml = bridge.httpGetWithHeaders(appUrls[i], this.appHeaders);
-                if (!appHtml || appHtml.error) {
-                    bridge.log("Baozi: App request failed for " + appUrls[i] + ": " + (appHtml && appHtml.error ? appHtml.error : "empty response"));
+                var appHtml;
+                try {
+                    appHtml = this._requestPage(appUrls[i], this.appHeaders);
+                } catch (e) {
+                    if (!this._isSourceFailure(e)) throw e;
+                    lastFailure = e;
+                    bridge.log("Baozi: reader request failed (" + e + ")");
+                    if (this._isTerminalSourceFailure(e)) {
+                        terminalFailure = e;
+                        break;
+                    }
                     continue;
                 }
-                if (this._isBlockedResponse(appHtml)) {
-                    bridge.log("Baozi: App request blocked/challenged for " + appUrls[i]);
-                    continue;
-                }
-
-                pages = this._parsePageList(appHtml, info.slug);
+                pages = this._parsePageList(appHtml, info.slug, appUrls[i]);
                 if (pages.length > 0) {
                     bridge.log("Baozi: using App chapter source for " + info.slug + " slot " + info.slot);
                     return pages;
@@ -328,8 +334,9 @@ var source = {
             }
         }
 
-        bridge.log("Baozi: no usable comic pages found for " + (info ? info.slug : "unknown chapter"));
-        return [];
+        if (terminalFailure) throw terminalFailure;
+        bridge.log("Baozi: no usable comic pages found");
+        throw lastFailure || "SHINSOU_SOURCE_HTTP_UNAVAILABLE";
     },
 
     _webChapterUrls: function(chapterUrl, info) {
@@ -435,18 +442,11 @@ var source = {
         // Match the Android App's loading_img():
         //   https://s1.baozicdn.com/scomic/... ->
         //   https://s1.baozicdn.com/w640/scomic/...
-        if (value.indexOf("/w640/scomic/") === -1) {
-            value = value.replace(".com/scomic/", ".com/w640/scomic/");
+        if (/^https:\/\/s1\.baozicdn\.com\/scomic\//i.test(value)) {
+            value = value.replace(/^https:\/\/s1\.baozicdn\.com\/scomic\//i,
+                "https://s1.baozicdn.com/w640/scomic/");
         }
         return value;
-    },
-
-    _isBlockedResponse: function(html) {
-        var text = String(html || "").slice(0, 16000).toLowerCase();
-        return text.indexOf("just a moment") !== -1 ||
-            text.indexOf("cf-mitigated") !== -1 ||
-            text.indexOf("challenge-platform") !== -1 ||
-            text.indexOf("enable javascript and cookies to continue") !== -1;
     },
 
     _isComicPageUrl: function(url, slug) {
@@ -460,10 +460,10 @@ var source = {
         return true;
     },
 
-    _parsePageList: function(html, slug) {
+    _parsePageList: function(html, slug, readerBaseUrl) {
         if (!html || html.error) return [];
 
-        var doc = Jsoup.parse(html, this.baseUrl);
+        var doc = Jsoup.parse(html, readerBaseUrl || this.baseUrl);
         var pages = [];
         var seen = {};
 
@@ -478,7 +478,7 @@ var source = {
             var src = this._pageImageSrc(img);
             if (!this._isComicPageUrl(src, slug)) return;
 
-            src = this._appImageUrl(this._fixUrl(src));
+            src = this._appImageUrl(this._fixUrl(src, readerBaseUrl || this.baseUrl));
             if (!seen[src]) {
                 seen[src] = true;
                 pages.push(new Page(pages.length, "", src));
@@ -492,7 +492,7 @@ var source = {
                 var src = this._pageImageSrc(img);
                 if (!this._isComicPageUrl(src, slug)) return;
 
-                src = this._appImageUrl(this._fixUrl(src));
+                src = this._appImageUrl(this._fixUrl(src, readerBaseUrl || this.baseUrl));
                 if (!seen[src]) {
                     seen[src] = true;
                     pages.push(new Page(pages.length, "", src));
@@ -502,6 +502,70 @@ var source = {
 
         bridge.domReleaseAll();
         return pages;
+    },
+
+    _requestPage: function(url, headers) {
+        var requestHeaders = headers || this.headers;
+        var structured = typeof bridge.httpGetResponse === "function";
+        var response = structured
+            ? bridge.httpGetResponse(url, requestHeaders)
+            : bridge.httpGetWithHeaders(url, requestHeaders);
+        var rawStatus = structured && response
+            ? (response.status != null ? response.status : response.statusCode)
+            : null;
+        var status = structured ? Number(rawStatus) : 0;
+        var html = structured
+            ? response && (response.body != null ? response.body : response.text)
+            : response;
+
+        if (structured && (!response || response.error)) {
+            throw "SHINSOU_SOURCE_HTTP_UNAVAILABLE";
+        }
+        if (structured && (!isFinite(status) || status <= 0 || Math.floor(status) !== status)) {
+            throw "SHINSOU_SOURCE_HTTP_UNAVAILABLE";
+        }
+        if (typeof html !== "string" || !html.trim()) {
+            throw "SHINSOU_SOURCE_HTTP_UNAVAILABLE";
+        }
+
+        var responseLower = html.toLowerCase();
+        if (responseLower.indexOf("sorry, you have been blocked") !== -1) {
+            throw "SHINSOU_SOURCE_HTTP_BLOCKED";
+        }
+
+        // A normal page can reference Cloudflare's passive resources. Require explicit
+        // challenge markup, or a challenge resource paired with a transient status/title/form.
+        var explicitChallenge = responseLower.indexOf("_cf_chl_opt") !== -1 ||
+            responseLower.indexOf("cf-chl") !== -1 ||
+            responseLower.indexOf("challenge-form") !== -1;
+        var interstitialTitle = /<title\b[^>]*>[^<]*(?:just a moment|checking your browser|attention required|enable javascript and cookies)[^<]*<\/title>/i.test(html);
+        var interstitialForm = /<(?:form|div)\b[^>]*(?:id|class)\s*=\s*["'][^"']*(?:challenge|cf-chl)[^"']*["']/i.test(html);
+        var challengePlatform = responseLower.indexOf("challenge-platform") !== -1;
+        var cfMitigated = responseLower.indexOf("cf-mitigated") !== -1;
+        var transientChallengeStatus = structured && (status === 403 || status === 503);
+        if (explicitChallenge ||
+            ((challengePlatform || cfMitigated) && (transientChallengeStatus || interstitialTitle || interstitialForm))) {
+            throw "SHINSOU_SOURCE_HTTP_CHALLENGE";
+        }
+
+        if (status === 403) throw "SHINSOU_SOURCE_HTTP_FORBIDDEN";
+        if (structured && (status < 200 || status >= 300)) {
+            throw "SHINSOU_SOURCE_HTTP_UNAVAILABLE";
+        }
+        return html;
+    },
+
+    _isSourceFailure: function(error) {
+        return error === "SHINSOU_SOURCE_HTTP_UNAVAILABLE" ||
+            error === "SHINSOU_SOURCE_HTTP_CHALLENGE" ||
+            error === "SHINSOU_SOURCE_HTTP_BLOCKED" ||
+            error === "SHINSOU_SOURCE_HTTP_FORBIDDEN";
+    },
+
+    _isTerminalSourceFailure: function(error) {
+        return error === "SHINSOU_SOURCE_HTTP_CHALLENGE" ||
+            error === "SHINSOU_SOURCE_HTTP_BLOCKED" ||
+            error === "SHINSOU_SOURCE_HTTP_FORBIDDEN";
     },
 
     // ======== Filters ========

@@ -32,17 +32,44 @@
       "contract": "shinsou",
       "runtime": "legacy-shinsou-adapter-v2",
       "contentType": "manga",
-      "contentKinds": ["IMAGE_SEQUENCE"],
+      "contentKinds": [
+        "IMAGE_SEQUENCE"
+      ],
       "scriptUrl": "plugins/eh.ehentai.js",
       "legacyScriptUrl": "merged-shuyue/shinsou/plugins/eh.ehentai.js",
       "sidecarUrl": "sidecars/eh.ehentai.json",
       "sha256": "564695e574d630d1336941adf2e5da11785ff83001c05229ab71e11a54bda485",
       "byteSize": 32531,
-      "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
-      "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"],
+      "capabilities": [
+        "CATALOGUE",
+        "LATEST",
+        "BROWSE",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "SEARCH"
+      ],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK"
+      ],
       "requestedHostPermissions": [],
-      "systemEvents": {"protocol": "dev.shinsou.system", "minVersion": 1, "maxVersion": 1, "required": [], "optional": []},
-      "sources": [{"sourceId": "6912170", "legacyLongId": "6912170", "name": "E-Hentai", "lang": "all", "baseUrl": "https://e-hentai.org"}]
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
+      "sources": [
+        {
+          "sourceId": "6912170",
+          "legacyLongId": "6912170",
+          "name": "E-Hentai",
+          "lang": "all",
+          "baseUrl": "https://e-hentai.org"
+        }
+      ]
     },
     {
       "id": "all.nhentai",
@@ -54,61 +81,144 @@
       "contract": "shinsou",
       "runtime": "legacy-shinsou-adapter-v2",
       "contentType": "manga",
-      "contentKinds": ["IMAGE_SEQUENCE"],
+      "contentKinds": [
+        "IMAGE_SEQUENCE"
+      ],
       "scriptUrl": "plugins/all.nhentai.js",
       "legacyScriptUrl": "merged-shuyue/shinsou/plugins/all.nhentai.js",
       "sidecarUrl": "sidecars/all.nhentai.json",
       "sha256": "193d6d89e51fa252ad695f839fe54ef0ab0c154d3fb75718dae67fceaa874a8f",
       "byteSize": 19220,
-      "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
-      "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"],
+      "capabilities": [
+        "CATALOGUE",
+        "LATEST",
+        "BROWSE",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "SEARCH"
+      ],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK"
+      ],
       "requestedHostPermissions": [],
-      "systemEvents": {"protocol": "dev.shinsou.system", "minVersion": 1, "maxVersion": 1, "required": [], "optional": []},
-      "sources": [{"sourceId": "7309872", "legacyLongId": "7309872", "name": "NHentai", "lang": "all", "baseUrl": "https://nhentai.net"}]
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
+      "sources": [
+        {
+          "sourceId": "7309872",
+          "legacyLongId": "7309872",
+          "name": "NHentai",
+          "lang": "all",
+          "baseUrl": "https://nhentai.net"
+        }
+      ]
     },
     {
       "id": "zh.jinmantiantang",
       "name": "禁漫天堂",
-      "version": "1.0.7",
-      "versionCode": 8,
+      "version": "1.0.9",
+      "versionCode": 10,
       "lang": "zh",
       "nsfw": true,
       "contract": "shinsou",
       "runtime": "legacy-shinsou-adapter-v2",
       "contentType": "manga",
-      "contentKinds": ["IMAGE_SEQUENCE"],
+      "contentKinds": [
+        "IMAGE_SEQUENCE"
+      ],
       "scriptUrl": "plugins/zh.jinmantiantang.js",
       "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.jinmantiantang.js?v=1.0.7",
       "sidecarUrl": "sidecars/zh.jinmantiantang.json",
-      "sha256": "f45a1485ac720d9a1963c7cecde874926c3e727f209c5534e04b49b544ebfb27",
-      "byteSize": 21381,
-      "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
-      "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"],
+      "sha256": "1cee1cf231775b8b622b855dc3d9e3269e52550201c88408c895537fec6880a8",
+      "byteSize": 24107,
+      "capabilities": [
+        "CATALOGUE",
+        "LATEST",
+        "BROWSE",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "SEARCH"
+      ],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK",
+        "COOKIE_STORAGE",
+        "BROWSER_CHALLENGE"
+      ],
       "requestedHostPermissions": [],
-      "systemEvents": {"protocol": "dev.shinsou.system", "minVersion": 1, "maxVersion": 1, "required": [], "optional": []},
-      "sources": [{"sourceId": "1817081", "legacyLongId": "1817081", "name": "禁漫天堂", "lang": "zh", "baseUrl": "https://18comic.vip"}]
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
+      "sources": [
+        {
+          "sourceId": "1817081",
+          "legacyLongId": "1817081",
+          "name": "禁漫天堂",
+          "lang": "zh",
+          "baseUrl": "https://18comic.vip"
+        }
+      ]
     },
     {
       "id": "zh.baozimh",
       "name": "包子漫画",
-      "version": "1.0.6",
-      "versionCode": 7,
+      "version": "1.0.9",
+      "versionCode": 10,
       "lang": "zh",
       "nsfw": false,
       "contract": "shinsou",
       "runtime": "legacy-shinsou-adapter-v2",
       "contentType": "manga",
-      "contentKinds": ["IMAGE_SEQUENCE"],
+      "contentKinds": [
+        "IMAGE_SEQUENCE"
+      ],
       "scriptUrl": "plugins/zh.baozimh.js",
       "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.baozimh.js",
       "sidecarUrl": "sidecars/zh.baozimh.json",
-      "sha256": "6dbafe5e7bc81fdf90a565e8a7f6dfd396de833cadfea6009530b95726e880e6",
-      "byteSize": 19793,
-      "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
-      "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"],
+      "sha256": "850c81d90644a3933fa0d6e5113c057c54d2c22f23b1c5c41dff83003c10f7a9",
+      "byteSize": 23123,
+      "capabilities": [
+        "CATALOGUE",
+        "LATEST",
+        "BROWSE",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "SEARCH"
+      ],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK"
+      ],
       "requestedHostPermissions": [],
-      "systemEvents": {"protocol": "dev.shinsou.system", "minVersion": 1, "maxVersion": 1, "required": [], "optional": []},
-      "sources": [{"sourceId": "4502917", "legacyLongId": "4502917", "name": "包子漫画", "lang": "zh", "baseUrl": "https://www.baozimh.com"}]
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
+      "sources": [
+        {
+          "sourceId": "4502917",
+          "legacyLongId": "4502917",
+          "name": "包子漫画",
+          "lang": "zh",
+          "baseUrl": "https://www.baozimh.com"
+        }
+      ]
     },
     {
       "id": "zh.bika",
@@ -120,127 +230,308 @@
       "contract": "shinsou",
       "runtime": "legacy-shinsou-adapter-v2",
       "contentType": "manga",
-      "contentKinds": ["IMAGE_SEQUENCE"],
+      "contentKinds": [
+        "IMAGE_SEQUENCE"
+      ],
       "scriptUrl": "plugins/zh.bika.js",
       "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.bika.js",
       "sidecarUrl": "sidecars/zh.bika.json",
       "sha256": "cd09553432d85389de169017aeeadd776f539183f13598c2259b4fec738cbdf1",
       "byteSize": 35431,
-      "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH", "LOGIN"],
-      "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS", "BROWSER_CHALLENGE"],
-      "requestedHostPermissions": ["REQUEST_LOGIN_UI"],
-      "systemEvents": {"protocol": "dev.shinsou.system", "minVersion": 1, "maxVersion": 1, "required": [], "optional": ["command.auth.login.request"]},
-      "sources": [{"sourceId": "8123456", "legacyLongId": "8123456", "name": "哔咔漫画", "lang": "zh", "baseUrl": "https://manhuabika.com", "browserSessionOrigins": ["https://picaapi.go2778.com"]}]
+      "capabilities": [
+        "CATALOGUE",
+        "LATEST",
+        "BROWSE",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "SEARCH",
+        "LOGIN"
+      ],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK",
+        "COOKIE_STORAGE",
+        "CREDENTIAL_ACCESS",
+        "BROWSER_CHALLENGE"
+      ],
+      "requestedHostPermissions": [
+        "REQUEST_LOGIN_UI"
+      ],
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": [
+          "command.auth.login.request"
+        ]
+      },
+      "sources": [
+        {
+          "sourceId": "8123456",
+          "legacyLongId": "8123456",
+          "name": "哔咔漫画",
+          "lang": "zh",
+          "baseUrl": "https://manhuabika.com",
+          "browserSessionOrigins": [
+            "https://picaapi.go2778.com"
+          ]
+        }
+      ]
     },
     {
       "id": "zh.manhuagui",
       "name": "漫画柜",
-      "version": "1.1.6",
-      "versionCode": 8,
+      "version": "1.1.8",
+      "versionCode": 10,
       "lang": "zh",
       "nsfw": true,
       "contract": "shinsou",
       "runtime": "legacy-shinsou-adapter-v2",
       "contentType": "manga",
-      "contentKinds": ["IMAGE_SEQUENCE"],
+      "contentKinds": [
+        "IMAGE_SEQUENCE"
+      ],
       "scriptUrl": "plugins/zh.manhuagui.js",
       "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.manhuagui.js",
       "sidecarUrl": "sidecars/zh.manhuagui.json",
-      "sha256": "a984f5e3594b57a821f56137d3817f69487eb35ddde53f8175fc648b8a626e53",
-      "byteSize": 28351,
-      "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
-      "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"],
+      "sha256": "fc6374218ed3c69a7e79823ef61a5f50b97556e29f6f6925ae145c192ab9660c",
+      "byteSize": 32025,
+      "capabilities": [
+        "CATALOGUE",
+        "LATEST",
+        "BROWSE",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "SEARCH"
+      ],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK"
+      ],
       "requestedHostPermissions": [],
-      "systemEvents": {"protocol": "dev.shinsou.system", "minVersion": 1, "maxVersion": 1, "required": [], "optional": []},
-      "sources": [{"sourceId": "6301748", "legacyLongId": "6301748", "name": "漫画柜", "lang": "zh", "baseUrl": "https://tw.manhuagui.com"}]
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
+      "sources": [
+        {
+          "sourceId": "6301748",
+          "legacyLongId": "6301748",
+          "name": "漫画柜",
+          "lang": "zh",
+          "baseUrl": "https://tw.manhuagui.com"
+        }
+      ]
     },
     {
       "id": "zh.komiic",
       "name": "Komiic",
-      "version": "1.2.0",
-      "versionCode": 4,
-      "lang": "zh",
-      "nsfw": true,
-      "contract": "shinsou",
-      "runtime": "legacy-shinsou-adapter-v2",
-      "contentType": "manga",
-      "contentKinds": ["IMAGE_SEQUENCE"],
-      "scriptUrl": "plugins/zh.komiic.js",
-      "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.komiic.js",
-      "sidecarUrl": "sidecars/zh.komiic.json",
-      "sha256": "5a450bf1480675f9be5993188221e49fb350338217511eb8e61fe90e8b178731",
-      "byteSize": 10676,
-      "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
-      "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"],
-      "requestedHostPermissions": [],
-      "systemEvents": {"protocol": "dev.shinsou.system", "minVersion": 1, "maxVersion": 1, "required": [], "optional": []},
-      "sources": [{"sourceId": "8104923", "legacyLongId": "8104923", "name": "Komiic", "lang": "zh", "baseUrl": "https://komiic.com"}]
-    },
-    {
-      "id": "zh.wnacg",
-      "name": "紳士漫畫",
-      "version": "1.3.2",
+      "version": "1.2.2",
       "versionCode": 6,
       "lang": "zh",
       "nsfw": true,
       "contract": "shinsou",
       "runtime": "legacy-shinsou-adapter-v2",
       "contentType": "manga",
-      "contentKinds": ["IMAGE_SEQUENCE"],
-      "scriptUrl": "plugins/zh.wnacg.js",
-      "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.wnacg.js?v=1.3.2",
-      "sidecarUrl": "sidecars/zh.wnacg.json",
-      "sha256": "36e4728f9207e640589fd0216eaa7cde2f5212341c5b78c6ab71d8a3d2972b9e",
-      "byteSize": 13311,
-      "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
-      "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"],
+      "contentKinds": [
+        "IMAGE_SEQUENCE"
+      ],
+      "scriptUrl": "plugins/zh.komiic.js",
+      "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.komiic.js",
+      "sidecarUrl": "sidecars/zh.komiic.json",
+      "sha256": "ccdd5c25dc607f26a436377c15f9b4ab1c3ed41aad66e17bb758f23131186b9c",
+      "byteSize": 11711,
+      "capabilities": [
+        "CATALOGUE",
+        "LATEST",
+        "BROWSE",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "SEARCH"
+      ],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK"
+      ],
       "requestedHostPermissions": [],
-      "systemEvents": {"protocol": "dev.shinsou.system", "minVersion": 1, "maxVersion": 1, "required": [], "optional": []},
-      "sources": [{"sourceId": "5209831", "legacyLongId": "5209831", "name": "紳士漫畫", "lang": "zh", "baseUrl": "https://www.wnacg.com"}]
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
+      "sources": [
+        {
+          "sourceId": "8104923",
+          "legacyLongId": "8104923",
+          "name": "Komiic",
+          "lang": "zh",
+          "baseUrl": "https://komiic.com"
+        }
+      ]
+    },
+    {
+      "id": "zh.wnacg",
+      "name": "紳士漫畫",
+      "version": "1.3.3",
+      "versionCode": 7,
+      "lang": "zh",
+      "nsfw": true,
+      "contract": "shinsou",
+      "runtime": "legacy-shinsou-adapter-v2",
+      "contentType": "manga",
+      "contentKinds": [
+        "IMAGE_SEQUENCE"
+      ],
+      "scriptUrl": "plugins/zh.wnacg.js",
+      "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.wnacg.js?v=1.3.3",
+      "sidecarUrl": "sidecars/zh.wnacg.json",
+      "sha256": "a6710148c297694ce8f2c2c2345eb68b3cb758aadc22334ab067c8bd06af0765",
+      "byteSize": 13788,
+      "capabilities": [
+        "CATALOGUE",
+        "LATEST",
+        "BROWSE",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "SEARCH"
+      ],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK"
+      ],
+      "requestedHostPermissions": [],
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
+      "sources": [
+        {
+          "sourceId": "5209831",
+          "legacyLongId": "5209831",
+          "name": "紳士漫畫",
+          "lang": "zh",
+          "baseUrl": "https://www.wnacg.com"
+        }
+      ]
     },
     {
       "id": "zh.mycomic",
       "name": "MyComic",
-      "version": "1.0.0",
-      "versionCode": 1,
+      "version": "1.0.2",
+      "versionCode": 3,
       "lang": "zh",
       "nsfw": true,
       "contract": "shinsou",
       "runtime": "legacy-shinsou-adapter-v2",
       "contentType": "manga",
-      "contentKinds": ["IMAGE_SEQUENCE"],
+      "contentKinds": [
+        "IMAGE_SEQUENCE"
+      ],
       "scriptUrl": "plugins/zh.mycomic.js",
       "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.mycomic.js",
       "sidecarUrl": "sidecars/zh.mycomic.json",
-      "sha256": "7bc6502b5b418c0d640f84adc1fd44a83f38fa533603591300798fe45d798ad0",
-      "byteSize": 21121,
-      "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
-      "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"],
+      "sha256": "d79fbcd04e3398f57d73af021691fa368ae3d7702dc3ef62d00cc67144fd7eba",
+      "byteSize": 23990,
+      "capabilities": [
+        "CATALOGUE",
+        "LATEST",
+        "BROWSE",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "SEARCH"
+      ],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK",
+        "COOKIE_STORAGE",
+        "BROWSER_CHALLENGE"
+      ],
       "requestedHostPermissions": [],
-      "systemEvents": {"protocol": "dev.shinsou.system", "minVersion": 1, "maxVersion": 1, "required": [], "optional": []},
-      "sources": [{"sourceId": "9119537447562549661", "legacyLongId": "9119537447562549661", "name": "MyComic", "lang": "zh", "baseUrl": "https://mycomic.com"}]
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
+      "sources": [
+        {
+          "sourceId": "9119537447562549661",
+          "legacyLongId": "9119537447562549661",
+          "name": "MyComic",
+          "lang": "zh",
+          "baseUrl": "https://mycomic.com"
+        }
+      ]
     },
     {
       "id": "zh.dm5",
       "name": "動漫屋",
-      "version": "1.4.0",
-      "versionCode": 5,
+      "version": "1.4.1",
+      "versionCode": 6,
       "lang": "zh",
       "nsfw": true,
       "contract": "shinsou",
       "runtime": "legacy-shinsou-adapter-v2",
       "contentType": "manga",
-      "contentKinds": ["IMAGE_SEQUENCE"],
+      "contentKinds": [
+        "IMAGE_SEQUENCE"
+      ],
       "scriptUrl": "plugins/zh.dm5.js",
       "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.dm5.js",
       "sidecarUrl": "sidecars/zh.dm5.json",
-      "sha256": "947a6a2e75f3415432a45ac84ea50a50ff70ed26b0eb993419a56bad84850642",
-      "byteSize": 21448,
-      "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH", "LOGIN"],
-      "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS", "BROWSER_CHALLENGE"],
-      "requestedHostPermissions": ["REQUEST_LOGIN_UI"],
-      "systemEvents": {"protocol": "dev.shinsou.system", "minVersion": 1, "maxVersion": 1, "required": [], "optional": []},
-      "sources": [{"sourceId": "3947628", "legacyLongId": "3947628", "name": "動漫屋", "lang": "zh", "baseUrl": "https://www.dm5.com"}]
+      "sha256": "88618e4c1e6df4a7955c40e5c24a879c6d04baf945d5a89fea25f2b27ca4e133",
+      "byteSize": 22580,
+      "capabilities": [
+        "CATALOGUE",
+        "LATEST",
+        "BROWSE",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "SEARCH",
+        "LOGIN"
+      ],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK",
+        "COOKIE_STORAGE",
+        "CREDENTIAL_ACCESS",
+        "BROWSER_CHALLENGE"
+      ],
+      "requestedHostPermissions": [
+        "REQUEST_LOGIN_UI"
+      ],
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
+      "sources": [
+        {
+          "sourceId": "3947628",
+          "legacyLongId": "3947628",
+          "name": "動漫屋",
+          "lang": "zh",
+          "baseUrl": "https://www.dm5.com"
+        }
+      ]
     },
     {
       "id": "zh.manhuaren",
@@ -252,17 +543,44 @@
       "contract": "shinsou",
       "runtime": "legacy-shinsou-adapter-v2",
       "contentType": "manga",
-      "contentKinds": ["IMAGE_SEQUENCE"],
+      "contentKinds": [
+        "IMAGE_SEQUENCE"
+      ],
       "scriptUrl": "plugins/zh.manhuaren.js",
       "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.manhuaren.js",
       "sidecarUrl": "sidecars/zh.manhuaren.json",
       "sha256": "3d16db2fee1044211b83d11d3d9ab9daae4b52e0d98817527bc99028fb07baa1",
       "byteSize": 14587,
-      "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
-      "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"],
+      "capabilities": [
+        "CATALOGUE",
+        "LATEST",
+        "BROWSE",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "SEARCH"
+      ],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK"
+      ],
       "requestedHostPermissions": [],
-      "systemEvents": {"protocol": "dev.shinsou.system", "minVersion": 1, "maxVersion": 1, "required": [], "optional": []},
-      "sources": [{"sourceId": "3616827811449702173", "legacyLongId": "3616827811449702173", "name": "漫画人", "lang": "zh", "baseUrl": "https://www.manhuaren.com"}]
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
+      "sources": [
+        {
+          "sourceId": "3616827811449702173",
+          "legacyLongId": "3616827811449702173",
+          "name": "漫画人",
+          "lang": "zh",
+          "baseUrl": "https://www.manhuaren.com"
+        }
+      ]
     },
     {
       "id": "zh.mangacopy",
@@ -274,17 +592,44 @@
       "contract": "shinsou",
       "runtime": "legacy-shinsou-adapter-v2",
       "contentType": "manga",
-      "contentKinds": ["IMAGE_SEQUENCE"],
+      "contentKinds": [
+        "IMAGE_SEQUENCE"
+      ],
       "scriptUrl": "plugins/zh.mangacopy.js",
       "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.mangacopy.js",
       "sidecarUrl": "sidecars/zh.mangacopy.json",
       "sha256": "8da992d2eab8c5b1030b0c9c617e1447645ce8ac3442145760b63f28f62cd8cb",
       "byteSize": 41927,
-      "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
-      "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"],
+      "capabilities": [
+        "CATALOGUE",
+        "LATEST",
+        "BROWSE",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "SEARCH"
+      ],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK"
+      ],
       "requestedHostPermissions": [],
-      "systemEvents": {"protocol": "dev.shinsou.system", "minVersion": 1, "maxVersion": 1, "required": [], "optional": []},
-      "sources": [{"sourceId": "6696312508930833206", "legacyLongId": "6696312508930833206", "name": "拷貝漫畫", "lang": "zh", "baseUrl": "https://www.mangacopy.com"}]
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
+      "sources": [
+        {
+          "sourceId": "6696312508930833206",
+          "legacyLongId": "6696312508930833206",
+          "name": "拷貝漫畫",
+          "lang": "zh",
+          "baseUrl": "https://www.mangacopy.com"
+        }
+      ]
     },
     {
       "id": "all.mangadex",
@@ -296,16 +641,43 @@
       "contract": "shinsou",
       "runtime": "legacy-shinsou-adapter-v2",
       "contentType": "manga",
-      "contentKinds": ["IMAGE_SEQUENCE"],
+      "contentKinds": [
+        "IMAGE_SEQUENCE"
+      ],
       "scriptUrl": "plugins/all.mangadex.js",
       "sidecarUrl": "sidecars/all.mangadex.json",
       "sha256": "320efd108ed7656cb00dd5270f4e54c67f08fc9e3c2af0c362f57af987c2e1f3",
       "byteSize": 25025,
-      "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
-      "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"],
+      "capabilities": [
+        "CATALOGUE",
+        "LATEST",
+        "BROWSE",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "SEARCH"
+      ],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK"
+      ],
       "requestedHostPermissions": [],
-      "systemEvents": {"protocol": "dev.shinsou.system", "minVersion": 1, "maxVersion": 1, "required": [], "optional": []},
-      "sources": [{"sourceId": "2499283", "legacyLongId": "2499283", "name": "MangaDex", "lang": "all", "baseUrl": "https://mangadex.org"}],
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
+      "sources": [
+        {
+          "sourceId": "2499283",
+          "legacyLongId": "2499283",
+          "name": "MangaDex",
+          "lang": "all",
+          "baseUrl": "https://mangadex.org"
+        }
+      ],
       "unindexedLegacy": true
     },
     {
@@ -318,16 +690,46 @@
       "contract": "shinsou",
       "runtime": "legacy-shinsou-adapter-v2",
       "contentType": "manga",
-      "contentKinds": ["IMAGE_SEQUENCE"],
+      "contentKinds": [
+        "IMAGE_SEQUENCE"
+      ],
       "scriptUrl": "plugins/example.login.js",
       "sidecarUrl": "sidecars/example.login.json",
       "sha256": "7e5eefb398da316787da7cf538b17611c47353560ddd3b6699a83842027ca3b9",
       "byteSize": 9910,
-      "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH", "LOGIN"],
-      "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS"],
+      "capabilities": [
+        "CATALOGUE",
+        "LATEST",
+        "BROWSE",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "SEARCH",
+        "LOGIN"
+      ],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK",
+        "COOKIE_STORAGE",
+        "CREDENTIAL_ACCESS"
+      ],
       "requestedHostPermissions": [],
-      "systemEvents": {"protocol": "dev.shinsou.system", "minVersion": 1, "maxVersion": 1, "required": [], "optional": []},
-      "sources": [{"sourceId": "example.login", "legacyLongId": null, "name": "Example Login Source", "lang": "all", "baseUrl": "https://example.com"}],
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
+      "sources": [
+        {
+          "sourceId": "example.login",
+          "legacyLongId": null,
+          "name": "Example Login Source",
+          "lang": "all",
+          "baseUrl": "https://example.com"
+        }
+      ],
       "referenceOnly": true,
       "installable": false
     },
@@ -341,15 +743,34 @@
       "contract": "shinsou",
       "runtime": "legacy-shinsou-adapter-v2",
       "contentType": "both",
-      "contentKinds": ["PLAIN_TEXT", "IMAGE_SEQUENCE"],
+      "contentKinds": [
+        "PLAIN_TEXT",
+        "IMAGE_SEQUENCE"
+      ],
       "scriptUrl": "plugins/example.dual.js",
       "sidecarUrl": "sidecars/example.dual.json",
       "sha256": "cf98ffabc92de87de147f3edc09804ca0447ba7204044377e4e724170e671701",
       "byteSize": 11436,
-      "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
-      "runtimePermissions": ["EXECUTE_SCRIPT"],
+      "capabilities": [
+        "CATALOGUE",
+        "LATEST",
+        "BROWSE",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "SEARCH"
+      ],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT"
+      ],
       "requestedHostPermissions": [],
-      "systemEvents": {"protocol": "dev.shinsou.system", "minVersion": 1, "maxVersion": 1, "required": [], "optional": []},
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
       "sources": [
         {
           "sourceId": "example.dual.novel",
@@ -358,7 +779,9 @@
           "lang": "zh",
           "baseUrl": "https://example.invalid/novel",
           "contentType": "novel",
-          "contentKinds": ["PLAIN_TEXT"]
+          "contentKinds": [
+            "PLAIN_TEXT"
+          ]
         },
         {
           "sourceId": "example.dual.manga",
@@ -367,7 +790,9 @@
           "lang": "zh",
           "baseUrl": "https://example.invalid/manga",
           "contentType": "manga",
-          "contentKinds": ["IMAGE_SEQUENCE"]
+          "contentKinds": [
+            "IMAGE_SEQUENCE"
+          ]
         }
       ],
       "referenceOnly": true,
@@ -383,15 +808,43 @@
       "contract": "shuyue",
       "runtime": "reviewed-shuyue-adapter-v2",
       "contentType": "novel",
-      "contentKinds": ["PLAIN_TEXT"],
+      "contentKinds": [
+        "PLAIN_TEXT"
+      ],
       "scriptUrl": "plugins/zh.bilimanga.js",
       "sidecarUrl": "sidecars/zh.bilimanga.json",
       "sha256": "f740eb9fb1da98774f32aa8a555829a828ea799fc6987781ad594a4a6eceb0f5",
       "byteSize": 29546,
-      "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH", "LOGIN"],
-      "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS", "LOGIN_PROMPT", "BROWSER_CHALLENGE"],
-      "requestedHostPermissions": ["REQUEST_LOGIN_UI"],
-      "systemEvents": {"protocol": "dev.shinsou.system", "minVersion": 1, "maxVersion": 1, "required": ["command.auth.login.request"], "optional": []},
+      "capabilities": [
+        "CATALOGUE",
+        "LATEST",
+        "BROWSE",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "SEARCH",
+        "LOGIN"
+      ],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK",
+        "COOKIE_STORAGE",
+        "CREDENTIAL_ACCESS",
+        "LOGIN_PROMPT",
+        "BROWSER_CHALLENGE"
+      ],
+      "requestedHostPermissions": [
+        "REQUEST_LOGIN_UI"
+      ],
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [
+          "command.auth.login.request"
+        ],
+        "optional": []
+      },
       "sources": [
         {
           "sourceId": "zh.bilimanga.novel",
@@ -400,7 +853,9 @@
           "lang": "zh",
           "baseUrl": "https://tw.linovelib.com",
           "contentType": "novel",
-          "contentKinds": ["PLAIN_TEXT"]
+          "contentKinds": [
+            "PLAIN_TEXT"
+          ]
         }
       ],
       "installable": true
@@ -408,22 +863,49 @@
     {
       "id": "zh.bilimanga.manga",
       "name": "嗶哩漫畫（BiliManga）",
-      "version": "1.0.0",
-      "versionCode": 1,
+      "version": "1.0.1",
+      "versionCode": 2,
       "lang": "zh",
       "nsfw": true,
       "contract": "shinsou",
       "runtime": "legacy-shinsou-adapter-v2",
       "contentType": "manga",
-      "contentKinds": ["IMAGE_SEQUENCE"],
+      "contentKinds": [
+        "IMAGE_SEQUENCE"
+      ],
       "scriptUrl": "plugins/zh.bilimanga.manga.js",
       "sidecarUrl": "sidecars/zh.bilimanga.manga.json",
-      "sha256": "849db61372e4c7cf9d7ca689fbc427c1440dabd10c017a548c242175c651bbdd",
-      "byteSize": 29211,
-      "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH", "LOGIN"],
-      "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS", "BROWSER_CHALLENGE"],
-      "requestedHostPermissions": ["REQUEST_LOGIN_UI"],
-      "systemEvents": {"protocol": "dev.shinsou.system", "minVersion": 1, "maxVersion": 1, "required": ["command.auth.login.request"], "optional": []},
+      "sha256": "0f4f4e8783d835cd5d5b4ee2734ecd219dc02da8df96aa71cce4bb1353f1f759",
+      "byteSize": 32592,
+      "capabilities": [
+        "CATALOGUE",
+        "LATEST",
+        "BROWSE",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "SEARCH",
+        "LOGIN"
+      ],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK",
+        "COOKIE_STORAGE",
+        "CREDENTIAL_ACCESS",
+        "BROWSER_CHALLENGE"
+      ],
+      "requestedHostPermissions": [
+        "REQUEST_LOGIN_UI"
+      ],
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [
+          "command.auth.login.request"
+        ],
+        "optional": []
+      },
       "sources": [
         {
           "sourceId": "7289707411592168382",
@@ -445,17 +927,54 @@
       "contract": "shuyue",
       "runtime": "reviewed-shuyue-adapter-v2",
       "contentType": "novel",
-      "contentKinds": ["PLAIN_TEXT"],
+      "contentKinds": [
+        "PLAIN_TEXT"
+      ],
       "scriptUrl": "plugins/zh.wenku8.js",
       "legacyScriptUrl": "merged-shuyue/shuyue/wenku8.js",
       "sidecarUrl": "sidecars/zh.wenku8.json",
       "sha256": "a6c1f21f94337249403b8d165d1ebe31e2c7534d62ca2b92fc5bd3f3c5bccfd1",
       "byteSize": 36648,
-      "capabilities": ["BROWSE", "SEARCH", "LATEST", "METADATA", "UNITS", "CONTENT", "LOGIN", "FAVORITE"],
-      "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS", "LOGIN_PROMPT", "FAVORITE_MUTATION", "BROWSER_CHALLENGE"],
-      "requestedHostPermissions": ["REQUEST_LOGIN_UI"],
-      "systemEvents": {"protocol": "dev.shinsou.system", "minVersion": 1, "maxVersion": 1, "required": ["command.auth.login.request"], "optional": []},
-      "sources": [{"sourceId": "zh.wenku8", "legacyLongId": null, "name": "輕小說文庫（停止維護）", "lang": "zh", "baseUrl": "https://www.wenku8.net"}],
+      "capabilities": [
+        "BROWSE",
+        "SEARCH",
+        "LATEST",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "LOGIN",
+        "FAVORITE"
+      ],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK",
+        "COOKIE_STORAGE",
+        "CREDENTIAL_ACCESS",
+        "LOGIN_PROMPT",
+        "FAVORITE_MUTATION",
+        "BROWSER_CHALLENGE"
+      ],
+      "requestedHostPermissions": [
+        "REQUEST_LOGIN_UI"
+      ],
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [
+          "command.auth.login.request"
+        ],
+        "optional": []
+      },
+      "sources": [
+        {
+          "sourceId": "zh.wenku8",
+          "legacyLongId": null,
+          "name": "輕小說文庫（停止維護）",
+          "lang": "zh",
+          "baseUrl": "https://www.wenku8.net"
+        }
+      ],
       "legacyCompatibilityOnly": true,
       "installable": false
     },
@@ -469,17 +988,51 @@
       "contract": "shuyue",
       "runtime": "reviewed-shuyue-adapter-v2",
       "contentType": "novel",
-      "contentKinds": ["PLAIN_TEXT"],
+      "contentKinds": [
+        "PLAIN_TEXT"
+      ],
       "scriptUrl": "plugins/zh.wenku8.api.js",
       "legacyScriptUrl": "merged-shuyue/shuyue/wenku8-api.js",
       "sidecarUrl": "sidecars/zh.wenku8.api.json",
       "sha256": "75e67a5937b9a93956f71e1f97f8738fbdabce6b7e7090c90779479e32cae56c",
       "byteSize": 33589,
-      "capabilities": ["BROWSE", "SEARCH", "LATEST", "METADATA", "UNITS", "CONTENT", "LOGIN"],
-      "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS", "LOGIN_PROMPT"],
-      "requestedHostPermissions": ["REQUEST_LOGIN_UI"],
-      "systemEvents": {"protocol": "dev.shinsou.system", "minVersion": 1, "maxVersion": 1, "required": ["command.auth.login.request"], "optional": []},
-      "sources": [{"sourceId": "zh.wenku8.api", "legacyLongId": null, "name": "輕小說文庫", "lang": "zh", "baseUrl": "https://wenku8-relay.mewx.org/"}]
+      "capabilities": [
+        "BROWSE",
+        "SEARCH",
+        "LATEST",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "LOGIN"
+      ],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK",
+        "COOKIE_STORAGE",
+        "CREDENTIAL_ACCESS",
+        "LOGIN_PROMPT"
+      ],
+      "requestedHostPermissions": [
+        "REQUEST_LOGIN_UI"
+      ],
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [
+          "command.auth.login.request"
+        ],
+        "optional": []
+      },
+      "sources": [
+        {
+          "sourceId": "zh.wenku8.api",
+          "legacyLongId": null,
+          "name": "輕小說文庫",
+          "lang": "zh",
+          "baseUrl": "https://wenku8-relay.mewx.org/"
+        }
+      ]
     },
     {
       "id": "zh.biquge.tw",
@@ -492,17 +1045,44 @@
       "runtime": "reviewed-shuyue-adapter-v2",
       "installable": true,
       "contentType": "novel",
-      "contentKinds": ["PLAIN_TEXT"],
+      "contentKinds": [
+        "PLAIN_TEXT"
+      ],
       "scriptUrl": "plugins/zh.biquge.tw.js",
       "legacyScriptUrl": "merged-shuyue/shuyue/biquge-tw.js",
       "sidecarUrl": "sidecars/zh.biquge.tw.json",
       "sha256": "3ab9e37be7ed83e0a7cd65266f984146b60a138f57d85ced4298f8e804dbb151",
       "byteSize": 23631,
-      "capabilities": ["BROWSE", "SEARCH", "LATEST", "METADATA", "UNITS", "CONTENT"],
-      "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "BROWSER_CHALLENGE"],
+      "capabilities": [
+        "BROWSE",
+        "SEARCH",
+        "LATEST",
+        "METADATA",
+        "UNITS",
+        "CONTENT"
+      ],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK",
+        "BROWSER_CHALLENGE"
+      ],
       "requestedHostPermissions": [],
-      "systemEvents": {"protocol": "dev.shinsou.system", "minVersion": 1, "maxVersion": 1, "required": [], "optional": []},
-      "sources": [{"sourceId": "zh.biquge.tw", "legacyLongId": null, "name": "筆趣閣", "lang": "zh", "baseUrl": "https://www.biquge.tw"}]
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
+      "sources": [
+        {
+          "sourceId": "zh.biquge.tw",
+          "legacyLongId": null,
+          "name": "筆趣閣",
+          "lang": "zh",
+          "baseUrl": "https://www.biquge.tw"
+        }
+      ]
     }
   ]
 }
