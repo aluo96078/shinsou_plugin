@@ -123,8 +123,8 @@
     {
       "id": "zh.jinmantiantang",
       "name": "禁漫天堂",
-      "version": "1.0.9",
-      "versionCode": 10,
+      "version": "1.0.10",
+      "versionCode": 11,
       "lang": "zh",
       "nsfw": true,
       "contract": "shinsou",
@@ -136,8 +136,8 @@
       "scriptUrl": "plugins/zh.jinmantiantang.js",
       "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.jinmantiantang.js?v=1.0.7",
       "sidecarUrl": "sidecars/zh.jinmantiantang.json",
-      "sha256": "1cee1cf231775b8b622b855dc3d9e3269e52550201c88408c895537fec6880a8",
-      "byteSize": 24107,
+      "sha256": "81e9358d1d9615fd1adc31f0a5b97be9bad2466d2a9f57d50d923350333adc59",
+      "byteSize": 24612,
       "capabilities": [
         "CATALOGUE",
         "LATEST",

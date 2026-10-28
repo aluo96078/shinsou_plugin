@@ -190,12 +190,16 @@ var source = {
                 var manga = SManga.create();
                 manga.url = link.attr("href");
 
-                // Title
-                var titleEl = item.selectFirst(".title-truncate a, span.video-title, .hidden-xs");
-                if (titleEl) {
-                    manga.title = titleEl.text().trim();
-                } else {
-                    manga.title = link.attr("title") || "";
+                // Title. The author block (div.title-truncate.hidden-xs > a[href*='/search/'])
+                // precedes span.video-title in document order, so a grouped selector would
+                // return the author. Query the title nodes individually, never author links.
+                var titleEl = item.selectFirst("span.video-title")
+                    || item.selectFirst(".video-title")
+                    || item.selectFirst(".title-truncate a[href*='/album/']");
+                manga.title = titleEl ? titleEl.text().trim() : "";
+                if (!manga.title) {
+                    var titledImg = item.selectFirst("img[title], img[alt]");
+                    manga.title = (titledImg && (titledImg.attr("title") || titledImg.attr("alt")) || link.attr("title") || "").trim();
                 }
 
                 // Thumbnail
