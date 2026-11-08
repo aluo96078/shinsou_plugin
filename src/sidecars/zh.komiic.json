@@ -3,24 +3,34 @@
   "contractVersion": 2,
   "packageId": "zh.komiic",
   "name": "Komiic",
-  "version": "1.2.2",
-  "versionCode": 6,
+  "version": "1.2.3",
+  "versionCode": 7,
   "contract": "shinsou",
   "lang": "zh",
   "nsfw": true,
   "installable": true,
   "artifact": {
     "scriptUrl": "plugins/zh.komiic.js",
-    "sha256": "ccdd5c25dc607f26a436377c15f9b4ab1c3ed41aad66e17bb758f23131186b9c",
-    "byteSize": 11711
+    "sha256": "4bc7bf81a39be87d229e7be50d81650d2a630b732fd5d68a75c2618d10c3c53c",
+    "byteSize": 11785
   },
   "content": {
     "contract": "extension-content-v2",
     "contractVersion": 2,
     "type": "manga",
-    "kinds": ["IMAGE_SEQUENCE"]
+    "kinds": [
+      "IMAGE_SEQUENCE"
+    ]
   },
-  "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
+  "capabilities": [
+    "CATALOGUE",
+    "LATEST",
+    "BROWSE",
+    "METADATA",
+    "UNITS",
+    "CONTENT",
+    "SEARCH"
+  ],
   "systemEvents": {
     "protocol": "dev.shinsou.system",
     "minVersion": 1,
@@ -29,30 +39,60 @@
     "optional": []
   },
   "requestedHostPermissions": [],
-  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"],
-  "sources": [{
-    "sourceKey": {
-      "contractVersion": 2,
-      "packageId": "zh.komiic",
+  "runtimePermissions": [
+    "EXECUTE_SCRIPT",
+    "NETWORK"
+  ],
+  "sources": [
+    {
+      "sourceKey": {
+        "contractVersion": 2,
+        "packageId": "zh.komiic",
+        "sourceId": "8104923",
+        "legacyLongId": "8104923"
+      },
       "sourceId": "8104923",
-      "legacyLongId": "8104923"
-    },
-    "sourceId": "8104923",
-    "name": "Komiic",
-    "lang": "zh",
-    "baseUrl": "https://komiic.com",
-    "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
-    "contentKinds": ["IMAGE_SEQUENCE"],
-    "systemEvents": {
-      "protocol": "dev.shinsou.system",
-      "minVersion": 1,
-      "maxVersion": 1,
-      "required": [],
-      "optional": []
-    },
-    "requestedHostPermissions": [],
-    "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"]
-  }],
+      "name": "Komiic",
+      "lang": "zh",
+      "baseUrl": "https://komiic.com",
+      "capabilities": [
+        "CATALOGUE",
+        "LATEST",
+        "BROWSE",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "SEARCH"
+      ],
+      "contentKinds": [
+        "IMAGE_SEQUENCE"
+      ],
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
+      "requestedHostPermissions": [],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK"
+      ],
+      "requestOrigins": [
+        "https://komiic.com"
+      ],
+      "credentialOrigins": [
+        "https://komiic.com"
+      ],
+      "contentOrigins": [
+        "https://img.komiic.com",
+        "https://komiic.com",
+        "https://public.komiic.com"
+      ],
+      "browserSessionOrigins": []
+    }
+  ],
   "migration": {
     "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.komiic.js",
     "legacyIndex": "merged-shuyue/index.json"

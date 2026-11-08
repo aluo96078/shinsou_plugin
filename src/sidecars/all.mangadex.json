@@ -3,8 +3,8 @@
   "contractVersion": 2,
   "packageId": "all.mangadex",
   "name": "MangaDex",
-  "version": "1.2.0",
-  "versionCode": 3,
+  "version": "1.2.1",
+  "versionCode": 4,
   "contract": "shinsou",
   "lang": "all",
   "nsfw": true,
@@ -12,16 +12,26 @@
   "unindexedLegacy": true,
   "artifact": {
     "scriptUrl": "plugins/all.mangadex.js",
-    "sha256": "320efd108ed7656cb00dd5270f4e54c67f08fc9e3c2af0c362f57af987c2e1f3",
-    "byteSize": 25025
+    "sha256": "3753ea822248b6938c59866154b1040377435240b3363cc3ce4618908974806b",
+    "byteSize": 25102
   },
   "content": {
     "contract": "extension-content-v2",
     "contractVersion": 2,
     "type": "manga",
-    "kinds": ["IMAGE_SEQUENCE"]
+    "kinds": [
+      "IMAGE_SEQUENCE"
+    ]
   },
-  "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
+  "capabilities": [
+    "CATALOGUE",
+    "LATEST",
+    "BROWSE",
+    "METADATA",
+    "UNITS",
+    "CONTENT",
+    "SEARCH"
+  ],
   "systemEvents": {
     "protocol": "dev.shinsou.system",
     "minVersion": 1,
@@ -30,28 +40,63 @@
     "optional": []
   },
   "requestedHostPermissions": [],
-  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"],
-  "sources": [{
-    "sourceKey": {
-      "contractVersion": 2,
-      "packageId": "all.mangadex",
+  "runtimePermissions": [
+    "EXECUTE_SCRIPT",
+    "NETWORK"
+  ],
+  "sources": [
+    {
+      "sourceKey": {
+        "contractVersion": 2,
+        "packageId": "all.mangadex",
+        "sourceId": "2499283",
+        "legacyLongId": "2499283"
+      },
       "sourceId": "2499283",
-      "legacyLongId": "2499283"
-    },
-    "sourceId": "2499283",
-    "name": "MangaDex",
-    "lang": "all",
-    "baseUrl": "https://mangadex.org",
-    "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
-    "contentKinds": ["IMAGE_SEQUENCE"],
-    "systemEvents": {
-      "protocol": "dev.shinsou.system",
-      "minVersion": 1,
-      "maxVersion": 1,
-      "required": [],
-      "optional": []
-    },
-    "requestedHostPermissions": [],
-    "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"]
-  }]
+      "name": "MangaDex",
+      "lang": "all",
+      "baseUrl": "https://mangadex.org",
+      "capabilities": [
+        "CATALOGUE",
+        "LATEST",
+        "BROWSE",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "SEARCH"
+      ],
+      "contentKinds": [
+        "IMAGE_SEQUENCE"
+      ],
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
+      "requestedHostPermissions": [],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK"
+      ],
+      "requestOrigins": [
+        "https://api.mangadex.org",
+        "https://mangadex.org"
+      ],
+      "credentialOrigins": [
+        "https://api.mangadex.org",
+        "https://mangadex.org"
+      ],
+      "contentOrigins": [
+        "https://api.mangadex.org",
+        "https://mangadex.org",
+        "https://uploads.mangadex.org"
+      ],
+      "browserSessionOrigins": [],
+      "contentHostSuffixes": [
+        "mangadex.network"
+      ]
+    }
+  ]
 }

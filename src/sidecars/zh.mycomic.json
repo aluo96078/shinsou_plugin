@@ -3,24 +3,34 @@
   "contractVersion": 2,
   "packageId": "zh.mycomic",
   "name": "MyComic",
-  "version": "1.0.2",
-  "versionCode": 3,
+  "version": "1.0.3",
+  "versionCode": 4,
   "contract": "shinsou",
   "lang": "zh",
   "nsfw": true,
   "installable": true,
   "artifact": {
     "scriptUrl": "plugins/zh.mycomic.js",
-    "sha256": "d79fbcd04e3398f57d73af021691fa368ae3d7702dc3ef62d00cc67144fd7eba",
-    "byteSize": 23990
+    "sha256": "e27f90d3c1648402425817df964f69fbc8a5f6f5e33a9c3941ee9902b5262ef8",
+    "byteSize": 24065
   },
   "content": {
     "contract": "extension-content-v2",
     "contractVersion": 2,
     "type": "manga",
-    "kinds": ["IMAGE_SEQUENCE"]
+    "kinds": [
+      "IMAGE_SEQUENCE"
+    ]
   },
-  "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
+  "capabilities": [
+    "CATALOGUE",
+    "LATEST",
+    "BROWSE",
+    "METADATA",
+    "UNITS",
+    "CONTENT",
+    "SEARCH"
+  ],
   "systemEvents": {
     "protocol": "dev.shinsou.system",
     "minVersion": 1,
@@ -29,30 +39,66 @@
     "optional": []
   },
   "requestedHostPermissions": [],
-  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "BROWSER_CHALLENGE"],
-  "sources": [{
-    "sourceKey": {
-      "contractVersion": 2,
-      "packageId": "zh.mycomic",
+  "runtimePermissions": [
+    "EXECUTE_SCRIPT",
+    "NETWORK",
+    "COOKIE_STORAGE",
+    "BROWSER_CHALLENGE"
+  ],
+  "sources": [
+    {
+      "sourceKey": {
+        "contractVersion": 2,
+        "packageId": "zh.mycomic",
+        "sourceId": "9119537447562549661",
+        "legacyLongId": "9119537447562549661"
+      },
       "sourceId": "9119537447562549661",
-      "legacyLongId": "9119537447562549661"
-    },
-    "sourceId": "9119537447562549661",
-    "name": "MyComic",
-    "lang": "zh",
-    "baseUrl": "https://mycomic.com",
-    "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
-    "contentKinds": ["IMAGE_SEQUENCE"],
-    "systemEvents": {
-      "protocol": "dev.shinsou.system",
-      "minVersion": 1,
-      "maxVersion": 1,
-      "required": [],
-      "optional": []
-    },
-    "requestedHostPermissions": [],
-    "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "BROWSER_CHALLENGE"]
-  }],
+      "name": "MyComic",
+      "lang": "zh",
+      "baseUrl": "https://mycomic.com",
+      "capabilities": [
+        "CATALOGUE",
+        "LATEST",
+        "BROWSE",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "SEARCH"
+      ],
+      "contentKinds": [
+        "IMAGE_SEQUENCE"
+      ],
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
+      "requestedHostPermissions": [],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK",
+        "COOKIE_STORAGE",
+        "BROWSER_CHALLENGE"
+      ],
+      "requestOrigins": [
+        "https://mycomic.com"
+      ],
+      "credentialOrigins": [
+        "https://mycomic.com"
+      ],
+      "contentOrigins": [
+        "https://biccam.com",
+        "https://mycomic.com"
+      ],
+      "browserSessionOrigins": [
+        "https://mycomic.com",
+        "https://challenges.cloudflare.com"
+      ]
+    }
+  ],
   "migration": {
     "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.mycomic.js",
     "legacyIndex": "merged-shuyue/index.json"

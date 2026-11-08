@@ -39,6 +39,8 @@ const allowedRuntimePermissions = new Set([
   "LOGIN_PROMPT",
   "FAVORITE_MUTATION",
   "BROWSER_CHALLENGE",
+  "COOKIE_READ",
+  "BROWSER_IMAGES",
 ]);
 
 function expect(condition, message) {
@@ -250,10 +252,18 @@ for (const pkg of index.packages) {
     expect(!/getFavoriteManga\s*=/.test(scriptText), "zh.wenku8.api remote bookcase adapter must be absent");
     expect(!/action=bookcase/.test(scriptText), "zh.wenku8.api must not call the remote bookcase API");
   }
-  expect(
-    (pkg.sources || []).every((source) => !source.browserSessionOrigins || source.browserSessionOrigins.length === 0),
-    pkg.id + " must not receive browser-session transport",
-  );
+  for (const source of pkg.sources || []) {
+    if ((source.browserSessionOrigins || []).length) {
+      expect(pkg.runtimePermissions.includes("BROWSER_CHALLENGE"), pkg.id + " browser-session origins need BROWSER_CHALLENGE");
+    }
+    if ((source.browserImageOrigins || []).length) {
+      expect(pkg.runtimePermissions.includes("BROWSER_IMAGES"), pkg.id + " browser image origins need BROWSER_IMAGES");
+      expect(source.browserImageOrigins.every((o) => source.contentOrigins.includes(o)), pkg.id + " browser image origins are content origins");
+    }
+    if (pkg.contract === "shinsou" && pkg.installable !== false && pkg.runtimePermissions.includes("NETWORK")) {
+      expect(Array.isArray(source.requestOrigins) && source.requestOrigins.length > 0, pkg.id + " must declare its request origins");
+    }
+  }
   if (pkg.contract === "shuyue") expect(mergedIds.has(pkg.id), pkg.id + " must map to merged ShuYue catalog");
 
   const declaredLoginEvents = pkg.systemEvents.required.concat(pkg.systemEvents.optional);

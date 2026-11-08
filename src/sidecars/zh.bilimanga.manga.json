@@ -3,33 +3,55 @@
   "contractVersion": 2,
   "packageId": "zh.bilimanga.manga",
   "name": "嗶哩漫畫（BiliManga）",
-  "version": "1.0.1",
-  "versionCode": 2,
+  "version": "1.0.2",
+  "versionCode": 3,
   "contract": "shinsou",
   "lang": "zh",
   "nsfw": true,
   "installable": true,
   "artifact": {
     "scriptUrl": "plugins/zh.bilimanga.manga.js",
-    "sha256": "0f4f4e8783d835cd5d5b4ee2734ecd219dc02da8df96aa71cce4bb1353f1f759",
-    "byteSize": 32592
+    "sha256": "819a775fbec9631f3d39df041c986212b940369ac53d6c4af273e70d40c88f4a",
+    "byteSize": 32675
   },
   "content": {
     "contract": "extension-content-v2",
     "contractVersion": 2,
     "type": "manga",
-    "kinds": ["IMAGE_SEQUENCE"]
+    "kinds": [
+      "IMAGE_SEQUENCE"
+    ]
   },
-  "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH", "LOGIN"],
+  "capabilities": [
+    "CATALOGUE",
+    "LATEST",
+    "BROWSE",
+    "METADATA",
+    "UNITS",
+    "CONTENT",
+    "SEARCH",
+    "LOGIN"
+  ],
   "systemEvents": {
     "protocol": "dev.shinsou.system",
     "minVersion": 1,
     "maxVersion": 1,
-    "required": ["command.auth.login.request"],
+    "required": [
+      "command.auth.login.request"
+    ],
     "optional": []
   },
-  "requestedHostPermissions": ["REQUEST_LOGIN_UI"],
-  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS", "BROWSER_CHALLENGE"],
+  "requestedHostPermissions": [
+    "REQUEST_LOGIN_UI"
+  ],
+  "runtimePermissions": [
+    "EXECUTE_SCRIPT",
+    "NETWORK",
+    "COOKIE_STORAGE",
+    "CREDENTIAL_ACCESS",
+    "BROWSER_CHALLENGE",
+    "BROWSER_IMAGES"
+  ],
   "sources": [
     {
       "sourceKey": {
@@ -43,17 +65,55 @@
       "lang": "zh",
       "baseUrl": "https://www.bilimanga.net",
       "contentType": "manga",
-      "contentKinds": ["IMAGE_SEQUENCE"],
-      "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH", "LOGIN"],
+      "contentKinds": [
+        "IMAGE_SEQUENCE"
+      ],
+      "capabilities": [
+        "CATALOGUE",
+        "LATEST",
+        "BROWSE",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "SEARCH",
+        "LOGIN"
+      ],
       "systemEvents": {
         "protocol": "dev.shinsou.system",
         "minVersion": 1,
         "maxVersion": 1,
-        "required": ["command.auth.login.request"],
+        "required": [
+          "command.auth.login.request"
+        ],
         "optional": []
       },
-      "requestedHostPermissions": ["REQUEST_LOGIN_UI"],
-      "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS", "BROWSER_CHALLENGE"]
+      "requestedHostPermissions": [
+        "REQUEST_LOGIN_UI"
+      ],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK",
+        "COOKIE_STORAGE",
+        "CREDENTIAL_ACCESS",
+        "BROWSER_CHALLENGE",
+        "BROWSER_IMAGES"
+      ],
+      "requestOrigins": [
+        "https://www.bilimanga.net"
+      ],
+      "credentialOrigins": [
+        "https://www.bilimanga.net"
+      ],
+      "contentOrigins": [
+        "https://i.motiezw.com",
+        "https://www.bilimanga.net"
+      ],
+      "browserSessionOrigins": [
+        "https://www.bilimanga.net"
+      ],
+      "browserImageOrigins": [
+        "https://i.motiezw.com"
+      ]
     }
   ]
 }

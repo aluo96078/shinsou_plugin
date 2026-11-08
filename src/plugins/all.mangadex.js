@@ -614,3 +614,4 @@ var source = {
 if (typeof source === "object" && source) {
     source.v2 = __shinsouExtensionV2;
 }
+// all.mangadex 1.2.1: network origins are declared in the repository index.
