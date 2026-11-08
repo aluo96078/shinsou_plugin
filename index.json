@@ -4,7 +4,7 @@
   "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
   "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
   "payloadType": "repository-index",
-  "sequence": 1,
+  "sequence": 2,
   "payload": {
     "format": "shinsou-extension-v2",
     "contractVersion": 2,
@@ -32,8 +32,8 @@
       {
         "id": "zh.baozimh",
         "name": "包子漫画",
-        "version": "1.0.9",
-        "versionCode": 10,
+        "version": "1.0.10",
+        "versionCode": 11,
         "lang": "zh",
         "nsfw": false,
         "contract": "shinsou",
@@ -45,8 +45,8 @@
         "scriptUrl": "plugins/zh.baozimh.js",
         "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.baozimh.js",
         "sidecarUrl": "sidecars/zh.baozimh.json",
-        "sha256": "850c81d90644a3933fa0d6e5113c057c54d2c22f23b1c5c41dff83003c10f7a9",
-        "byteSize": 23123,
+        "sha256": "84bdf847493e314cfbd771cd995bc9fc8ee183e929ac760224cc903355366772",
+        "byteSize": 23199,
         "capabilities": [
           "CATALOGUE",
           "LATEST",
@@ -74,15 +74,37 @@
             "legacyLongId": "4502917",
             "name": "包子漫画",
             "lang": "zh",
-            "baseUrl": "https://www.baozimh.com"
+            "baseUrl": "https://www.baozimh.com",
+            "requestOrigins": [
+              "https://app.baozimh.com",
+              "https://appgb.baozimh.com",
+              "https://www.baozimh.com",
+              "https://www.twmanga.com"
+            ],
+            "credentialOrigins": [
+              "https://app.baozimh.com",
+              "https://appgb.baozimh.com",
+              "https://www.baozimh.com"
+            ],
+            "contentOrigins": [
+              "https://app.baozimh.com",
+              "https://appgb.baozimh.com",
+              "https://s1.baozicdn.com",
+              "https://s1.bzcdn.net",
+              "https://s2.bzcdn.net",
+              "https://static-tw.baozimh.com",
+              "https://www.baozimh.com",
+              "https://www.twmanga.com"
+            ],
+            "browserSessionOrigins": []
           }
         ]
       },
       {
         "id": "zh.manhuagui",
         "name": "漫画柜",
-        "version": "1.1.8",
-        "versionCode": 10,
+        "version": "1.1.9",
+        "versionCode": 11,
         "lang": "zh",
         "nsfw": true,
         "contract": "shinsou",
@@ -94,8 +116,8 @@
         "scriptUrl": "plugins/zh.manhuagui.js",
         "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.manhuagui.js",
         "sidecarUrl": "sidecars/zh.manhuagui.json",
-        "sha256": "fc6374218ed3c69a7e79823ef61a5f50b97556e29f6f6925ae145c192ab9660c",
-        "byteSize": 32025,
+        "sha256": "f51ae504d02690104347188b349e594c64816dfcc858eb761731604150e2b718",
+        "byteSize": 32102,
         "capabilities": [
           "CATALOGUE",
           "LATEST",
@@ -123,15 +145,27 @@
             "legacyLongId": "6301748",
             "name": "漫画柜",
             "lang": "zh",
-            "baseUrl": "https://tw.manhuagui.com"
+            "baseUrl": "https://tw.manhuagui.com",
+            "requestOrigins": [
+              "https://tw.manhuagui.com"
+            ],
+            "credentialOrigins": [
+              "https://tw.manhuagui.com"
+            ],
+            "contentOrigins": [
+              "https://cf.mhgui.com",
+              "https://i.hamreus.com",
+              "https://tw.manhuagui.com"
+            ],
+            "browserSessionOrigins": []
           }
         ]
       },
       {
         "id": "zh.komiic",
         "name": "Komiic",
-        "version": "1.2.2",
-        "versionCode": 6,
+        "version": "1.2.3",
+        "versionCode": 7,
         "lang": "zh",
         "nsfw": true,
         "contract": "shinsou",
@@ -143,8 +177,8 @@
         "scriptUrl": "plugins/zh.komiic.js",
         "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.komiic.js",
         "sidecarUrl": "sidecars/zh.komiic.json",
-        "sha256": "ccdd5c25dc607f26a436377c15f9b4ab1c3ed41aad66e17bb758f23131186b9c",
-        "byteSize": 11711,
+        "sha256": "4bc7bf81a39be87d229e7be50d81650d2a630b732fd5d68a75c2618d10c3c53c",
+        "byteSize": 11785,
         "capabilities": [
           "CATALOGUE",
           "LATEST",
@@ -172,15 +206,27 @@
             "legacyLongId": "8104923",
             "name": "Komiic",
             "lang": "zh",
-            "baseUrl": "https://komiic.com"
+            "baseUrl": "https://komiic.com",
+            "requestOrigins": [
+              "https://komiic.com"
+            ],
+            "credentialOrigins": [
+              "https://komiic.com"
+            ],
+            "contentOrigins": [
+              "https://img.komiic.com",
+              "https://komiic.com",
+              "https://public.komiic.com"
+            ],
+            "browserSessionOrigins": []
           }
         ]
       },
       {
         "id": "zh.mycomic",
         "name": "MyComic",
-        "version": "1.0.2",
-        "versionCode": 3,
+        "version": "1.0.3",
+        "versionCode": 4,
         "lang": "zh",
         "nsfw": true,
         "contract": "shinsou",
@@ -192,8 +238,8 @@
         "scriptUrl": "plugins/zh.mycomic.js",
         "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.mycomic.js",
         "sidecarUrl": "sidecars/zh.mycomic.json",
-        "sha256": "d79fbcd04e3398f57d73af021691fa368ae3d7702dc3ef62d00cc67144fd7eba",
-        "byteSize": 23990,
+        "sha256": "e27f90d3c1648402425817df964f69fbc8a5f6f5e33a9c3941ee9902b5262ef8",
+        "byteSize": 24065,
         "capabilities": [
           "CATALOGUE",
           "LATEST",
@@ -223,15 +269,29 @@
             "legacyLongId": "9119537447562549661",
             "name": "MyComic",
             "lang": "zh",
-            "baseUrl": "https://mycomic.com"
+            "baseUrl": "https://mycomic.com",
+            "requestOrigins": [
+              "https://mycomic.com"
+            ],
+            "credentialOrigins": [
+              "https://mycomic.com"
+            ],
+            "contentOrigins": [
+              "https://biccam.com",
+              "https://mycomic.com"
+            ],
+            "browserSessionOrigins": [
+              "https://mycomic.com",
+              "https://challenges.cloudflare.com"
+            ]
           }
         ]
       },
       {
         "id": "zh.dm5",
         "name": "動漫屋",
-        "version": "1.4.1",
-        "versionCode": 6,
+        "version": "1.4.2",
+        "versionCode": 7,
         "lang": "zh",
         "nsfw": true,
         "contract": "shinsou",
@@ -243,8 +303,8 @@
         "scriptUrl": "plugins/zh.dm5.js",
         "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.dm5.js",
         "sidecarUrl": "sidecars/zh.dm5.json",
-        "sha256": "88618e4c1e6df4a7955c40e5c24a879c6d04baf945d5a89fea25f2b27ca4e133",
-        "byteSize": 22580,
+        "sha256": "07ee5b119a1492e5445ec783da33693c8a9680e862e403e8c82b7c2a66ef26ba",
+        "byteSize": 22651,
         "capabilities": [
           "CATALOGUE",
           "LATEST",
@@ -278,15 +338,40 @@
             "legacyLongId": "3947628",
             "name": "動漫屋",
             "lang": "zh",
-            "baseUrl": "https://www.dm5.com"
+            "baseUrl": "https://www.dm5.com",
+            "requestOrigins": [
+              "https://www.dm5.com"
+            ],
+            "credentialOrigins": [
+              "https://www.dm5.com"
+            ],
+            "contentOrigins": [
+              "https://manhua1031zjcdn63.cdndm5.com",
+              "https://manhua1033zjcdn79.cdndm5.com",
+              "https://manhua1041zjcdn63.cdndm5.com",
+              "https://manhua1041zjcdn79.cdndm5.com",
+              "https://mhfm1tw.cdndm5.com",
+              "https://mhfm2tw.cdndm5.com",
+              "https://mhfm3tw.cdndm5.com",
+              "https://mhfm4tw.cdndm5.com",
+              "https://mhfm5tw.cdndm5.com",
+              "https://mhfm6tw.cdndm5.com",
+              "https://mhfm7tw.cdndm5.com",
+              "https://mhfm8tw.cdndm5.com",
+              "https://mhfm9tw.cdndm5.com",
+              "https://www.dm5.com"
+            ],
+            "browserSessionOrigins": [
+              "https://www.dm5.com"
+            ]
           }
         ]
       },
       {
         "id": "zh.manhuaren",
         "name": "漫画人",
-        "version": "1.0.0",
-        "versionCode": 1,
+        "version": "1.0.1",
+        "versionCode": 2,
         "lang": "zh",
         "nsfw": false,
         "contract": "shinsou",
@@ -298,8 +383,8 @@
         "scriptUrl": "plugins/zh.manhuaren.js",
         "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.manhuaren.js",
         "sidecarUrl": "sidecars/zh.manhuaren.json",
-        "sha256": "3d16db2fee1044211b83d11d3d9ab9daae4b52e0d98817527bc99028fb07baa1",
-        "byteSize": 14587,
+        "sha256": "4fa2f5e26eba5c6409f4fa96a1d3b7837553589d42f8ceb8360e813d1667bc61",
+        "byteSize": 14664,
         "capabilities": [
           "CATALOGUE",
           "LATEST",
@@ -327,15 +412,36 @@
             "legacyLongId": "3616827811449702173",
             "name": "漫画人",
             "lang": "zh",
-            "baseUrl": "https://www.manhuaren.com"
+            "baseUrl": "https://www.manhuaren.com",
+            "requestOrigins": [
+              "https://www.manhuaren.com"
+            ],
+            "credentialOrigins": [
+              "https://www.manhuaren.com"
+            ],
+            "contentOrigins": [
+              "https://manhua1041zjcdn63.cdndm5.com",
+              "https://manhua1041zjcdn79.cdndm5.com",
+              "https://mhfm1tw.cdndm5.com",
+              "https://mhfm2tw.cdndm5.com",
+              "https://mhfm3tw.cdndm5.com",
+              "https://mhfm4tw.cdndm5.com",
+              "https://mhfm5tw.cdndm5.com",
+              "https://mhfm6tw.cdndm5.com",
+              "https://mhfm7tw.cdndm5.com",
+              "https://mhfm8tw.cdndm5.com",
+              "https://mhfm9tw.cdndm5.com",
+              "https://www.manhuaren.com"
+            ],
+            "browserSessionOrigins": []
           }
         ]
       },
       {
         "id": "zh.mangacopy",
         "name": "拷貝漫畫",
-        "version": "1.0.0",
-        "versionCode": 1,
+        "version": "1.0.1",
+        "versionCode": 2,
         "lang": "zh",
         "nsfw": true,
         "contract": "shinsou",
@@ -347,8 +453,8 @@
         "scriptUrl": "plugins/zh.mangacopy.js",
         "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.mangacopy.js",
         "sidecarUrl": "sidecars/zh.mangacopy.json",
-        "sha256": "8da992d2eab8c5b1030b0c9c617e1447645ce8ac3442145760b63f28f62cd8cb",
-        "byteSize": 41927,
+        "sha256": "52c9ae99c7d17893b2100e5f8b54ac209ad6b7f12d537261799fb5b2e9fefffc",
+        "byteSize": 42004,
         "capabilities": [
           "CATALOGUE",
           "LATEST",
@@ -376,15 +482,77 @@
             "legacyLongId": "6696312508930833206",
             "name": "拷貝漫畫",
             "lang": "zh",
-            "baseUrl": "https://www.mangacopy.com"
+            "baseUrl": "https://www.mangacopy.com",
+            "requestOrigins": [
+              "https://api.copy202602.com",
+              "https://api.manga2026.xyz",
+              "https://mapi.elfgjfghkk.club",
+              "https://mapi.fgjfghkk.club",
+              "https://mapi.fgjfghkkcenter.club",
+              "https://mapi.hotmangasd.com",
+              "https://mapi.hotmangasf.com",
+              "https://mapi.hotmangasg.com",
+              "https://www.2026copy.com",
+              "https://www.copy20.com",
+              "https://www.copy3000.com",
+              "https://www.mangacopy.com"
+            ],
+            "credentialOrigins": [
+              "https://api.copy202602.com",
+              "https://api.manga2026.xyz",
+              "https://mapi.elfgjfghkk.club",
+              "https://mapi.fgjfghkk.club",
+              "https://mapi.fgjfghkkcenter.club",
+              "https://mapi.hotmangasd.com",
+              "https://mapi.hotmangasf.com",
+              "https://mapi.hotmangasg.com",
+              "https://www.2026copy.com",
+              "https://www.copy20.com",
+              "https://www.copy3000.com",
+              "https://www.mangacopy.com"
+            ],
+            "contentOrigins": [
+              "https://api.copy202602.com",
+              "https://api.manga2026.xyz",
+              "https://mapi.elfgjfghkk.club",
+              "https://mapi.fgjfghkk.club",
+              "https://mapi.fgjfghkkcenter.club",
+              "https://mapi.hotmangasd.com",
+              "https://mapi.hotmangasf.com",
+              "https://mapi.hotmangasg.com",
+              "https://s3.mangafunb.fun",
+              "https://sb.mangafunb.fun",
+              "https://sc.mangafunb.fun",
+              "https://sd.mangafunb.fun",
+              "https://se.mangafunb.fun",
+              "https://sf.mangafunb.fun",
+              "https://sg.mangafunb.fun",
+              "https://sj.mangafunb.fun",
+              "https://sl.mangafunb.fun",
+              "https://sm.mangafunb.fun",
+              "https://sn.mangafunb.fun",
+              "https://so.mangafunb.fun",
+              "https://sq.mangafunb.fun",
+              "https://ss.mangafunb.fun",
+              "https://st.mangafunb.fun",
+              "https://sw.mangafunb.fun",
+              "https://sx.mangafunb.fun",
+              "https://sy.mangafunb.fun",
+              "https://sz.mangafunb.fun",
+              "https://www.2026copy.com",
+              "https://www.copy20.com",
+              "https://www.copy3000.com",
+              "https://www.mangacopy.com"
+            ],
+            "browserSessionOrigins": []
           }
         ]
       },
       {
         "id": "all.mangadex",
         "name": "MangaDex",
-        "version": "1.2.0",
-        "versionCode": 3,
+        "version": "1.2.1",
+        "versionCode": 4,
         "lang": "all",
         "nsfw": true,
         "contract": "shinsou",
@@ -395,8 +563,8 @@
         ],
         "scriptUrl": "plugins/all.mangadex.js",
         "sidecarUrl": "sidecars/all.mangadex.json",
-        "sha256": "320efd108ed7656cb00dd5270f4e54c67f08fc9e3c2af0c362f57af987c2e1f3",
-        "byteSize": 25025,
+        "sha256": "3753ea822248b6938c59866154b1040377435240b3363cc3ce4618908974806b",
+        "byteSize": 25102,
         "capabilities": [
           "CATALOGUE",
           "LATEST",
@@ -424,7 +592,24 @@
             "legacyLongId": "2499283",
             "name": "MangaDex",
             "lang": "all",
-            "baseUrl": "https://mangadex.org"
+            "baseUrl": "https://mangadex.org",
+            "requestOrigins": [
+              "https://api.mangadex.org",
+              "https://mangadex.org"
+            ],
+            "credentialOrigins": [
+              "https://api.mangadex.org",
+              "https://mangadex.org"
+            ],
+            "contentOrigins": [
+              "https://api.mangadex.org",
+              "https://mangadex.org",
+              "https://uploads.mangadex.org"
+            ],
+            "browserSessionOrigins": [],
+            "contentHostSuffixes": [
+              "mangadex.network"
+            ]
           }
         ],
         "unindexedLegacy": true
@@ -612,8 +797,8 @@
       {
         "id": "zh.bilimanga.manga",
         "name": "嗶哩漫畫（BiliManga）",
-        "version": "1.0.1",
-        "versionCode": 2,
+        "version": "1.0.2",
+        "versionCode": 3,
         "lang": "zh",
         "nsfw": true,
         "contract": "shinsou",
@@ -624,8 +809,8 @@
         ],
         "scriptUrl": "plugins/zh.bilimanga.manga.js",
         "sidecarUrl": "sidecars/zh.bilimanga.manga.json",
-        "sha256": "0f4f4e8783d835cd5d5b4ee2734ecd219dc02da8df96aa71cce4bb1353f1f759",
-        "byteSize": 32592,
+        "sha256": "819a775fbec9631f3d39df041c986212b940369ac53d6c4af273e70d40c88f4a",
+        "byteSize": 32675,
         "capabilities": [
           "CATALOGUE",
           "LATEST",
@@ -641,7 +826,8 @@
           "NETWORK",
           "COOKIE_STORAGE",
           "CREDENTIAL_ACCESS",
-          "BROWSER_CHALLENGE"
+          "BROWSER_CHALLENGE",
+          "BROWSER_IMAGES"
         ],
         "requestedHostPermissions": [
           "REQUEST_LOGIN_UI"
@@ -661,7 +847,23 @@
             "legacyLongId": "7289707411592168382",
             "name": "嗶哩漫畫（BiliManga）",
             "lang": "zh",
-            "baseUrl": "https://www.bilimanga.net"
+            "baseUrl": "https://www.bilimanga.net",
+            "requestOrigins": [
+              "https://www.bilimanga.net"
+            ],
+            "credentialOrigins": [
+              "https://www.bilimanga.net"
+            ],
+            "contentOrigins": [
+              "https://i.motiezw.com",
+              "https://www.bilimanga.net"
+            ],
+            "browserSessionOrigins": [
+              "https://www.bilimanga.net"
+            ],
+            "browserImageOrigins": [
+              "https://i.motiezw.com"
+            ]
           }
         ],
         "installable": true
@@ -835,5 +1037,5 @@
       }
     ]
   },
-  "signature": "BTKwxKrNiWaoD97dEIDE6OdYcFdrfjEXokCuhS8P4zdaJSycgCVFV-ctVhVJ2ueoIc75v82gE1gzPl0pRkfaBQ"
+  "signature": "YgrPwLkcDz6gBPpCIOu7Hf3xG72_ptmfSHAhZr5UctuxMB2reZrCnG-3PUmWA4ojwUh0_DYEcxaYRjjENnR0AQ"
 }

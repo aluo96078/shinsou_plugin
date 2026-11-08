@@ -4,22 +4,22 @@
   "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
   "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
   "payloadType": "plugin-sidecar",
-  "sequence": 1,
+  "sequence": 2,
   "payload": {
     "format": "shinsou-extension-sidecar-v2",
     "contractVersion": 2,
     "packageId": "zh.komiic",
     "name": "Komiic",
-    "version": "1.2.2",
-    "versionCode": 6,
+    "version": "1.2.3",
+    "versionCode": 7,
     "contract": "shinsou",
     "lang": "zh",
     "nsfw": true,
     "installable": true,
     "artifact": {
       "scriptUrl": "plugins/zh.komiic.js",
-      "sha256": "ccdd5c25dc607f26a436377c15f9b4ab1c3ed41aad66e17bb758f23131186b9c",
-      "byteSize": 11711
+      "sha256": "4bc7bf81a39be87d229e7be50d81650d2a630b732fd5d68a75c2618d10c3c53c",
+      "byteSize": 11785
     },
     "content": {
       "contract": "extension-content-v2",
@@ -85,7 +85,19 @@
         "runtimePermissions": [
           "EXECUTE_SCRIPT",
           "NETWORK"
-        ]
+        ],
+        "requestOrigins": [
+          "https://komiic.com"
+        ],
+        "credentialOrigins": [
+          "https://komiic.com"
+        ],
+        "contentOrigins": [
+          "https://img.komiic.com",
+          "https://komiic.com",
+          "https://public.komiic.com"
+        ],
+        "browserSessionOrigins": []
       }
     ],
     "migration": {
@@ -93,5 +105,5 @@
       "legacyIndex": "merged-shuyue/index.json"
     }
   },
-  "signature": "mT9ZY7JVuKMF2-pKFdRDIh4GIj8xnlXZ0IYTiLJhaOtybA8kkn0V4dALLlaFS82to05-ktTz7iN8Euc64WzlCQ"
+  "signature": "ReSbCBbIUX9xnpaOi4oqv4hP2VHK2h0sryDuX4kY0C0fm-P0o6v1gM8jRxkMaYLkoKK6J-EgqBirOxc03Tn7Ag"
 }

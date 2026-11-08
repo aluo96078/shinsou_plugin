@@ -1046,3 +1046,4 @@ var source = {
 if (typeof source === "object" && source) {
     source.v2 = __shinsouExtensionV2;
 }
+// zh.mangacopy 1.0.1: network origins are declared in the repository index.

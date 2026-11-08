@@ -4,22 +4,22 @@
   "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
   "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
   "payloadType": "plugin-sidecar",
-  "sequence": 1,
+  "sequence": 2,
   "payload": {
     "format": "shinsou-extension-sidecar-v2",
     "contractVersion": 2,
     "packageId": "zh.bilimanga.manga",
     "name": "嗶哩漫畫（BiliManga）",
-    "version": "1.0.1",
-    "versionCode": 2,
+    "version": "1.0.2",
+    "versionCode": 3,
     "contract": "shinsou",
     "lang": "zh",
     "nsfw": true,
     "installable": true,
     "artifact": {
       "scriptUrl": "plugins/zh.bilimanga.manga.js",
-      "sha256": "0f4f4e8783d835cd5d5b4ee2734ecd219dc02da8df96aa71cce4bb1353f1f759",
-      "byteSize": 32592
+      "sha256": "819a775fbec9631f3d39df041c986212b940369ac53d6c4af273e70d40c88f4a",
+      "byteSize": 32675
     },
     "content": {
       "contract": "extension-content-v2",
@@ -56,7 +56,8 @@
       "NETWORK",
       "COOKIE_STORAGE",
       "CREDENTIAL_ACCESS",
-      "BROWSER_CHALLENGE"
+      "BROWSER_CHALLENGE",
+      "BROWSER_IMAGES"
     ],
     "sources": [
       {
@@ -101,10 +102,27 @@
           "NETWORK",
           "COOKIE_STORAGE",
           "CREDENTIAL_ACCESS",
-          "BROWSER_CHALLENGE"
+          "BROWSER_CHALLENGE",
+          "BROWSER_IMAGES"
+        ],
+        "requestOrigins": [
+          "https://www.bilimanga.net"
+        ],
+        "credentialOrigins": [
+          "https://www.bilimanga.net"
+        ],
+        "contentOrigins": [
+          "https://i.motiezw.com",
+          "https://www.bilimanga.net"
+        ],
+        "browserSessionOrigins": [
+          "https://www.bilimanga.net"
+        ],
+        "browserImageOrigins": [
+          "https://i.motiezw.com"
         ]
       }
     ]
   },
-  "signature": "l4Op3CsxDn0n2KdGb1mFhWIVc3LbRdZdGHQIsEJuhmZ2TxmiLl_1orG3yRJb_rse_0jFAViWjWUPGtO1etVPCg"
+  "signature": "IAan9_OqZMt-0m89Og4xlH9dm17_eG8Itg9r_6LsiCx0cRePSf5aCmkSi2QHcOoBTx8lJmWs3LhqJbEs1kbFAQ"
 }

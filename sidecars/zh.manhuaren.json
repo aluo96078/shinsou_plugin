@@ -4,22 +4,22 @@
   "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
   "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
   "payloadType": "plugin-sidecar",
-  "sequence": 1,
+  "sequence": 2,
   "payload": {
     "format": "shinsou-extension-sidecar-v2",
     "contractVersion": 2,
     "packageId": "zh.manhuaren",
     "name": "漫画人",
-    "version": "1.0.0",
-    "versionCode": 1,
+    "version": "1.0.1",
+    "versionCode": 2,
     "contract": "shinsou",
     "lang": "zh",
     "nsfw": false,
     "installable": true,
     "artifact": {
       "scriptUrl": "plugins/zh.manhuaren.js",
-      "sha256": "3d16db2fee1044211b83d11d3d9ab9daae4b52e0d98817527bc99028fb07baa1",
-      "byteSize": 14587
+      "sha256": "4fa2f5e26eba5c6409f4fa96a1d3b7837553589d42f8ceb8360e813d1667bc61",
+      "byteSize": 14664
     },
     "content": {
       "contract": "extension-content-v2",
@@ -85,7 +85,28 @@
         "runtimePermissions": [
           "EXECUTE_SCRIPT",
           "NETWORK"
-        ]
+        ],
+        "requestOrigins": [
+          "https://www.manhuaren.com"
+        ],
+        "credentialOrigins": [
+          "https://www.manhuaren.com"
+        ],
+        "contentOrigins": [
+          "https://manhua1041zjcdn63.cdndm5.com",
+          "https://manhua1041zjcdn79.cdndm5.com",
+          "https://mhfm1tw.cdndm5.com",
+          "https://mhfm2tw.cdndm5.com",
+          "https://mhfm3tw.cdndm5.com",
+          "https://mhfm4tw.cdndm5.com",
+          "https://mhfm5tw.cdndm5.com",
+          "https://mhfm6tw.cdndm5.com",
+          "https://mhfm7tw.cdndm5.com",
+          "https://mhfm8tw.cdndm5.com",
+          "https://mhfm9tw.cdndm5.com",
+          "https://www.manhuaren.com"
+        ],
+        "browserSessionOrigins": []
       }
     ],
     "migration": {
@@ -93,5 +114,5 @@
       "legacyIndex": "merged-shuyue/index.json"
     }
   },
-  "signature": "QNqKyC6INsS96BDZ99MIZCu8spdvgTr0zMirvtaDV0ymw0MWZl9DfF51PN0XgNH8BThbziyqZN7L8Gtenb6SAQ"
+  "signature": "GViSnO3u1KgglGZSy9CmbgjdQutdEEmX-CIGsS9siY_Rpcvxixa3aDy5FvOw6hjSgesJ7XN-RgmM4ZplDeG_CA"
 }
