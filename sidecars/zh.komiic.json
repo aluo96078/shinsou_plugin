@@ -4,7 +4,7 @@
   "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
   "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
   "payloadType": "plugin-sidecar",
-  "sequence": 2,
+  "sequence": 3,
   "payload": {
     "format": "shinsou-extension-sidecar-v2",
     "contractVersion": 2,
@@ -62,29 +62,9 @@
         "name": "Komiic",
         "lang": "zh",
         "baseUrl": "https://komiic.com",
-        "capabilities": [
-          "CATALOGUE",
-          "LATEST",
-          "BROWSE",
-          "METADATA",
-          "UNITS",
-          "CONTENT",
-          "SEARCH"
-        ],
+        "contentType": "manga",
         "contentKinds": [
           "IMAGE_SEQUENCE"
-        ],
-        "systemEvents": {
-          "protocol": "dev.shinsou.system",
-          "minVersion": 1,
-          "maxVersion": 1,
-          "required": [],
-          "optional": []
-        },
-        "requestedHostPermissions": [],
-        "runtimePermissions": [
-          "EXECUTE_SCRIPT",
-          "NETWORK"
         ],
         "requestOrigins": [
           "https://komiic.com"
@@ -97,13 +77,30 @@
           "https://komiic.com",
           "https://public.komiic.com"
         ],
-        "browserSessionOrigins": []
+        "browserSessionOrigins": [],
+        "capabilities": [
+          "CATALOGUE",
+          "LATEST",
+          "BROWSE",
+          "METADATA",
+          "UNITS",
+          "CONTENT",
+          "SEARCH"
+        ],
+        "systemEvents": {
+          "protocol": "dev.shinsou.system",
+          "minVersion": 1,
+          "maxVersion": 1,
+          "required": [],
+          "optional": []
+        },
+        "requestedHostPermissions": [],
+        "runtimePermissions": [
+          "EXECUTE_SCRIPT",
+          "NETWORK"
+        ]
       }
-    ],
-    "migration": {
-      "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.komiic.js",
-      "legacyIndex": "merged-shuyue/index.json"
-    }
+    ]
   },
-  "signature": "ReSbCBbIUX9xnpaOi4oqv4hP2VHK2h0sryDuX4kY0C0fm-P0o6v1gM8jRxkMaYLkoKK6J-EgqBirOxc03Tn7Ag"
+  "signature": "yy5hKH8HdJFaLeq7Ej4y3pwaN2jeq6NEoqgcq4BWP5keYOTHI5xEQXgfQ8b7ET5u_17cLBAT_vJfhgubSnqZDA"
 }

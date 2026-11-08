@@ -4,7 +4,7 @@
   "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
   "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
   "payloadType": "plugin-sidecar",
-  "sequence": 2,
+  "sequence": 3,
   "payload": {
     "format": "shinsou-extension-sidecar-v2",
     "contractVersion": 2,
@@ -64,31 +64,9 @@
         "name": "MyComic",
         "lang": "zh",
         "baseUrl": "https://mycomic.com",
-        "capabilities": [
-          "CATALOGUE",
-          "LATEST",
-          "BROWSE",
-          "METADATA",
-          "UNITS",
-          "CONTENT",
-          "SEARCH"
-        ],
+        "contentType": "manga",
         "contentKinds": [
           "IMAGE_SEQUENCE"
-        ],
-        "systemEvents": {
-          "protocol": "dev.shinsou.system",
-          "minVersion": 1,
-          "maxVersion": 1,
-          "required": [],
-          "optional": []
-        },
-        "requestedHostPermissions": [],
-        "runtimePermissions": [
-          "EXECUTE_SCRIPT",
-          "NETWORK",
-          "COOKIE_STORAGE",
-          "BROWSER_CHALLENGE"
         ],
         "requestOrigins": [
           "https://mycomic.com"
@@ -103,13 +81,32 @@
         "browserSessionOrigins": [
           "https://mycomic.com",
           "https://challenges.cloudflare.com"
+        ],
+        "capabilities": [
+          "CATALOGUE",
+          "LATEST",
+          "BROWSE",
+          "METADATA",
+          "UNITS",
+          "CONTENT",
+          "SEARCH"
+        ],
+        "systemEvents": {
+          "protocol": "dev.shinsou.system",
+          "minVersion": 1,
+          "maxVersion": 1,
+          "required": [],
+          "optional": []
+        },
+        "requestedHostPermissions": [],
+        "runtimePermissions": [
+          "EXECUTE_SCRIPT",
+          "NETWORK",
+          "COOKIE_STORAGE",
+          "BROWSER_CHALLENGE"
         ]
       }
-    ],
-    "migration": {
-      "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.mycomic.js",
-      "legacyIndex": "merged-shuyue/index.json"
-    }
+    ]
   },
-  "signature": "FgcQ8ZLVXg0m95ZoofYmOygsc09yOiTXw_AYHrx95cZgVgIyuLOm-cEWbOx8U0AT21emE-DMTonhuGx1C1B1AQ"
+  "signature": "uqqv80SqoPC2t9r4ZTL33l4vmTc2xOJjhoCnXfj8m7pHVkeBJEsiatRzTLLLZVizA_JVPdGAUesgYQIhyE73DA"
 }

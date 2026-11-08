@@ -1,18 +1,14 @@
 /*
- * Shinsou extension content v2 executable artifact.
+ * Shinsou extension content v2 executable artifact (Shinsou script format).
  *
- * This is an independently hashed migration artifact. The legacy source remains in
- * merged-shuyue/shuyue/wenku8.js; this file carries the v2 declaration consumed by the host admission layer.
+ * Wenku8 HTML site source. The site parsing lives in the internal Wenku8 helper object; the
+ * exported `source` only carries the Shinsou metadata and hooks.
  */
 var __shinsouExtensionV2 = {"contractVersion":2,"contentContract":"extension-content-v2","packageId":"zh.wenku8","contentType":"novel","contentKinds":["PLAIN_TEXT"],"systemEvents":{"protocol":"dev.shinsou.system","minVersion":1,"maxVersion":1,"required":["command.auth.login.request"],"optional":[]},"requestedHostPermissions":["REQUEST_LOGIN_UI"]};
-var source = {
-  id: "zh.wenku8",
-  name: "輕小說文庫（停止維護）",
-  lang: "zh",
-  baseUrl: "https://www.wenku8.net",
-  supportsLogin: true,
-  supportsLatest: true,
-  supportsFavorites: true,
+var WENKU8_BASE_URL = "https://www.wenku8.net";
+
+var Wenku8 = {
+  baseUrl: WENKU8_BASE_URL,
   // Login prompts are emitted by the plugin so the host can show its native
   // dialog. Keep a short source-level cooldown because one screen can load
   // tags, latest books and the bookcase in quick succession.
@@ -24,16 +20,10 @@ var source = {
     "Referer": "https://www.wenku8.net/login.php"
   },
 
-  // ShuYue passes (sourceId, message) to bridge.log, while older Shinsou
-  // hosts expose a one-argument bridge.log(message). Keep diagnostics useful
-  // on both hosts without requiring a new bridge API.
   log: function(message) {
     try {
       if (typeof bridge === "undefined" || !bridge || typeof bridge.log !== "function") return;
-      var text = String(message == null ? "" : message);
-      var arity = Number(bridge.log.length);
-      if (isFinite(arity) && arity <= 1) bridge.log(text);
-      else bridge.log(this.id, text);
+      bridge.log(String(message == null ? "" : message));
     } catch (ignored) {}
   },
 
@@ -117,8 +107,7 @@ var source = {
       { id: "rank:goodnum", title: "總收藏榜", group: "總榜" },
       { id: "rank:size", title: "字數排行", group: "總榜" },
       { id: "article:0", title: "全部作品", group: "書庫" },
-      { id: "article:1", title: "完結作品", group: "書庫" },
-      { id: "bookcase", title: "我的書架", group: "個人" }
+      { id: "article:1", title: "完結作品", group: "書庫" }
     ];
     // This hook runs while the source catalogue is being opened. Never perform network I/O here:
     // the legacy implementation fetched the Cloudflare-sensitive tags page synchronously and
@@ -215,7 +204,6 @@ var source = {
       if (!cid) continue;
       var title = this.cleanText(match[3]);
       chapters.push({
-        sourceId: this.id,
         bookUrl: bookUrl,
         title: volumeTitle ? volumeTitle + " / " + title : title,
         url: this.chapterContentUrl(chapterAid, cid),
@@ -242,7 +230,17 @@ var source = {
 
   requestPage: function(url, referer, allowEmptyFallback) {
     var headers = this.dalvikHeaders(referer);
-    var html = this.httpOnly(url, headers);
+    var html;
+    var httpError = null;
+    try {
+      html = this.httpOnly(url, headers);
+    } catch (error) {
+      // An endpoint that is allowed to use the browser session may report the
+      // challenge as a transport failure; try the browser before giving up.
+      if (!allowEmptyFallback) throw error;
+      httpError = error;
+      html = null;
+    }
     // Some platform HTTP bridges expose a 403/challenge as null instead of
     // returning its HTML body. Only the explicitly CF-sensitive endpoints
     // pass allowEmptyFallback=true; a normal page keeps the empty result as a
@@ -250,16 +248,39 @@ var source = {
     if (html && !this.isCloudflareResponse(html)) return html;
     if (!html && !allowEmptyFallback) return html;
 
-    if (!bridge.webViewGetWithHeaders) {
-      this.log("Cloudflare response needs browser clearance, but no WebView bridge is available.");
+    var browserHtml = this.browserPage(url, this.mergeHeaders(headers));
+    if (browserHtml === undefined) {
+      this.log("Cloudflare response needs browser clearance, but no browser session is available.");
+      if (httpError) throw httpError;
       return html;
     }
-
-    var browserHtml = bridge.webViewGetWithHeaders(url, this.mergeHeaders(headers));
     this.log("Cloudflare fallback returned " + (browserHtml ? browserHtml.length + " chars" : "null") + " for " + url.substring(0, 80));
     // Keep the original challenge page when the browser fallback fails so the
     // caller can report a source failure instead of parsing an empty value.
+    if (!browserHtml && httpError) throw httpError;
     return browserHtml || html;
+  },
+
+  // Browser-session GET. Returns undefined when no browser transport exists or the
+  // host refused it (permission not granted), "" or a string otherwise.
+  browserPage: function(url, headers) {
+    try {
+      if (typeof bridge === "undefined" || !bridge) return undefined;
+      if (typeof bridge.browserSessionRequest === "function") {
+        var response = bridge.browserSessionRequest(url, "GET", "", headers || {});
+        if (response && typeof response === "object") {
+          var body = response.body != null ? response.body : response.text;
+          return typeof body === "string" ? body : "";
+        }
+        return typeof response === "string" ? response : "";
+      }
+      if (typeof bridge.webViewGetWithHeaders === "function") {
+        return bridge.webViewGetWithHeaders(url, headers || {}) || "";
+      }
+    } catch (error) {
+      this.log("Browser session request failed: " + error);
+    }
+    return undefined;
   },
 
   chapters: function(book) {
@@ -309,7 +330,6 @@ var source = {
     var cover = this.firstAttr(html, /<img[^>]+src=["']([^"']*\/image\/[^"']+)["'][^>]*>/i)
       || this.firstAttr(html, /<img[^>]+src=["']([^"']+)["'][^>]*>/i);
     return {
-      sourceId: this.id,
       title: this.cleanText(title),
       url: this.baseUrl + "/book/" + aid + ".htm",
       author: this.cleanText(author || ""),
@@ -357,7 +377,6 @@ var source = {
     var aidImgRe = new RegExp('<img[^>]+src=["\']([^"\']*/' + aid + '/[^"\']+)["\'][^>]*>', 'i');
     var cover = this.firstAttr(block, aidImgRe);
     results.push({
-      sourceId: this.id,
       title: title,
       url: this.baseUrl + "/book/" + aid + ".htm",
       author: this.cleanText(this.firstText(block, /小说作者：\s*([^<\n]+)/i) || this.firstText(block, /作者：\s*([^<\n]+)/i) || ""),
@@ -665,7 +684,6 @@ var source = {
     var authorMatch = /(?:作者|作家)[：:]?\s*(?:<[^>]+>\s*)*([^<\n]+)/i.exec(afterTitle);
     var author = authorMatch ? this.cleanText(authorMatch[1]) : "";
     results.push({
-      sourceId: this.id,
       title: title,
       url: this.baseUrl + "/book/" + aid + ".htm",
       author: author,
@@ -683,23 +701,13 @@ var source = {
     }
     this._lastLoginRequestAt = now;
     try {
-      if (typeof bridge !== "undefined" && bridge) {
-        // V2 hosts expose login through the versioned system-event transport.
-        // Fall back to the legacy callback only for older hosts.
-        if (bridge.system && typeof bridge.system.requestLogin === "function") {
-          bridge.system.requestLogin(reason);
-          return true;
-        }
-        if (typeof bridge.requestLogin === "function") {
-          var arity = Number(bridge.requestLogin.length);
-          if (isFinite(arity) && arity <= 1) bridge.requestLogin(reason);
-          else bridge.requestLogin(this.id, reason);
-          return true;
-        }
+      if (typeof bridge !== "undefined" && bridge && typeof bridge.requestLogin === "function") {
+        bridge.requestLogin(String(reason || ""));
+        return true;
       }
     } catch (ignored) {}
-    // Older Shinsou hosts do not provide a login-dialog callback. Keep the
-    // protected operation safe and let the user sign in from source settings.
+    // Hosts without a login-dialog callback keep the protected operation safe
+    // and let the user sign in from source settings.
     return false;
   },
 
@@ -725,97 +733,124 @@ var source = {
   }
 };
 
-// Legacy Shinsou plugin compatibility. Keep the current ShuYue source API
-// intact while exposing the historical get* contract used by old hosts.
-(function installLegacyShinsouContract(target) {
-  function pageNumber(value) {
-    var number = Number(value);
-    return isFinite(number) ? Math.max(1, Math.floor(number) + 1) : 1;
-  }
+// ---- Shinsou hooks -------------------------------------------------------
 
-  function legacyBook(value) {
-    if (!value || typeof value !== "object") return null;
-    var url = String(value.url || "");
-    if (!url) return null;
-    var status = typeof value.status === "number" && isFinite(value.status) ? value.status : 0;
-    return {
-      url: url,
-      title: String(value.title || value.name || url),
-      author: value.author || null,
-      artist: value.artist || null,
-      description: value.description || null,
-      genre: value.genre || null,
-      status: status,
-      thumbnailUrl: value.thumbnailUrl || value.thumbnail_url || value.coverImage || value.cover || null,
-      initialized: true
-    };
-  }
+function wenku8PageNumber(value) {
+  var number = Number(value);
+  return isFinite(number) && number >= 0 ? Math.floor(number) + 1 : 1;
+}
 
-  function legacyPage(values, hasNextPage) {
-    var list = Array.isArray(values) ? values : [];
-    var mangas = [];
-    for (var i = 0; i < list.length; i++) {
-      var mapped = legacyBook(list[i]);
-      if (mapped) mangas.push(mapped);
+function wenku8Manga(value) {
+  if (!value || typeof value !== "object") return null;
+  var url = String(value.url || "");
+  if (!url) return null;
+  var status = typeof value.status === "number" && isFinite(value.status) ? value.status : 0;
+  return {
+    url: url,
+    title: String(value.title || value.name || url),
+    author: value.author || null,
+    artist: value.artist || null,
+    description: value.description || null,
+    genre: Array.isArray(value.genre) ? value.genre : [],
+    status: status,
+    thumbnailUrl: value.thumbnailUrl || value.thumbnail_url || value.coverImage || value.cover || null,
+    initialized: true
+  };
+}
+
+function wenku8Page(values, hasNextPage) {
+  var list = Array.isArray(values) ? values : [];
+  var mangas = [];
+  for (var i = 0; i < list.length; i++) {
+    var mapped = wenku8Manga(list[i]);
+    if (mapped) mangas.push(mapped);
+  }
+  return { mangas: mangas, hasNextPage: hasNextPage === undefined ? mangas.length > 0 : !!hasNextPage };
+}
+
+function wenku8SelectedFilter(filters) {
+  if (!Array.isArray(filters)) return 0;
+  for (var i = 0; i < filters.length; i++) {
+    var filter = filters[i] || {};
+    if (Array.isArray(filter.values)) {
+      var state = Number(filter.state);
+      if (isFinite(state)) return Math.max(0, Math.floor(state));
     }
-    return { mangas: mangas, hasNextPage: hasNextPage === undefined ? mangas.length > 0 : !!hasNextPage };
+    var nested = wenku8SelectedFilter(filter.filters);
+    if (nested > 0) return nested;
   }
+  return 0;
+}
 
-  function selectedFilter(filters) {
-    if (!Array.isArray(filters)) return 0;
-    for (var i = 0; i < filters.length; i++) {
-      var filter = filters[i] || {};
-      if (Array.isArray(filter.values)) {
-        var state = Number(filter.state);
-        if (isFinite(state)) return Math.max(0, Math.floor(state));
+var source = {
+  id: "zh.wenku8",
+  name: "輕小說文庫（停止維護）",
+  lang: "zh",
+  baseUrl: WENKU8_BASE_URL,
+  webChallengeUrl: WENKU8_BASE_URL,
+  supportsLogin: true,
+  supportsLatest: true,
+  supportsFavorites: true,
+  headers: Wenku8.headers,
+
+  login: function(username, password) {
+    return Wenku8.login(username, password);
+  },
+
+  logout: function() {
+    try {
+      if (typeof bridge !== "undefined" && bridge) {
+        if (typeof bridge.clearCredential === "function") bridge.clearCredential();
+        if (typeof bridge.clearCookies === "function") bridge.clearCookies();
       }
-      var nested = selectedFilter(filter.filters);
-      if (nested > 0) return nested;
-    }
-    return 0;
-  }
+    } catch (ignored) {}
+    Wenku8._lastLoginRequestAt = 0;
+  },
 
-  function legacyFilters() {
-    var options = typeof target.browseOptions === "function" ? target.browseOptions() : [];
-    var values = ["搜尋"];
-    for (var i = 0; i < options.length; i++) values.push(String(options[i].title || options[i].id || "分類"));
-    return [{ type: "select", name: "分類", values: values, state: 0 }];
-  }
+  getPopularManga: function(page) {
+    return wenku8Page(Wenku8.latest(wenku8PageNumber(page)));
+  },
 
-  target.getPopularManga = function(page) {
-    return legacyPage(target.latest(pageNumber(page)));
-  };
+  getLatestUpdates: function(page) {
+    return wenku8Page(Wenku8.latest(wenku8PageNumber(page)));
+  },
 
-  target.getLatestUpdates = function(page) {
-    return legacyPage(target.latest(pageNumber(page)));
-  };
-
-  target.getFavoriteManga = function(page) {
-    return legacyPage(target.browse("bookcase", pageNumber(page)), false);
-  };
-
-  target.getSearchManga = function(page, query, filters) {
-    var options = typeof target.browseOptions === "function" ? target.browseOptions() : [];
-    var selected = selectedFilter(filters);
+  getSearchManga: function(page, query, filters) {
+    var options = Wenku8.browseOptions();
+    var selected = wenku8SelectedFilter(filters);
     if (selected > 0 && options[selected - 1]) {
-      return legacyPage(target.browse(options[selected - 1].id, pageNumber(page)));
+      return wenku8Page(Wenku8.browse(options[selected - 1].id, wenku8PageNumber(page)));
     }
-    return legacyPage(target.search(String(query || ""), pageNumber(page)));
-  };
+    var keyword = String(query || "");
+    // A direct book id/url lookup returns one result; later pages would repeat it.
+    return wenku8Page(Wenku8.search(keyword, wenku8PageNumber(page)), Wenku8.aidFromText(keyword.trim()) ? false : undefined);
+  },
 
-  target.getMangaDetails = function(manga) {
-    var input = manga || {};
-    var aid = typeof target.aidFromText === "function" ? target.aidFromText(input.url) : "";
-    var details = aid && typeof target.bookFromAid === "function" ? target.bookFromAid(aid) : null;
-    return legacyBook(details || input) || legacyBook({ url: String(input.url || ""), title: String(input.title || "") });
-  };
+  // The bookcase is one complete page; there is never a next page.
+  getFavoriteManga: function(page) {
+    return wenku8Page(Wenku8.browse("bookcase", wenku8PageNumber(page)), false);
+  },
 
-  target.getChapterList = function(manga) {
+  // The site API only adds to the bookcase; removal is not supported.
+  setFavorite: function(manga, favorite) {
+    if (!favorite) return false;
     var input = manga || {};
-    var values = typeof target.chapters === "function" ? target.chapters({
+    return !!Wenku8.favorite({ url: String(input.url || ""), title: String(input.title || "") });
+  },
+
+  getMangaDetails: function(manga) {
+    var input = manga || {};
+    var aid = Wenku8.aidFromText(input.url);
+    var details = aid ? Wenku8.bookFromAid(aid) : null;
+    return wenku8Manga(details || input) || wenku8Manga({ url: String(input.url || ""), title: String(input.title || "") });
+  },
+
+  getChapterList: function(manga) {
+    var input = manga || {};
+    var values = Wenku8.chapters({
       url: String(input.url || ""),
       title: String(input.title || "")
-    }) : [];
+    });
     var chapters = [];
     for (var i = 0; i < values.length; i++) {
       var value = values[i] || {};
@@ -830,31 +865,22 @@ var source = {
       });
     }
     return chapters;
-  };
+  },
 
-  // Older Shinsou hosts only know image-oriented Page values. Preserve the
-  // chapter URL and attach text/content for hosts that understand text pages.
-  target.getPageList = function(chapter) {
+  getChapterText: function(chapter) {
     var input = chapter || {};
-    var text = typeof target.chapterText === "function" ? target.chapterText(input) : "";
-    if (!text) return [];
-    return [{ index: 0, url: String(input.url || ""), imageUrl: null, text: String(text), content: String(text) }];
-  };
+    var text = String(Wenku8.chapterText(input) || "");
+    // Host limit is 4 MiB of UTF-8; cap by characters (up to 3 bytes each).
+    return text.length > 1300000 ? text.substring(0, 1300000) : text;
+  },
 
-  target.getFilterList = legacyFilters;
+  getFilterList: function() {
+    var options = Wenku8.browseOptions();
+    var values = ["搜尋"];
+    for (var i = 0; i < options.length; i++) values.push(String(options[i].title || options[i].id || "分類"));
+    return [{ type: "select", name: "分類", values: values, state: 0 }];
+  }
+};
 
-  target.logout = function() {
-    try {
-      if (typeof bridge !== "undefined" && bridge) {
-        if (typeof bridge.clearCredential === "function") bridge.clearCredential();
-        if (typeof bridge.clearCookies === "function") bridge.clearCookies();
-      }
-    } catch (ignored) {}
-    target._lastLoginRequestAt = 0;
-  };
-})(source);
-
-// Expose only bounded, host-audited v2 metadata; executable calls still cross the legacy adapter.
-if (typeof source === "object" && source) {
-    source.v2 = __shinsouExtensionV2;
-}
+// Expose only bounded, host-audited v2 metadata.
+source.v2 = __shinsouExtensionV2;

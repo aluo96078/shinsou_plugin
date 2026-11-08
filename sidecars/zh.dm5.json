@@ -4,7 +4,7 @@
   "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
   "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
   "payloadType": "plugin-sidecar",
-  "sequence": 2,
+  "sequence": 3,
   "payload": {
     "format": "shinsou-extension-sidecar-v2",
     "contractVersion": 2,
@@ -68,35 +68,9 @@
         "name": "動漫屋",
         "lang": "zh",
         "baseUrl": "https://www.dm5.com",
-        "capabilities": [
-          "CATALOGUE",
-          "LATEST",
-          "BROWSE",
-          "METADATA",
-          "UNITS",
-          "CONTENT",
-          "SEARCH",
-          "LOGIN"
-        ],
+        "contentType": "manga",
         "contentKinds": [
           "IMAGE_SEQUENCE"
-        ],
-        "systemEvents": {
-          "protocol": "dev.shinsou.system",
-          "minVersion": 1,
-          "maxVersion": 1,
-          "required": [],
-          "optional": []
-        },
-        "requestedHostPermissions": [
-          "REQUEST_LOGIN_UI"
-        ],
-        "runtimePermissions": [
-          "EXECUTE_SCRIPT",
-          "NETWORK",
-          "COOKIE_STORAGE",
-          "CREDENTIAL_ACCESS",
-          "BROWSER_CHALLENGE"
         ],
         "requestOrigins": [
           "https://www.dm5.com"
@@ -122,13 +96,36 @@
         ],
         "browserSessionOrigins": [
           "https://www.dm5.com"
+        ],
+        "capabilities": [
+          "CATALOGUE",
+          "LATEST",
+          "BROWSE",
+          "METADATA",
+          "UNITS",
+          "CONTENT",
+          "SEARCH",
+          "LOGIN"
+        ],
+        "systemEvents": {
+          "protocol": "dev.shinsou.system",
+          "minVersion": 1,
+          "maxVersion": 1,
+          "required": [],
+          "optional": []
+        },
+        "requestedHostPermissions": [
+          "REQUEST_LOGIN_UI"
+        ],
+        "runtimePermissions": [
+          "EXECUTE_SCRIPT",
+          "NETWORK",
+          "COOKIE_STORAGE",
+          "CREDENTIAL_ACCESS",
+          "BROWSER_CHALLENGE"
         ]
       }
-    ],
-    "migration": {
-      "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.dm5.js",
-      "legacyIndex": "merged-shuyue/index.json"
-    }
+    ]
   },
-  "signature": "psS_B24LMAy5_EuSqGEMNG73zrm31o2dz-VKyPzzwh355OHPSEbbfLXXRh2YCCh7b39REAMnnMRVlEWbNq-_Cg"
+  "signature": "r8MOqGSN6cfIF4L0Utq_glwV2DXeDVp6QwUaxuD2WftzYeXDy-aGCtSTpFcJgWT2Cw-5SAHmrpb07SUhVsgYCQ"
 }

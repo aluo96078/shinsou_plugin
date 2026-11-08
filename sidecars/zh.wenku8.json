@@ -4,23 +4,23 @@
   "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
   "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
   "payloadType": "plugin-sidecar",
-  "sequence": 1,
+  "sequence": 2,
   "payload": {
     "format": "shinsou-extension-sidecar-v2",
     "contractVersion": 2,
     "packageId": "zh.wenku8",
     "name": "輕小說文庫（停止維護）",
-    "version": "1.6.14",
-    "versionCode": 32,
-    "contract": "shuyue",
+    "version": "1.7.0",
+    "versionCode": 33,
+    "contract": "shinsou",
     "lang": "zh",
     "nsfw": false,
-    "legacyCompatibilityOnly": true,
     "installable": false,
+    "legacyCompatibilityOnly": true,
     "artifact": {
       "scriptUrl": "plugins/zh.wenku8.js",
-      "sha256": "a6c1f21f94337249403b8d165d1ebe31e2c7534d62ca2b92fc5bd3f3c5bccfd1",
-      "byteSize": 36648
+      "sha256": "3f245cd32ed6bffdfb1e4ff07393a9583c0e6165ca18f109aa5592d61bb84299",
+      "byteSize": 36985
     },
     "content": {
       "contract": "extension-content-v2",
@@ -31,12 +31,13 @@
       ]
     },
     "capabilities": [
-      "BROWSE",
-      "SEARCH",
+      "CATALOGUE",
       "LATEST",
+      "BROWSE",
       "METADATA",
       "UNITS",
       "CONTENT",
+      "SEARCH",
       "LOGIN",
       "FAVORITE"
     ],
@@ -67,24 +68,41 @@
           "contractVersion": 2,
           "packageId": "zh.wenku8",
           "sourceId": "zh.wenku8",
-          "legacyLongId": null
+          "legacyLongId": "-9110000000000001"
         },
         "sourceId": "zh.wenku8",
         "name": "輕小說文庫（停止維護）",
         "lang": "zh",
         "baseUrl": "https://www.wenku8.net",
+        "contentType": "novel",
+        "contentKinds": [
+          "PLAIN_TEXT"
+        ],
+        "requestOrigins": [
+          "https://www.wenku8.net"
+        ],
+        "credentialOrigins": [
+          "https://www.wenku8.net"
+        ],
+        "contentOrigins": [
+          "https://www.wenku8.net",
+          "https://img.wenku8.com",
+          "https://pic.777743.xyz",
+          "https://pic.wenku8.com"
+        ],
+        "browserSessionOrigins": [
+          "https://www.wenku8.net"
+        ],
         "capabilities": [
-          "BROWSE",
-          "SEARCH",
+          "CATALOGUE",
           "LATEST",
+          "BROWSE",
           "METADATA",
           "UNITS",
           "CONTENT",
+          "SEARCH",
           "LOGIN",
           "FAVORITE"
-        ],
-        "contentKinds": [
-          "PLAIN_TEXT"
         ],
         "systemEvents": {
           "protocol": "dev.shinsou.system",
@@ -108,11 +126,7 @@
           "BROWSER_CHALLENGE"
         ]
       }
-    ],
-    "migration": {
-      "legacyScriptUrl": "merged-shuyue/shuyue/wenku8.js",
-      "legacyIndex": "merged-shuyue/index.json"
-    }
+    ]
   },
-  "signature": "Zu--hwUD-9aotCEucyFr9HBw1JjmRUpOkKL9BpIIEc9qGt0YpPTjc9yfqyDdnPqcUwWEOsZi78O8JMPEomrDAA"
+  "signature": "XOUTwgcaDhbGx1BSa1fnNcvUOLxTZYgmX4ruQsmQ_yDjOx8GF84HQamdo67ZY6nqj-sb8r0P93iX8u5MtCOrDQ"
 }

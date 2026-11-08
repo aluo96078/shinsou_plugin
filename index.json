@@ -4,7 +4,7 @@
   "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
   "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
   "payloadType": "repository-index",
-  "sequence": 2,
+  "sequence": 3,
   "payload": {
     "format": "shinsou-extension-v2",
     "contractVersion": 2,
@@ -12,8 +12,7 @@
     "contentContractVersion": 2,
     "repository": {
       "name": "Shinsou Community Plugins",
-      "source": "index.json",
-      "unifiedSource": "merged-shuyue/index.json"
+      "source": "index.json"
     },
     "systemEvents": {
       "protocol": "dev.shinsou.system",
@@ -43,7 +42,6 @@
           "IMAGE_SEQUENCE"
         ],
         "scriptUrl": "plugins/zh.baozimh.js",
-        "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.baozimh.js",
         "sidecarUrl": "sidecars/zh.baozimh.json",
         "sha256": "84bdf847493e314cfbd771cd995bc9fc8ee183e929ac760224cc903355366772",
         "byteSize": 23199,
@@ -114,7 +112,6 @@
           "IMAGE_SEQUENCE"
         ],
         "scriptUrl": "plugins/zh.manhuagui.js",
-        "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.manhuagui.js",
         "sidecarUrl": "sidecars/zh.manhuagui.json",
         "sha256": "f51ae504d02690104347188b349e594c64816dfcc858eb761731604150e2b718",
         "byteSize": 32102,
@@ -175,7 +172,6 @@
           "IMAGE_SEQUENCE"
         ],
         "scriptUrl": "plugins/zh.komiic.js",
-        "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.komiic.js",
         "sidecarUrl": "sidecars/zh.komiic.json",
         "sha256": "4bc7bf81a39be87d229e7be50d81650d2a630b732fd5d68a75c2618d10c3c53c",
         "byteSize": 11785,
@@ -236,7 +232,6 @@
           "IMAGE_SEQUENCE"
         ],
         "scriptUrl": "plugins/zh.mycomic.js",
-        "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.mycomic.js",
         "sidecarUrl": "sidecars/zh.mycomic.json",
         "sha256": "e27f90d3c1648402425817df964f69fbc8a5f6f5e33a9c3941ee9902b5262ef8",
         "byteSize": 24065,
@@ -301,7 +296,6 @@
           "IMAGE_SEQUENCE"
         ],
         "scriptUrl": "plugins/zh.dm5.js",
-        "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.dm5.js",
         "sidecarUrl": "sidecars/zh.dm5.json",
         "sha256": "07ee5b119a1492e5445ec783da33693c8a9680e862e403e8c82b7c2a66ef26ba",
         "byteSize": 22651,
@@ -381,7 +375,6 @@
           "IMAGE_SEQUENCE"
         ],
         "scriptUrl": "plugins/zh.manhuaren.js",
-        "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.manhuaren.js",
         "sidecarUrl": "sidecars/zh.manhuaren.json",
         "sha256": "4fa2f5e26eba5c6409f4fa96a1d3b7837553589d42f8ceb8360e813d1667bc61",
         "byteSize": 14664,
@@ -451,7 +444,6 @@
           "IMAGE_SEQUENCE"
         ],
         "scriptUrl": "plugins/zh.mangacopy.js",
-        "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.mangacopy.js",
         "sidecarUrl": "sidecars/zh.mangacopy.json",
         "sha256": "52c9ae99c7d17893b2100e5f8b54ac209ad6b7f12d537261799fb5b2e9fefffc",
         "byteSize": 42004,
@@ -735,20 +727,20 @@
       {
         "id": "zh.bilimanga",
         "name": "嗶哩輕小說（Linovelib）",
-        "version": "1.6.0",
-        "versionCode": 12,
+        "version": "1.7.0",
+        "versionCode": 13,
         "lang": "zh",
         "nsfw": true,
-        "contract": "shuyue",
-        "runtime": "reviewed-shuyue-adapter-v2",
+        "contract": "shinsou",
+        "runtime": "legacy-shinsou-adapter-v2",
         "contentType": "novel",
         "contentKinds": [
           "PLAIN_TEXT"
         ],
         "scriptUrl": "plugins/zh.bilimanga.js",
         "sidecarUrl": "sidecars/zh.bilimanga.json",
-        "sha256": "f740eb9fb1da98774f32aa8a555829a828ea799fc6987781ad594a4a6eceb0f5",
-        "byteSize": 29546,
+        "sha256": "903c0b4ee08c29fef01066be43bddfa37472e941548cda74f793348fbf593121",
+        "byteSize": 30188,
         "capabilities": [
           "CATALOGUE",
           "LATEST",
@@ -782,13 +774,26 @@
         "sources": [
           {
             "sourceId": "zh.bilimanga.novel",
-            "legacyLongId": null,
+            "legacyLongId": "-9110000000000004",
             "name": "嗶哩輕小說（Linovelib）",
             "lang": "zh",
             "baseUrl": "https://tw.linovelib.com",
             "contentType": "novel",
             "contentKinds": [
               "PLAIN_TEXT"
+            ],
+            "requestOrigins": [
+              "https://tw.linovelib.com"
+            ],
+            "credentialOrigins": [
+              "https://tw.linovelib.com"
+            ],
+            "contentOrigins": [
+              "https://tw.linovelib.com",
+              "https://img2.readpai.com"
+            ],
+            "browserSessionOrigins": [
+              "https://tw.linovelib.com"
             ]
           }
         ],
@@ -871,28 +876,28 @@
       {
         "id": "zh.wenku8",
         "name": "輕小說文庫（停止維護）",
-        "version": "1.6.14",
-        "versionCode": 32,
+        "version": "1.7.0",
+        "versionCode": 33,
         "lang": "zh",
         "nsfw": false,
-        "contract": "shuyue",
-        "runtime": "reviewed-shuyue-adapter-v2",
+        "contract": "shinsou",
+        "runtime": "legacy-shinsou-adapter-v2",
         "contentType": "novel",
         "contentKinds": [
           "PLAIN_TEXT"
         ],
         "scriptUrl": "plugins/zh.wenku8.js",
-        "legacyScriptUrl": "merged-shuyue/shuyue/wenku8.js",
         "sidecarUrl": "sidecars/zh.wenku8.json",
-        "sha256": "a6c1f21f94337249403b8d165d1ebe31e2c7534d62ca2b92fc5bd3f3c5bccfd1",
-        "byteSize": 36648,
+        "sha256": "3f245cd32ed6bffdfb1e4ff07393a9583c0e6165ca18f109aa5592d61bb84299",
+        "byteSize": 36985,
         "capabilities": [
-          "BROWSE",
-          "SEARCH",
+          "CATALOGUE",
           "LATEST",
+          "BROWSE",
           "METADATA",
           "UNITS",
           "CONTENT",
+          "SEARCH",
           "LOGIN",
           "FAVORITE"
         ],
@@ -920,10 +925,29 @@
         "sources": [
           {
             "sourceId": "zh.wenku8",
-            "legacyLongId": null,
+            "legacyLongId": "-9110000000000001",
             "name": "輕小說文庫（停止維護）",
             "lang": "zh",
-            "baseUrl": "https://www.wenku8.net"
+            "baseUrl": "https://www.wenku8.net",
+            "contentType": "novel",
+            "contentKinds": [
+              "PLAIN_TEXT"
+            ],
+            "requestOrigins": [
+              "https://www.wenku8.net"
+            ],
+            "credentialOrigins": [
+              "https://www.wenku8.net"
+            ],
+            "contentOrigins": [
+              "https://www.wenku8.net",
+              "https://img.wenku8.com",
+              "https://pic.777743.xyz",
+              "https://pic.wenku8.com"
+            ],
+            "browserSessionOrigins": [
+              "https://www.wenku8.net"
+            ]
           }
         ],
         "legacyCompatibilityOnly": true,
@@ -932,28 +956,28 @@
       {
         "id": "zh.wenku8.api",
         "name": "輕小說文庫",
-        "version": "1.0.5",
-        "versionCode": 6,
+        "version": "1.1.0",
+        "versionCode": 7,
         "lang": "zh",
         "nsfw": false,
-        "contract": "shuyue",
-        "runtime": "reviewed-shuyue-adapter-v2",
+        "contract": "shinsou",
+        "runtime": "legacy-shinsou-adapter-v2",
         "contentType": "novel",
         "contentKinds": [
           "PLAIN_TEXT"
         ],
         "scriptUrl": "plugins/zh.wenku8.api.js",
-        "legacyScriptUrl": "merged-shuyue/shuyue/wenku8-api.js",
         "sidecarUrl": "sidecars/zh.wenku8.api.json",
-        "sha256": "75e67a5937b9a93956f71e1f97f8738fbdabce6b7e7090c90779479e32cae56c",
-        "byteSize": 33589,
+        "sha256": "c76e9ef5276091997f5dd0696db595c82e3fe399afea72fa1174e9b635e16715",
+        "byteSize": 32373,
         "capabilities": [
-          "BROWSE",
-          "SEARCH",
+          "CATALOGUE",
           "LATEST",
+          "BROWSE",
           "METADATA",
           "UNITS",
           "CONTENT",
+          "SEARCH",
           "LOGIN"
         ],
         "runtimePermissions": [
@@ -978,39 +1002,57 @@
         "sources": [
           {
             "sourceId": "zh.wenku8.api",
-            "legacyLongId": null,
+            "legacyLongId": "-9110000000000002",
             "name": "輕小說文庫",
             "lang": "zh",
-            "baseUrl": "https://wenku8-relay.mewx.org/"
+            "baseUrl": "https://wenku8-relay.mewx.org/",
+            "contentType": "novel",
+            "contentKinds": [
+              "PLAIN_TEXT"
+            ],
+            "requestOrigins": [
+              "https://wenku8-relay.mewx.org",
+              "https://www.wenku8.net"
+            ],
+            "credentialOrigins": [
+              "https://wenku8-relay.mewx.org"
+            ],
+            "contentOrigins": [
+              "https://wenku8-relay.mewx.org",
+              "https://img.wenku8.com",
+              "https://pic.777743.xyz",
+              "https://pic.wenku8.com"
+            ],
+            "browserSessionOrigins": []
           }
         ]
       },
       {
         "id": "zh.biquge.tw",
         "name": "筆趣閣",
-        "version": "1.0.3",
-        "versionCode": 4,
+        "version": "1.1.0",
+        "versionCode": 5,
         "lang": "zh",
         "nsfw": false,
-        "contract": "shuyue",
-        "runtime": "reviewed-shuyue-adapter-v2",
+        "contract": "shinsou",
+        "runtime": "legacy-shinsou-adapter-v2",
         "installable": true,
         "contentType": "novel",
         "contentKinds": [
           "PLAIN_TEXT"
         ],
         "scriptUrl": "plugins/zh.biquge.tw.js",
-        "legacyScriptUrl": "merged-shuyue/shuyue/biquge-tw.js",
         "sidecarUrl": "sidecars/zh.biquge.tw.json",
-        "sha256": "3ab9e37be7ed83e0a7cd65266f984146b60a138f57d85ced4298f8e804dbb151",
-        "byteSize": 23631,
+        "sha256": "ea338b8b425d096879bb28dd4de530cac88986ffdbae4b4277463e17294509a2",
+        "byteSize": 23415,
         "capabilities": [
-          "BROWSE",
-          "SEARCH",
+          "CATALOGUE",
           "LATEST",
+          "BROWSE",
           "METADATA",
           "UNITS",
-          "CONTENT"
+          "CONTENT",
+          "SEARCH"
         ],
         "runtimePermissions": [
           "EXECUTE_SCRIPT",
@@ -1028,14 +1070,29 @@
         "sources": [
           {
             "sourceId": "zh.biquge.tw",
-            "legacyLongId": null,
+            "legacyLongId": "-9110000000000003",
             "name": "筆趣閣",
             "lang": "zh",
-            "baseUrl": "https://www.biquge.tw"
+            "baseUrl": "https://www.biquge.tw",
+            "contentType": "novel",
+            "contentKinds": [
+              "PLAIN_TEXT"
+            ],
+            "requestOrigins": [
+              "https://www.biquge.tw"
+            ],
+            "credentialOrigins": [],
+            "contentOrigins": [
+              "https://www.biquge.tw",
+              "https://img.biquge.tw"
+            ],
+            "browserSessionOrigins": [
+              "https://www.biquge.tw"
+            ]
           }
         ]
       }
     ]
   },
-  "signature": "YgrPwLkcDz6gBPpCIOu7Hf3xG72_ptmfSHAhZr5UctuxMB2reZrCnG-3PUmWA4ojwUh0_DYEcxaYRjjENnR0AQ"
+  "signature": "3UuIvakyOC2xaNLm5sOlCqZ3BH2oiqqBbVtFGT1_1VtVPxvR6XfJYhh1YZ_FcAJhDBurQIIy45YEAjUSUZ3oBQ"
 }

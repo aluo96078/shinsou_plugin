@@ -4,7 +4,7 @@
   "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
   "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
   "payloadType": "plugin-sidecar",
-  "sequence": 2,
+  "sequence": 3,
   "payload": {
     "format": "shinsou-extension-sidecar-v2",
     "contractVersion": 2,
@@ -62,29 +62,9 @@
         "name": "漫画人",
         "lang": "zh",
         "baseUrl": "https://www.manhuaren.com",
-        "capabilities": [
-          "CATALOGUE",
-          "LATEST",
-          "BROWSE",
-          "METADATA",
-          "UNITS",
-          "CONTENT",
-          "SEARCH"
-        ],
+        "contentType": "manga",
         "contentKinds": [
           "IMAGE_SEQUENCE"
-        ],
-        "systemEvents": {
-          "protocol": "dev.shinsou.system",
-          "minVersion": 1,
-          "maxVersion": 1,
-          "required": [],
-          "optional": []
-        },
-        "requestedHostPermissions": [],
-        "runtimePermissions": [
-          "EXECUTE_SCRIPT",
-          "NETWORK"
         ],
         "requestOrigins": [
           "https://www.manhuaren.com"
@@ -106,13 +86,30 @@
           "https://mhfm9tw.cdndm5.com",
           "https://www.manhuaren.com"
         ],
-        "browserSessionOrigins": []
+        "browserSessionOrigins": [],
+        "capabilities": [
+          "CATALOGUE",
+          "LATEST",
+          "BROWSE",
+          "METADATA",
+          "UNITS",
+          "CONTENT",
+          "SEARCH"
+        ],
+        "systemEvents": {
+          "protocol": "dev.shinsou.system",
+          "minVersion": 1,
+          "maxVersion": 1,
+          "required": [],
+          "optional": []
+        },
+        "requestedHostPermissions": [],
+        "runtimePermissions": [
+          "EXECUTE_SCRIPT",
+          "NETWORK"
+        ]
       }
-    ],
-    "migration": {
-      "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.manhuaren.js",
-      "legacyIndex": "merged-shuyue/index.json"
-    }
+    ]
   },
-  "signature": "GViSnO3u1KgglGZSy9CmbgjdQutdEEmX-CIGsS9siY_Rpcvxixa3aDy5FvOw6hjSgesJ7XN-RgmM4ZplDeG_CA"
+  "signature": "p_3Xig8OU_ARHiWprgPS9KjzL-MRK64FXXXddENtfqhWkenxCGRmpu7aaOLYi3J53pRyLA5Gm42HwpnapHaBAw"
 }

@@ -4,7 +4,7 @@
   "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
   "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
   "payloadType": "plugin-sidecar",
-  "sequence": 2,
+  "sequence": 3,
   "payload": {
     "format": "shinsou-extension-sidecar-v2",
     "contractVersion": 2,
@@ -62,29 +62,9 @@
         "name": "漫画柜",
         "lang": "zh",
         "baseUrl": "https://tw.manhuagui.com",
-        "capabilities": [
-          "CATALOGUE",
-          "LATEST",
-          "BROWSE",
-          "METADATA",
-          "UNITS",
-          "CONTENT",
-          "SEARCH"
-        ],
+        "contentType": "manga",
         "contentKinds": [
           "IMAGE_SEQUENCE"
-        ],
-        "systemEvents": {
-          "protocol": "dev.shinsou.system",
-          "minVersion": 1,
-          "maxVersion": 1,
-          "required": [],
-          "optional": []
-        },
-        "requestedHostPermissions": [],
-        "runtimePermissions": [
-          "EXECUTE_SCRIPT",
-          "NETWORK"
         ],
         "requestOrigins": [
           "https://tw.manhuagui.com"
@@ -97,13 +77,30 @@
           "https://i.hamreus.com",
           "https://tw.manhuagui.com"
         ],
-        "browserSessionOrigins": []
+        "browserSessionOrigins": [],
+        "capabilities": [
+          "CATALOGUE",
+          "LATEST",
+          "BROWSE",
+          "METADATA",
+          "UNITS",
+          "CONTENT",
+          "SEARCH"
+        ],
+        "systemEvents": {
+          "protocol": "dev.shinsou.system",
+          "minVersion": 1,
+          "maxVersion": 1,
+          "required": [],
+          "optional": []
+        },
+        "requestedHostPermissions": [],
+        "runtimePermissions": [
+          "EXECUTE_SCRIPT",
+          "NETWORK"
+        ]
       }
-    ],
-    "migration": {
-      "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.manhuagui.js",
-      "legacyIndex": "merged-shuyue/index.json"
-    }
+    ]
   },
-  "signature": "yu6FVx-bI9NxNVl3S19jDieF6qSuOZv6GZkpJ0_puC0Yl9kyVgDoPl0fLaCfIpnV7rcjxz9JcCcWT4M-t065Dg"
+  "signature": "PLtGUfxm6XBPGISOyLiw9iQBtF0I5BKVckTvRs3Er9lt8rkxwThwGPAaNFQ7kL7PNerdNgWbdQX9UwgIp8DPDQ"
 }

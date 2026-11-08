@@ -4,7 +4,7 @@
   "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
   "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
   "payloadType": "plugin-sidecar",
-  "sequence": 2,
+  "sequence": 3,
   "payload": {
     "format": "shinsou-extension-sidecar-v2",
     "contractVersion": 2,
@@ -16,7 +16,6 @@
     "lang": "all",
     "nsfw": true,
     "installable": true,
-    "unindexedLegacy": true,
     "artifact": {
       "scriptUrl": "plugins/all.mangadex.js",
       "sha256": "3753ea822248b6938c59866154b1040377435240b3363cc3ce4618908974806b",
@@ -63,29 +62,9 @@
         "name": "MangaDex",
         "lang": "all",
         "baseUrl": "https://mangadex.org",
-        "capabilities": [
-          "CATALOGUE",
-          "LATEST",
-          "BROWSE",
-          "METADATA",
-          "UNITS",
-          "CONTENT",
-          "SEARCH"
-        ],
+        "contentType": "manga",
         "contentKinds": [
           "IMAGE_SEQUENCE"
-        ],
-        "systemEvents": {
-          "protocol": "dev.shinsou.system",
-          "minVersion": 1,
-          "maxVersion": 1,
-          "required": [],
-          "optional": []
-        },
-        "requestedHostPermissions": [],
-        "runtimePermissions": [
-          "EXECUTE_SCRIPT",
-          "NETWORK"
         ],
         "requestOrigins": [
           "https://api.mangadex.org",
@@ -103,9 +82,30 @@
         "browserSessionOrigins": [],
         "contentHostSuffixes": [
           "mangadex.network"
+        ],
+        "capabilities": [
+          "CATALOGUE",
+          "LATEST",
+          "BROWSE",
+          "METADATA",
+          "UNITS",
+          "CONTENT",
+          "SEARCH"
+        ],
+        "systemEvents": {
+          "protocol": "dev.shinsou.system",
+          "minVersion": 1,
+          "maxVersion": 1,
+          "required": [],
+          "optional": []
+        },
+        "requestedHostPermissions": [],
+        "runtimePermissions": [
+          "EXECUTE_SCRIPT",
+          "NETWORK"
         ]
       }
     ]
   },
-  "signature": "VD0DDqc4OvkayJ7sQM_L52k5m0icDzJ3cZTeq6WbSphU7j-B-UEc3mAdb77ItEsQetOKKI4hRvLe1I9pzdR5CA"
+  "signature": "TJAHHR4BWU577Z6dHhRzeEH_Hbg1ZTrpUo9GtSnf50bcw_o1sS5b8HmqH2H7l-VX5HI5SVpuwcbKUYO3FoYwCw"
 }

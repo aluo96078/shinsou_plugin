@@ -4,23 +4,22 @@
   "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
   "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
   "payloadType": "plugin-sidecar",
-  "sequence": 1,
+  "sequence": 2,
   "payload": {
     "format": "shinsou-extension-sidecar-v2",
     "contractVersion": 2,
     "packageId": "zh.biquge.tw",
     "name": "筆趣閣",
-    "version": "1.0.3",
-    "versionCode": 4,
-    "contract": "shuyue",
-    "runtime": "reviewed-shuyue-adapter-v2",
+    "version": "1.1.0",
+    "versionCode": 5,
+    "contract": "shinsou",
     "lang": "zh",
     "nsfw": false,
     "installable": true,
     "artifact": {
       "scriptUrl": "plugins/zh.biquge.tw.js",
-      "sha256": "3ab9e37be7ed83e0a7cd65266f984146b60a138f57d85ced4298f8e804dbb151",
-      "byteSize": 23631
+      "sha256": "ea338b8b425d096879bb28dd4de530cac88986ffdbae4b4277463e17294509a2",
+      "byteSize": 23415
     },
     "content": {
       "contract": "extension-content-v2",
@@ -31,12 +30,13 @@
       ]
     },
     "capabilities": [
-      "BROWSE",
-      "SEARCH",
+      "CATALOGUE",
       "LATEST",
+      "BROWSE",
       "METADATA",
       "UNITS",
-      "CONTENT"
+      "CONTENT",
+      "SEARCH"
     ],
     "systemEvents": {
       "protocol": "dev.shinsou.system",
@@ -57,22 +57,35 @@
           "contractVersion": 2,
           "packageId": "zh.biquge.tw",
           "sourceId": "zh.biquge.tw",
-          "legacyLongId": null
+          "legacyLongId": "-9110000000000003"
         },
         "sourceId": "zh.biquge.tw",
         "name": "筆趣閣",
         "lang": "zh",
         "baseUrl": "https://www.biquge.tw",
-        "capabilities": [
-          "BROWSE",
-          "SEARCH",
-          "LATEST",
-          "METADATA",
-          "UNITS",
-          "CONTENT"
-        ],
+        "contentType": "novel",
         "contentKinds": [
           "PLAIN_TEXT"
+        ],
+        "requestOrigins": [
+          "https://www.biquge.tw"
+        ],
+        "credentialOrigins": [],
+        "contentOrigins": [
+          "https://www.biquge.tw",
+          "https://img.biquge.tw"
+        ],
+        "browserSessionOrigins": [
+          "https://www.biquge.tw"
+        ],
+        "capabilities": [
+          "CATALOGUE",
+          "LATEST",
+          "BROWSE",
+          "METADATA",
+          "UNITS",
+          "CONTENT",
+          "SEARCH"
         ],
         "systemEvents": {
           "protocol": "dev.shinsou.system",
@@ -88,11 +101,7 @@
           "BROWSER_CHALLENGE"
         ]
       }
-    ],
-    "migration": {
-      "legacyScriptUrl": "merged-shuyue/shuyue/biquge-tw.js",
-      "legacyIndex": "merged-shuyue/index.json"
-    }
+    ]
   },
-  "signature": "Jx6BSrnxxNPtFmfXJBiYiZmqVbopZTlEaWkvCT9L4GSP7oelzj5dLsH3fzQ6E6AIdsTg4KqCIvXdaAJoikTnCw"
+  "signature": "43ok7HLi2hhfA5u6asgEH6FfOHZgS8Nc76Rz7_g2MxXo5LcqgwDL2ifW0RkwgI4xPMGtebpU8Zm6N2wFo6sJBQ"
 }

@@ -1,8 +1,9 @@
 /*
- * Shinsou extension content v2 executable artifact.
+ * Shinsou extension content v2 executable artifact (Shinsou format).
  *
- * This is an independently hashed migration artifact. The legacy source remains in
- * merged-shuyue/shuyue/biquge-tw.js; this file carries the v2 declaration consumed by the host admission layer.
+ * Plain-text novel source for biquge.tw. The script exports the generic Shinsou hooks
+ * (getPopularManga / getLatestUpdates / getSearchManga / getMangaDetails / getChapterList /
+ * getChapterText / getFilterList); the site parsing lives in the private `Biquge` helper.
  */
 var __shinsouExtensionV2 = {"contractVersion":2,"contentContract":"extension-content-v2","packageId":"zh.biquge.tw","contentType":"novel","contentKinds":["PLAIN_TEXT"],"systemEvents":{"protocol":"dev.shinsou.system","minVersion":1,"maxVersion":1,"required":[],"optional":[]},"requestedHostPermissions":[]};
 // 筆趣閣（biquge.tw）來源插件。
@@ -11,15 +12,10 @@ var __shinsouExtensionV2 = {"contractVersion":2,"contentContract":"extension-con
 //   /book/{bookId}.html
 //   /book/{bookId}/
 //   /book/{bookId}/{chapterId}.html
-// 部分正文會拆成 *_2.html、*_3.html 等頁面；chapterText() 會將它們接起來。
-var source = {
+// 部分正文會拆成 *_2.html、*_3.html 等頁面；getChapterText() 會將它們接起來。
+var Biquge = {
   id: "zh.biquge.tw",
-  name: "筆趣閣",
-  lang: "zh",
   baseUrl: "https://www.biquge.tw",
-  supportsLogin: false,
-  supportsLatest: true,
-  supportsFavorites: false,
 
   headers: {
     "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1",
@@ -28,11 +24,7 @@ var source = {
     "Cache-Control": "no-cache"
   },
 
-  login: function() {
-    return false;
-  },
-
-  search: function(query, page) {
+  searchBooks: function(query, page) {
     var keyword = String(query || "").trim();
     if (!keyword) return [];
 
@@ -97,11 +89,7 @@ var source = {
     return this.parseBookLinks(html, url);
   },
 
-  favorite: function() {
-    return false;
-  },
-
-  chapters: function(book) {
+  chapterEntries: function(book) {
     var aid = this.aidFromText(book && book.url);
     if (!aid) return [];
     var bookUrl = this.bookUrl(aid);
@@ -133,7 +121,7 @@ var source = {
     return chapters;
   },
 
-  chapterText: function(chapter) {
+  readChapter: function(chapter) {
     var currentUrl = String(chapter && chapter.url || "");
     if (!currentUrl) return "";
 
@@ -278,11 +266,14 @@ var source = {
     this.log("GET " + url + " -> " + (html ? html.length : 0));
     if (html && !this.isBlocked(html)) return html;
 
-    // Cloudflare 有時會把 challenge 回傳為空字串。iOS 的 WebView bridge
-    // 能保留 JS/cookie session；只有拿到 challenge 或空回應才啟用它。
-    if (bridge.webViewGetWithHeaders) {
-      var browserHtml = bridge.webViewGetWithHeaders(url, requestHeaders);
-      if (browserHtml) return browserHtml;
+    // Cloudflare 有時會把 challenge 回傳為空字串。App 的瀏覽器 session 能保留
+    // JS/cookie；只有拿到 challenge 或空回應才啟用它。
+    if (typeof bridge.browserSessionRequest === "function") {
+      try {
+        var response = bridge.browserSessionRequest(url, "GET", "", requestHeaders);
+        var browserHtml = response && typeof response === "object" ? response.body : response;
+        if (browserHtml && typeof browserHtml === "string") return browserHtml;
+      } catch (ignored) {}
     }
     return html || "";
   },
@@ -471,93 +462,109 @@ var source = {
   }
 };
 
-// Legacy Shinsou plugin compatibility. Keep the current ShuYue source API
-// intact while exposing the historical get* contract used by old hosts.
-(function installLegacyShinsouContract(target) {
-  function pageNumber(value) {
-    var number = Number(value);
-    return isFinite(number) ? Math.max(1, Math.floor(number) + 1) : 1;
-  }
+// The app may override source.baseUrl; keep the helper in step with it.
+function biqugeSync(target) {
+  if (target && target.baseUrl) Biquge.baseUrl = String(target.baseUrl).replace(/\/+$/, "");
+}
 
-  function legacyBook(value) {
-    if (!value || typeof value !== "object") return null;
-    var url = String(value.url || "");
-    if (!url) return null;
-    var status = typeof value.status === "number" && isFinite(value.status) ? value.status : 0;
-    return {
-      url: url,
-      title: String(value.title || value.name || url),
-      author: value.author || null,
-      artist: value.artist || null,
-      description: value.description || null,
-      genre: value.genre || null,
-      status: status,
-      thumbnailUrl: value.thumbnailUrl || value.thumbnail_url || value.coverImage || value.cover || null,
-      initialized: true
-    };
-  }
+function biqugePageNumber(value) {
+  var number = Number(value);
+  return isFinite(number) && number >= 0 ? Math.floor(number) + 1 : 1;
+}
 
-  function legacyPage(values, hasNextPage) {
-    var list = Array.isArray(values) ? values : [];
-    var mangas = [];
-    for (var i = 0; i < list.length; i++) {
-      var mapped = legacyBook(list[i]);
-      if (mapped) mangas.push(mapped);
-    }
-    return { mangas: mangas, hasNextPage: hasNextPage === undefined ? mangas.length > 0 : !!hasNextPage };
-  }
-
-  function selectedFilter(filters) {
-    if (!Array.isArray(filters)) return 0;
-    for (var i = 0; i < filters.length; i++) {
-      var filter = filters[i] || {};
-      if (Array.isArray(filter.values)) {
-        var state = Number(filter.state);
-        if (isFinite(state)) return Math.max(0, Math.floor(state));
-      }
-      var nested = selectedFilter(filter.filters);
-      if (nested > 0) return nested;
-    }
-    return 0;
-  }
-
-  function legacyFilters() {
-    var options = typeof target.browseOptions === "function" ? target.browseOptions() : [];
-    var values = ["搜尋"];
-    for (var i = 0; i < options.length; i++) values.push(String(options[i].title || options[i].id || "分類"));
-    return [{ type: "select", name: "分類", values: values, state: 0 }];
-  }
-
-  target.getPopularManga = function(page) {
-    return legacyPage(target.latest(pageNumber(page)));
+function biqugeBook(value) {
+  if (!value || typeof value !== "object") return null;
+  var url = String(value.url || "");
+  if (!url) return null;
+  var status = typeof value.status === "number" && isFinite(value.status) ? value.status : 0;
+  return {
+    url: url,
+    title: String(value.title || value.name || url),
+    author: value.author || null,
+    artist: value.artist || null,
+    description: value.description || null,
+    genre: value.genre || null,
+    status: status,
+    thumbnailUrl: value.thumbnailUrl || value.thumbnail_url || value.coverImage || value.cover || null,
+    initialized: true
   };
+}
 
-  target.getLatestUpdates = function(page) {
-    return legacyPage(target.latest(pageNumber(page)));
-  };
+function biqugePage(values, hasNextPage) {
+  var list = Array.isArray(values) ? values : [];
+  var mangas = [];
+  for (var i = 0; i < list.length; i++) {
+    var mapped = biqugeBook(list[i]);
+    if (mapped) mangas.push(mapped);
+  }
+  return { mangas: mangas, hasNextPage: hasNextPage === undefined ? mangas.length > 0 : !!hasNextPage };
+}
 
-  target.getSearchManga = function(page, query, filters) {
-    var options = typeof target.browseOptions === "function" ? target.browseOptions() : [];
-    var selected = selectedFilter(filters);
+function biqugeSelectedFilter(filters) {
+  if (!Array.isArray(filters)) return 0;
+  for (var i = 0; i < filters.length; i++) {
+    var filter = filters[i] || {};
+    if (Array.isArray(filter.values)) {
+      var state = Number(filter.state);
+      if (isFinite(state)) return Math.max(0, Math.floor(state));
+    }
+    var nested = biqugeSelectedFilter(filter.filters);
+    if (nested > 0) return nested;
+  }
+  return 0;
+}
+
+var source = {
+  id: "zh.biquge.tw",
+  name: "筆趣閣",
+  lang: "zh",
+  baseUrl: "https://www.biquge.tw",
+  webChallengeUrl: "https://www.biquge.tw",
+  supportsLatest: true,
+  supportsLogin: false,
+  supportsFavorites: false,
+  headers: Biquge.headers,
+
+  getPopularManga: function(page) {
+    biqugeSync(this);
+    return biqugePage(Biquge.latest(biqugePageNumber(page)));
+  },
+
+  getLatestUpdates: function(page) {
+    biqugeSync(this);
+    return biqugePage(Biquge.latest(biqugePageNumber(page)));
+  },
+
+  getSearchManga: function(page, query, filters) {
+    biqugeSync(this);
+    var current = biqugePageNumber(page);
+    var options = Biquge.browseOptions();
+    var selected = biqugeSelectedFilter(filters);
     if (selected > 0 && options[selected - 1]) {
-      return legacyPage(target.browse(options[selected - 1].id, pageNumber(page)));
+      return biqugePage(Biquge.browse(options[selected - 1].id, current));
     }
-    return legacyPage(target.search(String(query || ""), pageNumber(page)));
-  };
+    var keyword = String(query || "").trim();
+    var results = Biquge.searchBooks(keyword, current);
+    // 作品 ID 直達只有單一結果，不能宣告還有下一頁。
+    if (keyword && /^\d+$/.test(keyword)) return biqugePage(results, false);
+    return biqugePage(results);
+  },
 
-  target.getMangaDetails = function(manga) {
+  getMangaDetails: function(manga) {
+    biqugeSync(this);
     var input = manga || {};
-    var aid = typeof target.aidFromText === "function" ? target.aidFromText(input.url) : "";
-    var details = aid && typeof target.bookFromAid === "function" ? target.bookFromAid(aid) : null;
-    return legacyBook(details || input) || legacyBook({ url: String(input.url || ""), title: String(input.title || "") });
-  };
+    var aid = Biquge.aidFromText(input.url);
+    var details = aid ? Biquge.bookFromAid(aid) : null;
+    return biqugeBook(details || input) || biqugeBook({ url: String(input.url || ""), title: String(input.title || "") });
+  },
 
-  target.getChapterList = function(manga) {
+  getChapterList: function(manga) {
+    biqugeSync(this);
     var input = manga || {};
-    var values = typeof target.chapters === "function" ? target.chapters({
+    var values = Biquge.chapterEntries({
       url: String(input.url || ""),
       title: String(input.title || "")
-    }) : [];
+    });
     var chapters = [];
     for (var i = 0; i < values.length; i++) {
       var value = values[i] || {};
@@ -572,28 +579,21 @@ var source = {
       });
     }
     return chapters;
-  };
+  },
 
-  // Older Shinsou hosts only know image-oriented Page values. Preserve the
-  // chapter URL and attach text/content for hosts that understand text pages.
-  target.getPageList = function(chapter) {
+  getChapterText: function(chapter) {
+    biqugeSync(this);
     var input = chapter || {};
-    var text = typeof target.chapterText === "function" ? target.chapterText(input) : "";
-    if (!text) return [];
-    return [{ index: 0, url: String(input.url || ""), imageUrl: null, text: String(text), content: String(text) }];
-  };
+    return String(Biquge.readChapter({ url: String(input.url || ""), name: String(input.name || "") }) || "");
+  },
 
-  target.getFilterList = legacyFilters;
-
-  target.logout = function() {
-    try {
-      if (typeof bridge !== "undefined" && bridge) {
-        if (typeof bridge.clearCredential === "function") bridge.clearCredential();
-        if (typeof bridge.clearCookies === "function") bridge.clearCookies();
-      }
-    } catch (ignored) {}
-  };
-})(source);
+  getFilterList: function() {
+    var options = Biquge.browseOptions();
+    var values = ["搜尋"];
+    for (var i = 0; i < options.length; i++) values.push(String(options[i].title || options[i].id || "分類"));
+    return [{ type: "select", name: "分類", values: values, state: 0 }];
+  }
+};
 
 // Expose only bounded, host-audited v2 metadata; executable calls still cross the legacy adapter.
 if (typeof source === "object" && source) {

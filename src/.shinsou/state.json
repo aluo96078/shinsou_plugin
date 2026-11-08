@@ -16,40 +16,40 @@
       "payloadSha256": "6487c00630837ae1142dd445cfc9afe2e1f6b3d274ee79e05a545797bb55e57a"
     },
     "index.json": {
-      "sequence": 2,
-      "payloadSha256": "c3f871b7743b17301d1af82bd9c92b44188be668c3756c2144df478f8150c56b"
+      "sequence": 3,
+      "payloadSha256": "c1e93bc44db03e39fc24eb0d3f12bfd47caf22668f00912818f23c5b4947e971"
     },
     "sidecars/zh.baozimh.json": {
-      "sequence": 2,
-      "payloadSha256": "d6c47dbca1d91e120a24a7c0c9837517b89dfca00cc57c541c2856033b3d3a03"
+      "sequence": 3,
+      "payloadSha256": "13f371f4cea85abd62052346ffb850e0badf1559759eccc51eef58a611569ff6"
     },
     "sidecars/zh.manhuagui.json": {
-      "sequence": 2,
-      "payloadSha256": "35e364a9931ad7a691b8b87a313899266007e3f24b1d89b47b3ea0b80dab68ab"
+      "sequence": 3,
+      "payloadSha256": "850884e22ba988aa2ff269a620fb3376ed14266d501affc04ff1165b9449dbb2"
     },
     "sidecars/zh.komiic.json": {
-      "sequence": 2,
-      "payloadSha256": "12a7e3005f98a58d850cac718536b07c82063b8eeb0b873dcf5c864c458fdf06"
+      "sequence": 3,
+      "payloadSha256": "4dfe0ce43f41f1e6b8e2299160a9309a2e75301bb6cf160b0cd175ccfca37d3a"
     },
     "sidecars/zh.mycomic.json": {
-      "sequence": 2,
-      "payloadSha256": "30e776014efd2cacb73ef5b3a7f2e0fa0f8ccd829569a45dfaf85ea8cd62990f"
+      "sequence": 3,
+      "payloadSha256": "e75efedc7afca2f508a2dee048328774837306cdc223a2d8481fdcf3943102b2"
     },
     "sidecars/zh.dm5.json": {
-      "sequence": 2,
-      "payloadSha256": "d554625cdf4a647abff312759c11f8f982458d4d98a7416bfa5da3002e87f099"
+      "sequence": 3,
+      "payloadSha256": "366c1f8cb5790603b8f08e360b953e236d73803a2c4dbdaf49f73b16558c01cd"
     },
     "sidecars/zh.manhuaren.json": {
-      "sequence": 2,
-      "payloadSha256": "f6e069992c24e79e8758f0909de9c0031ffd29880d9089055f6b10bde4560bb3"
+      "sequence": 3,
+      "payloadSha256": "fe7ae311ed76519b688a5a8755ffd1b9bb1e703f4f19e53418c0bdcea1ade5a4"
     },
     "sidecars/zh.mangacopy.json": {
-      "sequence": 2,
-      "payloadSha256": "11b76aa545e69c6f444e7220f83c623beaad5814c32feeaeffa291f821df15a9"
+      "sequence": 3,
+      "payloadSha256": "9740483e208261139fc3587a36fb1a785b279350883c476dbf74f3310696f2f6"
     },
     "sidecars/all.mangadex.json": {
-      "sequence": 2,
-      "payloadSha256": "232442f4463431686feac41528ca09d36d262494f4a6ac0e4eb5ced77a1a30d9"
+      "sequence": 3,
+      "payloadSha256": "6b1235d303d535793453783007fb226257c7296a93a7ecc48a823b6d36f807e6"
     },
     "sidecars/example.login.json": {
       "sequence": 1,
@@ -60,24 +60,24 @@
       "payloadSha256": "bfdbcf6eb1ddd91e170187594530f45a2d45b5a09f9a98444f3c1efa395085da"
     },
     "sidecars/zh.bilimanga.json": {
-      "sequence": 1,
-      "payloadSha256": "a6899e2daf3ec4c251acfadf7b42146eb3c2d77d34780b59e4a0029ea52b67c7"
+      "sequence": 2,
+      "payloadSha256": "8c3f2c1416880aa94f7f5d1fd510a9f155ee4dcd5cbcc77f3c3c986838269869"
     },
     "sidecars/zh.bilimanga.manga.json": {
       "sequence": 2,
       "payloadSha256": "17e25581c43208af26d7e50f6d4fd57fcaae484bd7d256fadd0aa7ab891386bc"
     },
     "sidecars/zh.wenku8.json": {
-      "sequence": 1,
-      "payloadSha256": "a78597b650fdd6f9440dab867ecb68e13cc526277e7dfb54669e8c0c8a89a105"
+      "sequence": 2,
+      "payloadSha256": "0389f4054cd498ed8249b797cf68bff6a9b9148489367468510a5e53e79ddbe9"
     },
     "sidecars/zh.wenku8.api.json": {
-      "sequence": 1,
-      "payloadSha256": "83d7f336db54abd9914f24df61148c5ac8b7d5c7a22c600dc32bee1323b16bef"
+      "sequence": 2,
+      "payloadSha256": "ffde1afe3af7aa15d84ebfc4cada5dc0b6d4d52d76f564b86643e8bd1a619417"
     },
     "sidecars/zh.biquge.tw.json": {
-      "sequence": 1,
-      "payloadSha256": "3f4ec8c9fd57b1d8bcbb054886cfc9e87714a45e4c0cc3aa62cc601956f0d1de"
+      "sequence": 2,
+      "payloadSha256": "83b5d01f4d40e1d7f739e03d380a68c76bce94f4ad48d08e45da27de7fadb7e9"
     },
     "publisher-revocations.json": {
       "sequence": 1,

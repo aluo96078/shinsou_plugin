@@ -4,7 +4,7 @@
   "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
   "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
   "payloadType": "plugin-sidecar",
-  "sequence": 2,
+  "sequence": 3,
   "payload": {
     "format": "shinsou-extension-sidecar-v2",
     "contractVersion": 2,
@@ -62,29 +62,9 @@
         "name": "拷貝漫畫",
         "lang": "zh",
         "baseUrl": "https://www.mangacopy.com",
-        "capabilities": [
-          "CATALOGUE",
-          "LATEST",
-          "BROWSE",
-          "METADATA",
-          "UNITS",
-          "CONTENT",
-          "SEARCH"
-        ],
+        "contentType": "manga",
         "contentKinds": [
           "IMAGE_SEQUENCE"
-        ],
-        "systemEvents": {
-          "protocol": "dev.shinsou.system",
-          "minVersion": 1,
-          "maxVersion": 1,
-          "required": [],
-          "optional": []
-        },
-        "requestedHostPermissions": [],
-        "runtimePermissions": [
-          "EXECUTE_SCRIPT",
-          "NETWORK"
         ],
         "requestOrigins": [
           "https://api.copy202602.com",
@@ -147,13 +127,30 @@
           "https://www.copy3000.com",
           "https://www.mangacopy.com"
         ],
-        "browserSessionOrigins": []
+        "browserSessionOrigins": [],
+        "capabilities": [
+          "CATALOGUE",
+          "LATEST",
+          "BROWSE",
+          "METADATA",
+          "UNITS",
+          "CONTENT",
+          "SEARCH"
+        ],
+        "systemEvents": {
+          "protocol": "dev.shinsou.system",
+          "minVersion": 1,
+          "maxVersion": 1,
+          "required": [],
+          "optional": []
+        },
+        "requestedHostPermissions": [],
+        "runtimePermissions": [
+          "EXECUTE_SCRIPT",
+          "NETWORK"
+        ]
       }
-    ],
-    "migration": {
-      "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.mangacopy.js",
-      "legacyIndex": "merged-shuyue/index.json"
-    }
+    ]
   },
-  "signature": "f_KW1ZXT1A0Of8s9bRfYY-R51q_n0HC_5fI8sdSY0XgEP14D5XoN_I3Phax6mrUpFBuvhJxJr23vcUQPws87DA"
+  "signature": "mlks-2C8iGB-Ii8Mvr0jV8ggWgwo9cS9CbrAD-ZsrmlPBOtIuqMfYrWepWudpGgrCjwQxaVDPgL9YIbmrFoKAw"
 }

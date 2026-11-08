@@ -75,6 +75,22 @@
         "contentKinds": [
           "IMAGE_SEQUENCE"
         ],
+        "requestOrigins": [
+          "https://www.bilimanga.net"
+        ],
+        "credentialOrigins": [
+          "https://www.bilimanga.net"
+        ],
+        "contentOrigins": [
+          "https://i.motiezw.com",
+          "https://www.bilimanga.net"
+        ],
+        "browserSessionOrigins": [
+          "https://www.bilimanga.net"
+        ],
+        "browserImageOrigins": [
+          "https://i.motiezw.com"
+        ],
         "capabilities": [
           "CATALOGUE",
           "LATEST",
@@ -104,22 +120,6 @@
           "CREDENTIAL_ACCESS",
           "BROWSER_CHALLENGE",
           "BROWSER_IMAGES"
-        ],
-        "requestOrigins": [
-          "https://www.bilimanga.net"
-        ],
-        "credentialOrigins": [
-          "https://www.bilimanga.net"
-        ],
-        "contentOrigins": [
-          "https://i.motiezw.com",
-          "https://www.bilimanga.net"
-        ],
-        "browserSessionOrigins": [
-          "https://www.bilimanga.net"
-        ],
-        "browserImageOrigins": [
-          "https://i.motiezw.com"
         ]
       }
     ]

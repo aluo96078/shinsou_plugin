@@ -4,23 +4,22 @@
   "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
   "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
   "payloadType": "plugin-sidecar",
-  "sequence": 1,
+  "sequence": 2,
   "payload": {
     "format": "shinsou-extension-sidecar-v2",
     "contractVersion": 2,
     "packageId": "zh.bilimanga",
     "name": "嗶哩輕小說（Linovelib）",
-    "version": "1.6.0",
-    "versionCode": 12,
-    "contract": "shuyue",
-    "runtime": "reviewed-shuyue-adapter-v2",
+    "version": "1.7.0",
+    "versionCode": 13,
+    "contract": "shinsou",
     "lang": "zh",
     "nsfw": true,
     "installable": true,
     "artifact": {
       "scriptUrl": "plugins/zh.bilimanga.js",
-      "sha256": "f740eb9fb1da98774f32aa8a555829a828ea799fc6987781ad594a4a6eceb0f5",
-      "byteSize": 29546
+      "sha256": "903c0b4ee08c29fef01066be43bddfa37472e941548cda74f793348fbf593121",
+      "byteSize": 30188
     },
     "content": {
       "contract": "extension-content-v2",
@@ -66,7 +65,7 @@
           "contractVersion": 2,
           "packageId": "zh.bilimanga",
           "sourceId": "zh.bilimanga.novel",
-          "legacyLongId": null
+          "legacyLongId": "-9110000000000004"
         },
         "sourceId": "zh.bilimanga.novel",
         "name": "嗶哩輕小說（Linovelib）",
@@ -75,6 +74,19 @@
         "contentType": "novel",
         "contentKinds": [
           "PLAIN_TEXT"
+        ],
+        "requestOrigins": [
+          "https://tw.linovelib.com"
+        ],
+        "credentialOrigins": [
+          "https://tw.linovelib.com"
+        ],
+        "contentOrigins": [
+          "https://tw.linovelib.com",
+          "https://img2.readpai.com"
+        ],
+        "browserSessionOrigins": [
+          "https://tw.linovelib.com"
         ],
         "capabilities": [
           "CATALOGUE",
@@ -109,5 +121,5 @@
       }
     ]
   },
-  "signature": "RfxRl6GGOZsensUl0Iuf5YVHWWCdLvwXvHdAAcszr4fHY06CX5qJmSchEBiihu9n_OLfQK4NLrJsIKELbQnxCQ"
+  "signature": "oexm70RWGD_47XUrasJ7MR_mYgE6gk-xqPK4sQFHbw1OckVY0c-jrbhcEM5C13p3b-KBTG6xWWqdUXL1CWoGDQ"
 }
