@@ -95,8 +95,8 @@ expect(index.format === "shinsou-extension-v2", "unexpected repository index for
 expect(index.contractVersion === 2, "unexpected v2 contract version");
 expect(index.contentContract === "extension-content-v2", "unexpected v2 content contract");
 expect(index.repository.unifiedSource === "merged-shuyue/index.json", "unexpected unified fixture path");
-expect(Array.isArray(index.packages) && index.packages.length === 20, "expected exactly 20 v2 packages");
-expect(new Set(index.packages.map((pkg) => pkg.id)).size === 20, "v2 package ids must be unique");
+expect(Array.isArray(index.packages) && index.packages.length === 15, "expected exactly 15 v2 packages");
+expect(new Set(index.packages.map((pkg) => pkg.id)).size === 15, "v2 package ids must be unique");
 expect(!fs.existsSync(path.join(repoRoot, "v2")), "the retired v2 subdirectory must be absent");
 expect(!fs.existsSync(path.join(repoRoot, "src")), "the retired v1 source tree must be absent");
 expect(merged.format === "shinsou-unified-v1", "merged ShuYue fixture format");
@@ -248,19 +248,10 @@ for (const pkg of index.packages) {
     expect(!/getFavoriteManga\s*=/.test(scriptText), "zh.wenku8.api remote bookcase adapter must be absent");
     expect(!/action=bookcase/.test(scriptText), "zh.wenku8.api must not call the remote bookcase API");
   }
-  if (pkg.id === "zh.bika") {
-    assert.deepStrictEqual(
-      pkg.sources[0].browserSessionOrigins,
-      ["https://picaapi.go2778.com"],
-      "zh.bika must restrict browser transport to its exact API origin",
-    );
-    expect(/bridge\.browserSessionRequest\s*\(/.test(scriptText), "zh.bika must use browser-session transport");
-  } else {
-    expect(
-      (pkg.sources || []).every((source) => !source.browserSessionOrigins || source.browserSessionOrigins.length === 0),
-      pkg.id + " must not receive browser-session transport",
-    );
-  }
+  expect(
+    (pkg.sources || []).every((source) => !source.browserSessionOrigins || source.browserSessionOrigins.length === 0),
+    pkg.id + " must not receive browser-session transport",
+  );
   if (pkg.contract === "shuyue") expect(mergedIds.has(pkg.id), pkg.id + " must map to merged ShuYue catalog");
 
   const declaredLoginEvents = pkg.systemEvents.required.concat(pkg.systemEvents.optional);
@@ -275,4 +266,4 @@ for (const pkg of index.packages) {
 const mangadex = index.packages.find((pkg) => pkg.id === "all.mangadex");
 expect(mangadex && mangadex.unindexedLegacy === true && !mangadex.legacyScriptUrl, "MangaDex must not reference a removed v1 artifact");
 expect(index.packages.some((pkg) => pkg.id === "example.login" && pkg.referenceOnly === true), "reference-only login entry missing");
-console.log("root v2 migration smoke: 20 packages, scripts, sidecars, permissions, identities, and migration fixtures verified");
+console.log("root v2 migration smoke: 15 packages, scripts, sidecars, permissions, identities, and migration fixtures verified");

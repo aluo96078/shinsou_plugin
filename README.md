@@ -10,6 +10,8 @@
 - `sidecars/`：權限、內容型別、SourceKey 與 system-event 宣告
 - `merged-shuyue/`：僅供既有資料遷移與測試使用的 legacy fixture，不是可安裝的 v1 套件
 
+成人（NSFW）專門來源（E-Hentai、NHentai、禁漫天堂、哔咔漫画、紳士漫畫）已移至獨立的 `shinsou_nsfw_plugin` 儲存庫。
+
 套件包含 ShuYue 小說擴充：
 
 - `zh.wenku8.api`：維護中的文庫 relay 來源

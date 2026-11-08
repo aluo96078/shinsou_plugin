@@ -20,7 +20,7 @@ function load(file, response, legacy = false) {
   return context.source;
 }
 
-for (const file of ["zh.mycomic.js", "zh.jinmantiantang.js", "zh.baozimh.js"]) {
+for (const file of ["zh.mycomic.js", "zh.baozimh.js"]) {
   // Cloudflare can return a challenge document with a successful or transient HTTP status.
   // Classification must happen before the generic non-2xx branch, while a blocked page wins
   // when both markers are present. The structured bridge must not be retried through the legacy
