@@ -12,9 +12,7 @@ const repoRoot = path.join(projectRoot, "src");
 const indexPath = path.join(repoRoot, "index.json");
 const indexText = fs.readFileSync(indexPath, "utf8");
 const index = JSON.parse(indexText);
-const merged = JSON.parse(
-  fs.readFileSync(path.join(projectRoot, "merged-shuyue", "index.json"), "utf8"),
-);
+
 
 const allowedContentKinds = new Set(["IMAGE_SEQUENCE", "PLAIN_TEXT", "EPUB_SPINE"]);
 const allowedHostPermissions = new Set([
@@ -39,6 +37,8 @@ const allowedRuntimePermissions = new Set([
   "LOGIN_PROMPT",
   "FAVORITE_MUTATION",
   "BROWSER_CHALLENGE",
+  "COOKIE_READ",
+  "BROWSER_IMAGES",
 ]);
 
 function expect(condition, message) {
@@ -96,24 +96,11 @@ function checkBrowserSessionOrigins(origins, label) {
 expect(index.format === "shinsou-extension-v2", "unexpected repository index format");
 expect(index.contractVersion === 2, "unexpected v2 contract version");
 expect(index.contentContract === "extension-content-v2", "unexpected v2 content contract");
-expect(index.repository.unifiedSource === "merged-shuyue/index.json", "unexpected unified fixture path");
+expect(!("unifiedSource" in index.repository), "the retired unified ShuYue fixture must not be referenced");
 expect(Array.isArray(index.packages) && index.packages.length === 15, "expected exactly 15 v2 packages");
 expect(new Set(index.packages.map((pkg) => pkg.id)).size === 15, "v2 package ids must be unique");
 expect(!fs.existsSync(path.join(projectRoot, "v2")), "the retired v2 subdirectory must be absent");
 expect(!fs.existsSync(path.join(repoRoot, "src")), "src/ must not nest another source tree");
-expect(merged.format === "shinsou-unified-v1", "merged ShuYue fixture format");
-expect(Array.isArray(merged.shuyue) && merged.shuyue.length === 4, "merged ShuYue index must retain 4 sources");
-
-for (const pkg of merged.shinsou || []) {
-  noTraversal(pkg.scriptUrl, pkg.id + " merged scriptUrl");
-  expect(pkg.scriptUrl.startsWith("shinsou/plugins/"), pkg.id + " merged scriptUrl must stay inside fixture");
-  expect(
-    fs.existsSync(path.join(projectRoot, "merged-shuyue", pkg.scriptUrl.split("?")[0])),
-    pkg.id + " merged script artifact is missing",
-  );
-}
-
-const mergedIds = new Set(merged.shuyue.map((pkg) => pkg.id));
 const seenScriptUrls = new Set();
 const seenSidecarUrls = new Set();
 
@@ -158,9 +145,6 @@ for (const pkg of index.packages) {
   const sidecar = readJson(path.join(repoRoot, pkg.sidecarUrl));
   expect(sidecar.format === "shinsou-extension-sidecar-v2", pkg.id + " sidecar format");
   expect(sidecar.contractVersion === 2, pkg.id + " sidecar contract version");
-  if (pkg.contract === "shuyue" && pkg.installable !== false) {
-    expect(sidecar.runtime === pkg.runtime, pkg.id + " reviewed sidecar runtime binding");
-  }
   expect(sidecar.packageId === pkg.id, pkg.id + " sidecar package identity");
   expect(sidecar.version === pkg.version && sidecar.versionCode === pkg.versionCode, pkg.id + " sidecar version identity");
   expect(!Object.prototype.hasOwnProperty.call(sidecar, "hostPermissions"), pkg.id + " sidecar must not self-grant host permissions");
@@ -185,15 +169,30 @@ for (const pkg of index.packages) {
     );
   }
 
-  if (pkg.legacyScriptUrl) {
-    const legacyUrl = pkg.legacyScriptUrl.split("?")[0];
-    const legacyPath = path.join(projectRoot, legacyUrl);
-    expect(fs.existsSync(legacyPath), pkg.id + " legacy migration script is missing");
-    expect(!fs.readFileSync(legacyPath).equals(scriptBytes), pkg.id + " v2 artifact must differ from legacy bytes");
-    expect(sidecar.migration && sidecar.migration.legacyScriptUrl === pkg.legacyScriptUrl, pkg.id + " migration script binding");
-    expect(sidecar.migration.legacyIndex === "merged-shuyue/index.json", pkg.id + " migration index binding");
-  } else {
-    expect(!sidecar.migration, pkg.id + " must not advertise a removed v1 migration artifact");
+  // One format only: every package is a Shinsou script for the app's sandbox.
+  expect(pkg.contract === "shinsou" && pkg.runtime === "legacy-shinsou-adapter-v2", pkg.id + " must be a Shinsou package");
+  expect(!pkg.legacyScriptUrl && !sidecar.migration, pkg.id + " must not reference a removed legacy artifact");
+  for (const source of pkg.sources || []) {
+    const numeric = /^-?\d{1,19}$/.test(source.sourceId);
+    // Reference-only fixtures are never installed, so the app never parses their source ids.
+    if (!numeric && pkg.referenceOnly !== true) {
+      expect(/^[a-z0-9][a-z0-9._-]{0,127}$/.test(source.sourceId), pkg.id + " string source id shape");
+      expect(/^-?\d{1,19}$/.test(String(source.legacyLongId)), pkg.id + " string source id needs a numeric legacyLongId");
+    }
+    const sidecarSource = sidecar.sources.find((entry) => entry.sourceId === source.sourceId);
+    for (const field of ["requestOrigins", "credentialOrigins", "contentOrigins", "browserSessionOrigins", "contentHostSuffixes", "browserImageOrigins"]) {
+      assert.deepStrictEqual(sidecarSource && sidecarSource[field], source[field], pkg.id + " sidecar " + field);
+    }
+    if (pkg.installable !== false && pkg.runtimePermissions.includes("NETWORK")) {
+      expect(Array.isArray(source.requestOrigins) && source.requestOrigins.length > 0, pkg.id + " must declare its request origins");
+    }
+    if ((source.browserSessionOrigins || []).length) {
+      expect(pkg.runtimePermissions.includes("BROWSER_CHALLENGE"), pkg.id + " browser-session origins need BROWSER_CHALLENGE");
+    }
+    if ((source.browserImageOrigins || []).length) {
+      expect(pkg.runtimePermissions.includes("BROWSER_IMAGES"), pkg.id + " browser image origins need BROWSER_IMAGES");
+      expect(source.browserImageOrigins.every((o) => source.contentOrigins.includes(o)), pkg.id + " browser image origins are content origins");
+    }
   }
 
   if (pkg.id === "example.login") {
@@ -214,11 +213,10 @@ for (const pkg of index.packages) {
   }
   if (pkg.id === "zh.bilimanga") {
     expect(pkg.referenceOnly !== true && pkg.installable === true, "zh.bilimanga novel package must be installable");
-    expect(pkg.contract === "shuyue" && pkg.runtime === "reviewed-shuyue-adapter-v2", "zh.bilimanga must remain reviewed ShuYue");
     expect(pkg.contentType === "novel", "zh.bilimanga package content type");
     assert.deepStrictEqual(pkg.contentKinds, ["PLAIN_TEXT"], "zh.bilimanga package content kinds");
     expect(Array.isArray(pkg.sources) && pkg.sources.length === 1, "zh.bilimanga must expose only Linovelib");
-    expect(pkg.sources[0].sourceId === "zh.bilimanga.novel", "zh.bilimanga novel source identity");
+    expect(pkg.sources[0].sourceId === "zh.bilimanga.novel" && pkg.sources[0].legacyLongId === "-9110000000000004", "zh.bilimanga novel source identity");
     expect(pkg.sources[0].baseUrl === "https://tw.linovelib.com", "zh.bilimanga novel domain");
     expect(pkg.capabilities.includes("LOGIN"), "zh.bilimanga must advertise its implemented member login");
     expect(/supportsLogin:\s*true/.test(scriptText), "zh.bilimanga source must expose login controls");
@@ -240,9 +238,10 @@ for (const pkg of index.packages) {
   }
   if (pkg.id === "zh.wenku8") {
     expect(pkg.legacyCompatibilityOnly === true && pkg.installable === false, "zh.wenku8 must remain compatibility-only");
+    expect(pkg.sources[0].sourceId === "zh.wenku8" && pkg.sources[0].legacyLongId === "-9110000000000001", "zh.wenku8 source identity");
   }
   if (pkg.id === "zh.wenku8.api") {
-    expect(pkg.version === "1.0.5" && pkg.versionCode === 6, "zh.wenku8.api local-library release identity");
+    expect(pkg.sources[0].sourceId === "zh.wenku8.api" && pkg.sources[0].legacyLongId === "-9110000000000002", "zh.wenku8.api source identity");
     expect(!pkg.capabilities.includes("FAVORITE"), "zh.wenku8.api must use the app-local library");
     expect(!pkg.runtimePermissions.includes("FAVORITE_MUTATION"), "zh.wenku8.api must not request remote favorite mutation");
     expect(/supportsFavorites:\s*false/.test(scriptText), "zh.wenku8.api must disable remote favorites");
@@ -250,22 +249,17 @@ for (const pkg of index.packages) {
     expect(!/getFavoriteManga\s*=/.test(scriptText), "zh.wenku8.api remote bookcase adapter must be absent");
     expect(!/action=bookcase/.test(scriptText), "zh.wenku8.api must not call the remote bookcase API");
   }
-  expect(
-    (pkg.sources || []).every((source) => !source.browserSessionOrigins || source.browserSessionOrigins.length === 0),
-    pkg.id + " must not receive browser-session transport",
-  );
-  if (pkg.contract === "shuyue") expect(mergedIds.has(pkg.id), pkg.id + " must map to merged ShuYue catalog");
+  if (pkg.id === "zh.biquge.tw") {
+    expect(pkg.sources[0].sourceId === "zh.biquge.tw" && pkg.sources[0].legacyLongId === "-9110000000000003", "zh.biquge.tw source identity");
+  }
 
   const declaredLoginEvents = pkg.systemEvents.required.concat(pkg.systemEvents.optional);
   if (declaredLoginEvents.includes("command.auth.login.request")) {
-    expect(/bridge\.system\.requestLogin\s*\(/.test(scriptText), pkg.id + " must use the native system login helper");
-    const systemCall = scriptText.indexOf("bridge.system.requestLogin");
-    const legacyCall = scriptText.indexOf("bridge.requestLogin");
-    expect(legacyCall < 0 || systemCall < legacyCall, pkg.id + " legacy login callback may only be a fallback");
+    expect(/bridge\.requestLogin\s*\(/.test(scriptText), pkg.id + " must ask the app for login through bridge.requestLogin");
   }
 }
 
 const mangadex = index.packages.find((pkg) => pkg.id === "all.mangadex");
 expect(mangadex && mangadex.unindexedLegacy === true && !mangadex.legacyScriptUrl, "MangaDex must not reference a removed v1 artifact");
 expect(index.packages.some((pkg) => pkg.id === "example.login" && pkg.referenceOnly === true), "reference-only login entry missing");
-console.log("root v2 migration smoke: 15 packages, scripts, sidecars, permissions, identities, and migration fixtures verified");
+console.log("v2 smoke: 15 Shinsou packages, scripts, sidecars, permissions, origins and identities verified");

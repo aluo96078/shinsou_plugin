@@ -715,3 +715,4 @@ var source = {
 };
 
 source.v2 = __shinsouExtensionV2;
+// zh.bilimanga.manga 1.0.2: network origins are declared in the repository index.

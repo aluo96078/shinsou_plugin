@@ -16,8 +16,7 @@ function loadPlugin(fileName) {
 
 const novel = loadPlugin("zh.bilimanga.js");
 const manga = loadPlugin("zh.bilimanga.manga.js");
-assert.strictEqual(novel.source, novel.novelSource);
-assert.strictEqual(novel.source.id, "zh.bilimanga.novel");
+assert.strictEqual(novel.novelSource, undefined);
 assert.strictEqual(novel.mangaSource, undefined);
 assert.strictEqual(manga.source.id, "7289707411592168382");
 
@@ -34,7 +33,7 @@ const novelFixture = [
   '<a href="/novel/10/103.html" class="chapter-li-a"><span>第四章</span></a>',
   "</ul></div>",
 ].join("\n");
-const novelChapters = novel.parseNovelChapters(novel.novelSource, "10", novelFixture);
+const novelChapters = novel.parseNovelChapters(novel.source, "10", novelFixture);
 assert.strictEqual(
   novelChapters.map((chapter) => chapter.url).join(","),
   "https://tw.linovelib.com/novel/10/100.html,https://tw.linovelib.com/novel/10/101.html,https://tw.linovelib.com/novel/10/102.html,https://tw.linovelib.com/novel/10/103.html",
@@ -99,7 +98,7 @@ novel.bridge = {
     cleared = true;
   },
 };
-const novelLogin = novel.novelSource.login("member@example.com", "secret");
+const novelLogin = novel.source.login("member@example.com", "secret");
 assert.strictEqual(novelLogin.loggedIn, true);
 assert.strictEqual(novelLogin.errorMessage, undefined);
 assert.strictEqual(novelPreflightRequests, 2);
@@ -107,7 +106,7 @@ assert.strictEqual(posted.url, "https://tw.linovelib.com/login.php?do=submit");
 assert.match(posted.body, /username=member%40example\.com/);
 assert.match(posted.body, /password=secret/);
 assert.strictEqual(posted.headers["Content-Type"], "application/x-www-form-urlencoded");
-novel.novelSource.logout();
+novel.source.logout();
 assert.strictEqual(cleared, true);
 
 let importedSessionPosts = 0;
@@ -154,9 +153,9 @@ const ordinaryMangaLogin = manga.source.login("member", "secret");
 assert.strictEqual(ordinaryMangaLogin.loggedIn, true);
 assert.strictEqual(ordinaryLoginPosts, 1);
 assert.strictEqual(ordinaryLoginHomeRequests, 2);
-assert.strictEqual(novel.novelSource.supportsLogin, true);
+assert.strictEqual(novel.source.supportsLogin, true);
 assert.strictEqual(manga.source.supportsLogin, true);
-assert.strictEqual(novel.novelSource.webChallengeUrl, "https://tw.linovelib.com/login.php");
+assert.strictEqual(novel.source.webChallengeUrl, "https://tw.linovelib.com/login.php");
 assert.strictEqual(manga.source.webChallengeUrl, "https://www.bilimanga.net/login.php");
 
 novel.bridge = {
@@ -171,7 +170,7 @@ novel.bridge = {
     ].join("");
   },
 };
-const guestHomeLogin = novel.novelSource.login("wrong-user", "wrong-password");
+const guestHomeLogin = novel.source.login("wrong-user", "wrong-password");
 assert.strictEqual(guestHomeLogin.loggedIn, false);
 assert.strictEqual(guestHomeLogin.errorMessage, "登入失敗，請檢查使用者名稱與密碼。");
 
@@ -183,7 +182,7 @@ novel.bridge = {
     return '<a href="/login.php" class="icon icon-person jsLogin"></a>';
   },
 };
-const failedLogin = novel.novelSource.login("wrong-user", "wrong-password");
+const failedLogin = novel.source.login("wrong-user", "wrong-password");
 assert.strictEqual(failedLogin.loggedIn, false);
 assert.strictEqual(failedLogin.errorMessage, "帳號或密碼錯誤");
 
@@ -195,7 +194,7 @@ novel.bridge = {
     return '<a href="/login.php" class="icon icon-person jsLogin"></a>';
   },
 };
-const reversedFailureLogin = novel.novelSource.login("wrong-user", "wrong-password");
+const reversedFailureLogin = novel.source.login("wrong-user", "wrong-password");
 assert.strictEqual(reversedFailureLogin.loggedIn, false);
 assert.strictEqual(reversedFailureLogin.errorMessage, "錯誤的密碼");
 
@@ -212,7 +211,7 @@ novel.bridge = {
     return '<a href="/login.php" class="icon icon-person jsLogin"></a>';
   },
 };
-const nonexistentUserLogin = novel.novelSource.login("wrong-user", "wrong-password");
+const nonexistentUserLogin = novel.source.login("wrong-user", "wrong-password");
 assert.strictEqual(nonexistentUserLogin.loggedIn, false);
 assert.strictEqual(nonexistentUserLogin.errorMessage, "該用戶不存在，請注意字母大小寫是否輸入正確！");
 
@@ -232,7 +231,7 @@ novel.bridge = {
     return announcementFixture;
   },
 };
-const announcementLogin = novel.novelSource.login("wrong-user", "wrong-password");
+const announcementLogin = novel.source.login("wrong-user", "wrong-password");
 assert.strictEqual(announcementLogin.loggedIn, false);
 assert.strictEqual(announcementLogin.errorMessage, "登入失敗，請檢查使用者名稱與密碼。");
 
@@ -249,7 +248,7 @@ novel.bridge = {
     return '<div class="notice">內容加載失敗！請重載或更換瀏覽器</div>';
   },
 };
-const unrelatedFailureLogin = novel.novelSource.login("wrong-user", "wrong-password");
+const unrelatedFailureLogin = novel.source.login("wrong-user", "wrong-password");
 assert.strictEqual(unrelatedFailureLogin.loggedIn, false);
 assert.strictEqual(unrelatedFailureLogin.errorMessage, "登入失敗，請檢查使用者名稱與密碼。");
 
@@ -279,9 +278,9 @@ novel.bridge = {
     },
   },
 };
-novel.novelSource._lastLoginRequestAt = 0;
-novel.novelSource.getMangaDetails({ url: "https://tw.linovelib.com/novel/10.html", title: "Fallback" });
-novel.novelSource.getChapterList({ url: "https://tw.linovelib.com/novel/10.html" });
+novel.source._lastLoginRequestAt = 0;
+novel.source.getMangaDetails({ url: "https://tw.linovelib.com/novel/10.html", title: "Fallback" });
+novel.source.getChapterList({ url: "https://tw.linovelib.com/novel/10.html" });
 assert.deepStrictEqual(loginReasons, ["小說作品詳情需要登入才能載入。"]);
 
 console.log("zh.bilimanga regressions: split identities, chapter order, image headers, login errors, and logout verified");

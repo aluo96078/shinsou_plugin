@@ -3,24 +3,35 @@
   "contractVersion": 2,
   "packageId": "zh.dm5",
   "name": "動漫屋",
-  "version": "1.4.1",
-  "versionCode": 6,
+  "version": "1.4.2",
+  "versionCode": 7,
   "contract": "shinsou",
   "lang": "zh",
   "nsfw": true,
   "installable": true,
   "artifact": {
     "scriptUrl": "plugins/zh.dm5.js",
-    "sha256": "88618e4c1e6df4a7955c40e5c24a879c6d04baf945d5a89fea25f2b27ca4e133",
-    "byteSize": 22580
+    "sha256": "07ee5b119a1492e5445ec783da33693c8a9680e862e403e8c82b7c2a66ef26ba",
+    "byteSize": 22651
   },
   "content": {
     "contract": "extension-content-v2",
     "contractVersion": 2,
     "type": "manga",
-    "kinds": ["IMAGE_SEQUENCE"]
+    "kinds": [
+      "IMAGE_SEQUENCE"
+    ]
   },
-  "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH", "LOGIN"],
+  "capabilities": [
+    "CATALOGUE",
+    "LATEST",
+    "BROWSE",
+    "METADATA",
+    "UNITS",
+    "CONTENT",
+    "SEARCH",
+    "LOGIN"
+  ],
   "systemEvents": {
     "protocol": "dev.shinsou.system",
     "minVersion": 1,
@@ -28,33 +39,84 @@
     "required": [],
     "optional": []
   },
-  "requestedHostPermissions": ["REQUEST_LOGIN_UI"],
-  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS", "BROWSER_CHALLENGE"],
-  "sources": [{
-    "sourceKey": {
-      "contractVersion": 2,
-      "packageId": "zh.dm5",
+  "requestedHostPermissions": [
+    "REQUEST_LOGIN_UI"
+  ],
+  "runtimePermissions": [
+    "EXECUTE_SCRIPT",
+    "NETWORK",
+    "COOKIE_STORAGE",
+    "CREDENTIAL_ACCESS",
+    "BROWSER_CHALLENGE"
+  ],
+  "sources": [
+    {
+      "sourceKey": {
+        "contractVersion": 2,
+        "packageId": "zh.dm5",
+        "sourceId": "3947628",
+        "legacyLongId": "3947628"
+      },
       "sourceId": "3947628",
-      "legacyLongId": "3947628"
-    },
-    "sourceId": "3947628",
-    "name": "動漫屋",
-    "lang": "zh",
-    "baseUrl": "https://www.dm5.com",
-    "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH", "LOGIN"],
-    "contentKinds": ["IMAGE_SEQUENCE"],
-    "systemEvents": {
-      "protocol": "dev.shinsou.system",
-      "minVersion": 1,
-      "maxVersion": 1,
-      "required": [],
-      "optional": []
-    },
-    "requestedHostPermissions": ["REQUEST_LOGIN_UI"],
-    "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS", "BROWSER_CHALLENGE"]
-  }],
-  "migration": {
-    "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.dm5.js",
-    "legacyIndex": "merged-shuyue/index.json"
-  }
+      "name": "動漫屋",
+      "lang": "zh",
+      "baseUrl": "https://www.dm5.com",
+      "contentType": "manga",
+      "contentKinds": [
+        "IMAGE_SEQUENCE"
+      ],
+      "requestOrigins": [
+        "https://www.dm5.com"
+      ],
+      "credentialOrigins": [
+        "https://www.dm5.com"
+      ],
+      "contentOrigins": [
+        "https://manhua1031zjcdn63.cdndm5.com",
+        "https://manhua1033zjcdn79.cdndm5.com",
+        "https://manhua1041zjcdn63.cdndm5.com",
+        "https://manhua1041zjcdn79.cdndm5.com",
+        "https://mhfm1tw.cdndm5.com",
+        "https://mhfm2tw.cdndm5.com",
+        "https://mhfm3tw.cdndm5.com",
+        "https://mhfm4tw.cdndm5.com",
+        "https://mhfm5tw.cdndm5.com",
+        "https://mhfm6tw.cdndm5.com",
+        "https://mhfm7tw.cdndm5.com",
+        "https://mhfm8tw.cdndm5.com",
+        "https://mhfm9tw.cdndm5.com",
+        "https://www.dm5.com"
+      ],
+      "browserSessionOrigins": [
+        "https://www.dm5.com"
+      ],
+      "capabilities": [
+        "CATALOGUE",
+        "LATEST",
+        "BROWSE",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "SEARCH",
+        "LOGIN"
+      ],
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
+      "requestedHostPermissions": [
+        "REQUEST_LOGIN_UI"
+      ],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK",
+        "COOKIE_STORAGE",
+        "CREDENTIAL_ACCESS",
+        "BROWSER_CHALLENGE"
+      ]
+    }
+  ]
 }

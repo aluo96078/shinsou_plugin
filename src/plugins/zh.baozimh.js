@@ -583,3 +583,4 @@ var source = {
 if (typeof source === "object" && source) {
     source.v2 = __shinsouExtensionV2;
 }
+// zh.baozimh 1.0.10: network origins are declared in the repository index.

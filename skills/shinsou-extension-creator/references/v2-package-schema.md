@@ -127,10 +127,9 @@ For comics, return one image page per panel/page:
 
 The repository's `example.dual` fixture demonstrates one package with a novel
 source and a manga source. It is intentionally `referenceOnly` and not
-installable: the generic Shinsou adapter still has image-oriented legacy
-assumptions, while the reviewed ShuYue coordinator currently expects a single
-source. A real package must only be marked installable after its target host
-supports the complete mixed runtime.
+installable: it is a teaching fixture. The app supports mixed packages (each
+source declares its own content kinds; novel sources implement
+`getChapterText`), so a real mixed package may be installable.
 
 ## Validation
 

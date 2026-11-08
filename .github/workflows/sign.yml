@@ -31,7 +31,7 @@ env:
   MIRROR: https://raw.githubusercontent.com/aluo96078/shinsou_plugin/refs/heads/master
   # shinsou-plugin CLI, pinned to an exact commit.
   CLI_REPOSITORY: aluo96078/shinsou-plugin-cli
-  CLI_COMMIT: edf06d17921c32a15a92d42783806c7a4f5070e4
+  CLI_COMMIT: 2d9c450bd4b3135660c26ad82e32e087bb52bf6f
 
 jobs:
   sign:

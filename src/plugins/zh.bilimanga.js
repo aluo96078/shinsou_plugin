@@ -1,9 +1,9 @@
 /*
- * Linovelib / 嗶哩輕小說 content v2 package.
+ * Linovelib / 嗶哩輕小說 Shinsou content v2 package.
  *
- * BiliManga is published separately as zh.bilimanga.manga so it can use the
- * generic Shinsou manga detail and reader flow.  This reviewed ShuYue package
- * intentionally retains only Linovelib plain-text content.
+ * BiliManga is published separately as zh.bilimanga.manga.  This package uses
+ * the Shinsou script contract (`var source`, getChapterText) and retains only
+ * Linovelib plain-text content.
  */
 var __shinsouExtensionV2 = {"contractVersion":2,"contentContract":"extension-content-v2","packageId":"zh.bilimanga","contentType":"novel","contentKinds":["PLAIN_TEXT"],"systemEvents":{"protocol":"dev.shinsou.system","minVersion":1,"maxVersion":1,"required":["command.auth.login.request"],"optional":[]},"requestedHostPermissions":["REQUEST_LOGIN_UI"]};
 
@@ -450,7 +450,33 @@ var BiliMangaShared = {
       if (!next || !this.sameChapter(current, next, "novel")) break;
       current = next;
     }
-    return chunks.join("\n\n");
+    return this.limitUtf8(chunks.join("\n\n"), 4 * 1024 * 1024);
+  },
+
+  utf8Length: function(text) {
+    var length = 0;
+    for (var i = 0; i < text.length; i++) {
+      var code = text.charCodeAt(i);
+      if (code < 0x80) length += 1;
+      else if (code < 0x800) length += 2;
+      else if (code >= 0xd800 && code <= 0xdbff && i + 1 < text.length) { length += 4; i++; }
+      else length += 3;
+    }
+    return length;
+  },
+
+  limitUtf8: function(text, maxBytes) {
+    if (text.length * 3 <= maxBytes || this.utf8Length(text) <= maxBytes) return text;
+    var low = 0;
+    var high = text.length;
+    while (low < high) {
+      var mid = Math.ceil((low + high) / 2);
+      if (this.utf8Length(text.substring(0, mid)) <= maxBytes) low = mid; else high = mid - 1;
+    }
+    var cut = text.substring(0, low);
+    var last = cut.charCodeAt(cut.length - 1);
+    if (last >= 0xd800 && last <= 0xdbff) cut = cut.substring(0, cut.length - 1);
+    return cut;
   }
 };
 
@@ -473,7 +499,7 @@ function novelBook(sourceObject, id, block, url) {
     author: author || null,
     artist: null,
     description: description || null,
-    genre: tags.length ? tags.join(" ") : null,
+    genre: tags,
     status: status,
     thumbnailUrl: BiliMangaShared.image(block, sourceObject.baseUrl) || null,
     initialized: true
@@ -508,7 +534,8 @@ function novelDetails(sourceObject, id, html, url) {
   book.artist = illustrator || null;
   book.description = content ? BiliMangaShared.cleanContent(content[1]) : book.description;
   book.status = BiliMangaShared.status(html);
-  book.genre = BiliMangaShared.tagTexts(html).join(" ") || book.genre;
+  var detailTags = BiliMangaShared.tagTexts(html);
+  if (detailTags.length) book.genre = detailTags;
   book.thumbnailUrl = BiliMangaShared.image(html, sourceObject.baseUrl) || book.thumbnailUrl;
   return book;
 }
@@ -571,8 +598,9 @@ var novelSortLabels = ["最新更新", "最新入庫", "週點擊", "月點擊",
 var novelTagIds = ["0", "15", "61", "96", "18", "13", "14", "16", "17", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60"];
 var novelTagLabels = ["全部", "奇幻", "冒險", "魔法", "戰鬥", "愛情", "校園", "青春", "科幻", "懸疑", "推理", "治癒", "日常", "搞笑", "後宮", "異世界", "轉生", "龍傲天", "黑暗", "大逃殺", "犯罪", "歷史", "武俠", "都市", "職場", "群像", "女性視角", "百合", "耽美", "輕文學", "音樂", "美食", "旅行", "病嬌", "青梅竹馬", "妹妹", "大小姐", "人外", "末日", "超自然", "遊戲", "異能", "戰爭", "經營", "歡樂", "溫馨", "蘿莉", "正太", "性轉", "偽娘", "獵奇", "神鬼", "偵探", "冒險譚", "校園戀愛", "戀愛喜劇", "日本輕小說", "電擊文庫", "角川文庫", "GA文庫", "MF文庫", "富士見文庫"];
 
-var novelSource = {
-  id: "zh.bilimanga.novel",
+var source = {
+  // The app overwrites id with the numeric index id (-9110000000000004).
+  id: "-9110000000000004",
   name: "嗶哩輕小說（Linovelib）",
   lang: "zh",
   baseUrl: "https://tw.linovelib.com",
@@ -580,8 +608,6 @@ var novelSource = {
   // can remain in RUNNING state on that document even though the dedicated member page loads
   // immediately, so start the isolated browser at the smaller same-origin login endpoint.
   webChallengeUrl: "https://tw.linovelib.com/login.php",
-  contentType: "novel",
-  contentKinds: ["PLAIN_TEXT"],
   supportsLatest: true,
   supportsLogin: true,
   supportsFavorites: false,
@@ -663,14 +689,7 @@ var novelSource = {
     return parseNovelChapters(this, id, BiliMangaShared.request(this, url, null, "小說章節列表需要登入才能載入。"));
   },
 
-  getPageList: function(chapter) {
-    var input = chapter || {};
-    var text = BiliMangaShared.novelText(this, input);
-    if (!text) return [];
-    return [{ index: 0, url: String(input.url || ""), imageUrl: null, text: text, content: text }];
-  },
-
-  chapterText: function(chapter) {
+  getChapterText: function(chapter) {
     return BiliMangaShared.novelText(this, chapter || {});
   },
 
@@ -682,5 +701,4 @@ var novelSource = {
   }
 };
 
-var source = novelSource;
 source.v2 = __shinsouExtensionV2;
