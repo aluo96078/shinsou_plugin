@@ -827,3 +827,4 @@ var source = {
 if (typeof source === "object" && source) {
     source.v2 = __shinsouExtensionV2;
 }
+// zh.manhuagui 1.1.9: network origins are declared in the repository index.

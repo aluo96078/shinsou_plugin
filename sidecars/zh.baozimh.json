@@ -4,22 +4,22 @@
   "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
   "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
   "payloadType": "plugin-sidecar",
-  "sequence": 1,
+  "sequence": 2,
   "payload": {
     "format": "shinsou-extension-sidecar-v2",
     "contractVersion": 2,
     "packageId": "zh.baozimh",
     "name": "包子漫画",
-    "version": "1.0.9",
-    "versionCode": 10,
+    "version": "1.0.10",
+    "versionCode": 11,
     "contract": "shinsou",
     "lang": "zh",
     "nsfw": false,
     "installable": true,
     "artifact": {
       "scriptUrl": "plugins/zh.baozimh.js",
-      "sha256": "850c81d90644a3933fa0d6e5113c057c54d2c22f23b1c5c41dff83003c10f7a9",
-      "byteSize": 23123
+      "sha256": "84bdf847493e314cfbd771cd995bc9fc8ee183e929ac760224cc903355366772",
+      "byteSize": 23199
     },
     "content": {
       "contract": "extension-content-v2",
@@ -85,7 +85,29 @@
         "runtimePermissions": [
           "EXECUTE_SCRIPT",
           "NETWORK"
-        ]
+        ],
+        "requestOrigins": [
+          "https://app.baozimh.com",
+          "https://appgb.baozimh.com",
+          "https://www.baozimh.com",
+          "https://www.twmanga.com"
+        ],
+        "credentialOrigins": [
+          "https://app.baozimh.com",
+          "https://appgb.baozimh.com",
+          "https://www.baozimh.com"
+        ],
+        "contentOrigins": [
+          "https://app.baozimh.com",
+          "https://appgb.baozimh.com",
+          "https://s1.baozicdn.com",
+          "https://s1.bzcdn.net",
+          "https://s2.bzcdn.net",
+          "https://static-tw.baozimh.com",
+          "https://www.baozimh.com",
+          "https://www.twmanga.com"
+        ],
+        "browserSessionOrigins": []
       }
     ],
     "migration": {
@@ -93,5 +115,5 @@
       "legacyIndex": "merged-shuyue/index.json"
     }
   },
-  "signature": "AHC7v2hnFYut-gtqPfkMRd0DDbBlXwo-f5uUKBb010xk7wE5ffzS4a7hWUqjQyB1Lv9sMoJgJeJMhyVJrwHGCw"
+  "signature": "mOfkKXNCXmqbqh7DwQ84uMnJplbrr6nVuGdYfvIreh6cG1OKlbPhgUJozcZx0VoKHNV-4xWhP2ov3brL5YHyAA"
 }

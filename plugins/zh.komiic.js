@@ -304,3 +304,4 @@ var source = {
 if (typeof source === "object" && source) {
     source.v2 = __shinsouExtensionV2;
 }
+// zh.komiic 1.2.3: network origins are declared in the repository index.

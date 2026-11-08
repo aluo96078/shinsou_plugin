@@ -4,22 +4,22 @@
   "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
   "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
   "payloadType": "plugin-sidecar",
-  "sequence": 1,
+  "sequence": 2,
   "payload": {
     "format": "shinsou-extension-sidecar-v2",
     "contractVersion": 2,
     "packageId": "zh.mycomic",
     "name": "MyComic",
-    "version": "1.0.2",
-    "versionCode": 3,
+    "version": "1.0.3",
+    "versionCode": 4,
     "contract": "shinsou",
     "lang": "zh",
     "nsfw": true,
     "installable": true,
     "artifact": {
       "scriptUrl": "plugins/zh.mycomic.js",
-      "sha256": "d79fbcd04e3398f57d73af021691fa368ae3d7702dc3ef62d00cc67144fd7eba",
-      "byteSize": 23990
+      "sha256": "e27f90d3c1648402425817df964f69fbc8a5f6f5e33a9c3941ee9902b5262ef8",
+      "byteSize": 24065
     },
     "content": {
       "contract": "extension-content-v2",
@@ -89,6 +89,20 @@
           "NETWORK",
           "COOKIE_STORAGE",
           "BROWSER_CHALLENGE"
+        ],
+        "requestOrigins": [
+          "https://mycomic.com"
+        ],
+        "credentialOrigins": [
+          "https://mycomic.com"
+        ],
+        "contentOrigins": [
+          "https://biccam.com",
+          "https://mycomic.com"
+        ],
+        "browserSessionOrigins": [
+          "https://mycomic.com",
+          "https://challenges.cloudflare.com"
         ]
       }
     ],
@@ -97,5 +111,5 @@
       "legacyIndex": "merged-shuyue/index.json"
     }
   },
-  "signature": "n4oYJwsmJ-LGY0wGlyWUjDo3Un48KRXN04UehOWTk6ea0QryFwy5GIgLLG9RKNV1bOR4yk-g3vfeQA6rHebeAg"
+  "signature": "FgcQ8ZLVXg0m95ZoofYmOygsc09yOiTXw_AYHrx95cZgVgIyuLOm-cEWbOx8U0AT21emE-DMTonhuGx1C1B1AQ"
 }

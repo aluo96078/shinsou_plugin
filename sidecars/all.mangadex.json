@@ -4,14 +4,14 @@
   "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
   "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
   "payloadType": "plugin-sidecar",
-  "sequence": 1,
+  "sequence": 2,
   "payload": {
     "format": "shinsou-extension-sidecar-v2",
     "contractVersion": 2,
     "packageId": "all.mangadex",
     "name": "MangaDex",
-    "version": "1.2.0",
-    "versionCode": 3,
+    "version": "1.2.1",
+    "versionCode": 4,
     "contract": "shinsou",
     "lang": "all",
     "nsfw": true,
@@ -19,8 +19,8 @@
     "unindexedLegacy": true,
     "artifact": {
       "scriptUrl": "plugins/all.mangadex.js",
-      "sha256": "320efd108ed7656cb00dd5270f4e54c67f08fc9e3c2af0c362f57af987c2e1f3",
-      "byteSize": 25025
+      "sha256": "3753ea822248b6938c59866154b1040377435240b3363cc3ce4618908974806b",
+      "byteSize": 25102
     },
     "content": {
       "contract": "extension-content-v2",
@@ -86,9 +86,26 @@
         "runtimePermissions": [
           "EXECUTE_SCRIPT",
           "NETWORK"
+        ],
+        "requestOrigins": [
+          "https://api.mangadex.org",
+          "https://mangadex.org"
+        ],
+        "credentialOrigins": [
+          "https://api.mangadex.org",
+          "https://mangadex.org"
+        ],
+        "contentOrigins": [
+          "https://api.mangadex.org",
+          "https://mangadex.org",
+          "https://uploads.mangadex.org"
+        ],
+        "browserSessionOrigins": [],
+        "contentHostSuffixes": [
+          "mangadex.network"
         ]
       }
     ]
   },
-  "signature": "CWT7-41nh3SJVg9Kc-yQuhHlNJTyZF8Be_SI2HhCfzaX2eWJG9Qe49qMo2f4umWKYDwaS79olsM_uKftZo7JBg"
+  "signature": "VD0DDqc4OvkayJ7sQM_L52k5m0icDzJ3cZTeq6WbSphU7j-B-UEc3mAdb77ItEsQetOKKI4hRvLe1I9pzdR5CA"
 }

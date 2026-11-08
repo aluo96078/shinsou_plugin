@@ -101,7 +101,29 @@
       "runtimePermissions": [
         "EXECUTE_SCRIPT",
         "NETWORK"
-      ]
+      ],
+      "requestOrigins": [
+        "https://app.baozimh.com",
+        "https://appgb.baozimh.com",
+        "https://www.baozimh.com",
+        "https://www.twmanga.com"
+      ],
+      "credentialOrigins": [
+        "https://app.baozimh.com",
+        "https://appgb.baozimh.com",
+        "https://www.baozimh.com"
+      ],
+      "contentOrigins": [
+        "https://app.baozimh.com",
+        "https://appgb.baozimh.com",
+        "https://s1.baozicdn.com",
+        "https://s1.bzcdn.net",
+        "https://s2.bzcdn.net",
+        "https://static-tw.baozimh.com",
+        "https://www.baozimh.com",
+        "https://www.twmanga.com"
+      ],
+      "browserSessionOrigins": []
     }
   ]
 }
