@@ -1,48 +1,43 @@
 {
-  "format": "shinsou-extension-sidecar-v2",
-  "contractVersion": 2,
-  "packageId": "zh.mycomic",
-  "name": "MyComic",
-  "version": "1.0.2",
-  "versionCode": 3,
-  "contract": "shinsou",
-  "lang": "zh",
-  "nsfw": true,
-  "installable": true,
-  "artifact": {
-    "scriptUrl": "plugins/zh.mycomic.js",
-    "sha256": "d79fbcd04e3398f57d73af021691fa368ae3d7702dc3ef62d00cc67144fd7eba",
-    "byteSize": 23990
-  },
-  "content": {
-    "contract": "extension-content-v2",
+  "format": "shinsou-signed-envelope-v1",
+  "algorithm": "Ed25519",
+  "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
+  "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
+  "payloadType": "plugin-sidecar",
+  "sequence": 1,
+  "payload": {
+    "format": "shinsou-extension-sidecar-v2",
     "contractVersion": 2,
-    "type": "manga",
-    "kinds": ["IMAGE_SEQUENCE"]
-  },
-  "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
-  "systemEvents": {
-    "protocol": "dev.shinsou.system",
-    "minVersion": 1,
-    "maxVersion": 1,
-    "required": [],
-    "optional": []
-  },
-  "requestedHostPermissions": [],
-  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "BROWSER_CHALLENGE"],
-  "sources": [{
-    "sourceKey": {
-      "contractVersion": 2,
-      "packageId": "zh.mycomic",
-      "sourceId": "9119537447562549661",
-      "legacyLongId": "9119537447562549661"
-    },
-    "sourceId": "9119537447562549661",
+    "packageId": "zh.mycomic",
     "name": "MyComic",
+    "version": "1.0.2",
+    "versionCode": 3,
+    "contract": "shinsou",
     "lang": "zh",
-    "baseUrl": "https://mycomic.com",
-    "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
-    "contentKinds": ["IMAGE_SEQUENCE"],
+    "nsfw": true,
+    "installable": true,
+    "artifact": {
+      "scriptUrl": "plugins/zh.mycomic.js",
+      "sha256": "d79fbcd04e3398f57d73af021691fa368ae3d7702dc3ef62d00cc67144fd7eba",
+      "byteSize": 23990
+    },
+    "content": {
+      "contract": "extension-content-v2",
+      "contractVersion": 2,
+      "type": "manga",
+      "kinds": [
+        "IMAGE_SEQUENCE"
+      ]
+    },
+    "capabilities": [
+      "CATALOGUE",
+      "LATEST",
+      "BROWSE",
+      "METADATA",
+      "UNITS",
+      "CONTENT",
+      "SEARCH"
+    ],
     "systemEvents": {
       "protocol": "dev.shinsou.system",
       "minVersion": 1,
@@ -51,10 +46,56 @@
       "optional": []
     },
     "requestedHostPermissions": [],
-    "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "BROWSER_CHALLENGE"]
-  }],
-  "migration": {
-    "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.mycomic.js",
-    "legacyIndex": "merged-shuyue/index.json"
-  }
+    "runtimePermissions": [
+      "EXECUTE_SCRIPT",
+      "NETWORK",
+      "COOKIE_STORAGE",
+      "BROWSER_CHALLENGE"
+    ],
+    "sources": [
+      {
+        "sourceKey": {
+          "contractVersion": 2,
+          "packageId": "zh.mycomic",
+          "sourceId": "9119537447562549661",
+          "legacyLongId": "9119537447562549661"
+        },
+        "sourceId": "9119537447562549661",
+        "name": "MyComic",
+        "lang": "zh",
+        "baseUrl": "https://mycomic.com",
+        "capabilities": [
+          "CATALOGUE",
+          "LATEST",
+          "BROWSE",
+          "METADATA",
+          "UNITS",
+          "CONTENT",
+          "SEARCH"
+        ],
+        "contentKinds": [
+          "IMAGE_SEQUENCE"
+        ],
+        "systemEvents": {
+          "protocol": "dev.shinsou.system",
+          "minVersion": 1,
+          "maxVersion": 1,
+          "required": [],
+          "optional": []
+        },
+        "requestedHostPermissions": [],
+        "runtimePermissions": [
+          "EXECUTE_SCRIPT",
+          "NETWORK",
+          "COOKIE_STORAGE",
+          "BROWSER_CHALLENGE"
+        ]
+      }
+    ],
+    "migration": {
+      "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.mycomic.js",
+      "legacyIndex": "merged-shuyue/index.json"
+    }
+  },
+  "signature": "n4oYJwsmJ-LGY0wGlyWUjDo3Un48KRXN04UehOWTk6ea0QryFwy5GIgLLG9RKNV1bOR4yk-g3vfeQA6rHebeAg"
 }

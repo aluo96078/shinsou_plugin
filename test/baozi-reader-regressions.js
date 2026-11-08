@@ -1,5 +1,5 @@
 const fs = require('fs'), vm = require('vm'), assert = require('assert');
-const script = fs.readFileSync(require("path").join(__dirname, "../plugins/zh.baozimh.js"), 'utf8');
+const script = fs.readFileSync(require("path").join(__dirname, "../src/plugins/zh.baozimh.js"), 'utf8');
 function load(reply) {
   const requests = [];
   const empty = () => Object.assign([], { isEmpty() { return true; }, size() { return 0; } });

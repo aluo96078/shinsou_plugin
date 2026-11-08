@@ -11,7 +11,7 @@ const context = {
   Page: function(index, url, imageUrl) {Object.assign(this, {index, url, imageUrl});}
 };
 vm.createContext(context);
-vm.runInContext(fs.readFileSync(path.join(__dirname, '../plugins/zh.komiic.js'), 'utf8'), context);
+vm.runInContext(fs.readFileSync(path.join(__dirname, '../src/plugins/zh.komiic.js'), 'utf8'), context);
 const source = context.source;
 for (const state of [0,1,2]) {
   response = JSON.stringify({data: {hotComics: [{id:'1', title:'Fixture', imageUrl:'/cover.jpg'}]}});

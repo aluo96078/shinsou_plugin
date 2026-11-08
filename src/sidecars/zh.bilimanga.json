@@ -1,0 +1,60 @@
+{
+  "format": "shinsou-extension-sidecar-v2",
+  "contractVersion": 2,
+  "packageId": "zh.bilimanga",
+  "name": "嗶哩輕小說（Linovelib）",
+  "version": "1.6.0",
+  "versionCode": 12,
+  "contract": "shuyue",
+  "runtime": "reviewed-shuyue-adapter-v2",
+  "lang": "zh",
+  "nsfw": true,
+  "installable": true,
+  "artifact": {
+    "scriptUrl": "plugins/zh.bilimanga.js",
+    "sha256": "f740eb9fb1da98774f32aa8a555829a828ea799fc6987781ad594a4a6eceb0f5",
+    "byteSize": 29546
+  },
+  "content": {
+    "contract": "extension-content-v2",
+    "contractVersion": 2,
+    "type": "novel",
+    "kinds": ["PLAIN_TEXT"]
+  },
+  "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH", "LOGIN"],
+  "systemEvents": {
+    "protocol": "dev.shinsou.system",
+    "minVersion": 1,
+    "maxVersion": 1,
+    "required": ["command.auth.login.request"],
+    "optional": []
+  },
+  "requestedHostPermissions": ["REQUEST_LOGIN_UI"],
+  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS", "LOGIN_PROMPT", "BROWSER_CHALLENGE"],
+  "sources": [
+    {
+      "sourceKey": {
+        "contractVersion": 2,
+        "packageId": "zh.bilimanga",
+        "sourceId": "zh.bilimanga.novel",
+        "legacyLongId": null
+      },
+      "sourceId": "zh.bilimanga.novel",
+      "name": "嗶哩輕小說（Linovelib）",
+      "lang": "zh",
+      "baseUrl": "https://tw.linovelib.com",
+      "contentType": "novel",
+      "contentKinds": ["PLAIN_TEXT"],
+      "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH", "LOGIN"],
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": ["command.auth.login.request"],
+        "optional": []
+      },
+      "requestedHostPermissions": ["REQUEST_LOGIN_UI"],
+      "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS", "LOGIN_PROMPT", "BROWSER_CHALLENGE"]
+    }
+  ]
+}

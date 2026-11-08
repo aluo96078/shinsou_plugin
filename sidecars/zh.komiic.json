@@ -1,48 +1,43 @@
 {
-  "format": "shinsou-extension-sidecar-v2",
-  "contractVersion": 2,
-  "packageId": "zh.komiic",
-  "name": "Komiic",
-  "version": "1.2.2",
-  "versionCode": 6,
-  "contract": "shinsou",
-  "lang": "zh",
-  "nsfw": true,
-  "installable": true,
-  "artifact": {
-    "scriptUrl": "plugins/zh.komiic.js",
-    "sha256": "ccdd5c25dc607f26a436377c15f9b4ab1c3ed41aad66e17bb758f23131186b9c",
-    "byteSize": 11711
-  },
-  "content": {
-    "contract": "extension-content-v2",
+  "format": "shinsou-signed-envelope-v1",
+  "algorithm": "Ed25519",
+  "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
+  "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
+  "payloadType": "plugin-sidecar",
+  "sequence": 1,
+  "payload": {
+    "format": "shinsou-extension-sidecar-v2",
     "contractVersion": 2,
-    "type": "manga",
-    "kinds": ["IMAGE_SEQUENCE"]
-  },
-  "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
-  "systemEvents": {
-    "protocol": "dev.shinsou.system",
-    "minVersion": 1,
-    "maxVersion": 1,
-    "required": [],
-    "optional": []
-  },
-  "requestedHostPermissions": [],
-  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"],
-  "sources": [{
-    "sourceKey": {
-      "contractVersion": 2,
-      "packageId": "zh.komiic",
-      "sourceId": "8104923",
-      "legacyLongId": "8104923"
-    },
-    "sourceId": "8104923",
+    "packageId": "zh.komiic",
     "name": "Komiic",
+    "version": "1.2.2",
+    "versionCode": 6,
+    "contract": "shinsou",
     "lang": "zh",
-    "baseUrl": "https://komiic.com",
-    "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
-    "contentKinds": ["IMAGE_SEQUENCE"],
+    "nsfw": true,
+    "installable": true,
+    "artifact": {
+      "scriptUrl": "plugins/zh.komiic.js",
+      "sha256": "ccdd5c25dc607f26a436377c15f9b4ab1c3ed41aad66e17bb758f23131186b9c",
+      "byteSize": 11711
+    },
+    "content": {
+      "contract": "extension-content-v2",
+      "contractVersion": 2,
+      "type": "manga",
+      "kinds": [
+        "IMAGE_SEQUENCE"
+      ]
+    },
+    "capabilities": [
+      "CATALOGUE",
+      "LATEST",
+      "BROWSE",
+      "METADATA",
+      "UNITS",
+      "CONTENT",
+      "SEARCH"
+    ],
     "systemEvents": {
       "protocol": "dev.shinsou.system",
       "minVersion": 1,
@@ -51,10 +46,52 @@
       "optional": []
     },
     "requestedHostPermissions": [],
-    "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"]
-  }],
-  "migration": {
-    "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.komiic.js",
-    "legacyIndex": "merged-shuyue/index.json"
-  }
+    "runtimePermissions": [
+      "EXECUTE_SCRIPT",
+      "NETWORK"
+    ],
+    "sources": [
+      {
+        "sourceKey": {
+          "contractVersion": 2,
+          "packageId": "zh.komiic",
+          "sourceId": "8104923",
+          "legacyLongId": "8104923"
+        },
+        "sourceId": "8104923",
+        "name": "Komiic",
+        "lang": "zh",
+        "baseUrl": "https://komiic.com",
+        "capabilities": [
+          "CATALOGUE",
+          "LATEST",
+          "BROWSE",
+          "METADATA",
+          "UNITS",
+          "CONTENT",
+          "SEARCH"
+        ],
+        "contentKinds": [
+          "IMAGE_SEQUENCE"
+        ],
+        "systemEvents": {
+          "protocol": "dev.shinsou.system",
+          "minVersion": 1,
+          "maxVersion": 1,
+          "required": [],
+          "optional": []
+        },
+        "requestedHostPermissions": [],
+        "runtimePermissions": [
+          "EXECUTE_SCRIPT",
+          "NETWORK"
+        ]
+      }
+    ],
+    "migration": {
+      "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.komiic.js",
+      "legacyIndex": "merged-shuyue/index.json"
+    }
+  },
+  "signature": "mT9ZY7JVuKMF2-pKFdRDIh4GIj8xnlXZ0IYTiLJhaOtybA8kkn0V4dALLlaFS82to05-ktTz7iN8Euc64WzlCQ"
 }

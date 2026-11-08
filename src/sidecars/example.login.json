@@ -1,0 +1,57 @@
+{
+  "format": "shinsou-extension-sidecar-v2",
+  "contractVersion": 2,
+  "packageId": "example.login",
+  "name": "Example Login Source",
+  "version": "0.1.0",
+  "versionCode": 1,
+  "contract": "shinsou",
+  "lang": "all",
+  "nsfw": false,
+  "referenceOnly": true,
+  "installable": false,
+  "artifact": {
+    "scriptUrl": "plugins/example.login.js",
+    "sha256": "7e5eefb398da316787da7cf538b17611c47353560ddd3b6699a83842027ca3b9",
+    "byteSize": 9910
+  },
+  "content": {
+    "contract": "extension-content-v2",
+    "contractVersion": 2,
+    "type": "manga",
+    "kinds": ["IMAGE_SEQUENCE"]
+  },
+  "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH", "LOGIN"],
+  "systemEvents": {
+    "protocol": "dev.shinsou.system",
+    "minVersion": 1,
+    "maxVersion": 1,
+    "required": [],
+    "optional": []
+  },
+  "requestedHostPermissions": [],
+  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS"],
+  "sources": [{
+    "sourceKey": {
+      "contractVersion": 2,
+      "packageId": "example.login",
+      "sourceId": "example.login",
+      "legacyLongId": null
+    },
+    "sourceId": "example.login",
+    "name": "Example Login Source",
+    "lang": "all",
+    "baseUrl": "https://example.com",
+    "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH", "LOGIN"],
+    "contentKinds": ["IMAGE_SEQUENCE"],
+    "systemEvents": {
+      "protocol": "dev.shinsou.system",
+      "minVersion": 1,
+      "maxVersion": 1,
+      "required": [],
+      "optional": []
+    },
+    "requestedHostPermissions": [],
+    "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK", "COOKIE_STORAGE", "CREDENTIAL_ACCESS"]
+  }]
+}

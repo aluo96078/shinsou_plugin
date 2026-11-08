@@ -1,8 +1,17 @@
 {
-  "meta": {
-    "name": "Shinsou Community Plugins",
-    "shortName": "SCP V2",
-    "website": "https://github.com/aluo96078/shinsou_plugin",
-    "signingKeyFingerprint": ""
-  }
+  "format": "shinsou-signed-envelope-v1",
+  "algorithm": "Ed25519",
+  "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
+  "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
+  "payloadType": "repository-meta",
+  "sequence": 1,
+  "payload": {
+    "meta": {
+      "name": "Shinsou Community Plugins",
+      "shortName": "SCP V2",
+      "website": "https://github.com/aluo96078/shinsou_plugin",
+      "signingKeyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o"
+    }
+  },
+  "signature": "HsXTHhIGX7DwuHtJEx4ZkYVVctgqggGNkD-9h8EZw6jMgd7ShjPZVFC1_q9FhquPnhQxwnG9t4ZN7nLjSpF-Dg"
 }

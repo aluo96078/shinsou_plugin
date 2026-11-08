@@ -1,0 +1,14 @@
+{
+  "format": "shinsou-signed-envelope-v1",
+  "algorithm": "Ed25519",
+  "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
+  "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
+  "payloadType": "publisher-revocations",
+  "sequence": 1,
+  "payload": {
+    "publisherId": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
+    "revokedArtifacts": [],
+    "expiresAt": 1796708230
+  },
+  "signature": "EWk5hb3ftei_25TeCKAE5qSHshsoGDMOqhEeiA5cK52VM2lGVIFkAN3C49Kb0KHNRlVC3agzhDmNesvUW_VjAw"
+}

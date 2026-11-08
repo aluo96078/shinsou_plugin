@@ -5,7 +5,7 @@ const fs = require("fs");
 const path = require("path");
 const vm = require("vm");
 
-const script = fs.readFileSync(path.join(__dirname, "..", "plugins", "zh.manhuagui.js"), "utf8");
+const script = fs.readFileSync(path.join(__dirname, "..", "src", "plugins", "zh.manhuagui.js"), "utf8");
 
 function emptyElements() {
   return {

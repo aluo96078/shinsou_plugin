@@ -5,7 +5,7 @@ const fs = require("fs");
 const path = require("path");
 const vm = require("vm");
 
-const repoRoot = path.resolve(__dirname, "..");
+const repoRoot = path.resolve(__dirname, "..", "src");
 function loadPlugin(fileName) {
   const scriptText = fs.readFileSync(path.join(repoRoot, "plugins", fileName), "utf8");
   const context = { console, Date, encodeURIComponent, decodeURIComponent, bridge: {} };

@@ -6,7 +6,7 @@ const path = require("path");
 const vm = require("vm");
 
 const script = fs.readFileSync(
-  path.join(__dirname, "..", "plugins", "zh.bilimanga.manga.js"),
+  path.join(__dirname, "..", "src", "plugins", "zh.bilimanga.manga.js"),
   "utf8",
 );
 

@@ -1,0 +1,89 @@
+# Signs this repository for Shinsou X with the publisher key (ADR-0002).
+#
+# Edit only the unsigned sources under src/. On every push that changes src/, this workflow runs
+# the tests, re-signs repo.json, index.json, every sidecar and the revocation list into the
+# repository root (the files the app reads) and commits them. Every Monday it renews the revocation
+# list once less than half of its 30-day lifetime remains: past its expiry the app installs and
+# updates nothing from this publisher (installed plugins keep running).
+#
+# Secrets (Settings → Secrets and variables → Actions):
+#   SHINSOU_PLUGIN_KEY         the full JSON of ~/.config/shinsou-plugin/keys/aluo.json
+#   SHINSOU_PLUGIN_PASSPHRASE  its passphrase
+name: Sign repository
+
+on:
+  push:
+    branches: [master]
+    paths: ["src/**"]
+  schedule:
+    - cron: "17 3 * * 1" # every Monday 03:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: shinsou-sign
+  cancel-in-progress: false
+
+env:
+  # The URL users add. Signatures are bound to it, so it must never change.
+  MIRROR: https://raw.githubusercontent.com/aluo96078/shinsou_plugin/refs/heads/master
+  # shinsou-plugin CLI, pinned to an exact commit.
+  CLI_REPOSITORY: aluo96078/shinsou-plugin-cli
+  CLI_COMMIT: edf06d17921c32a15a92d42783806c7a4f5070e4
+
+jobs:
+  sign:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check out the shinsou-plugin CLI
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.CLI_REPOSITORY }}
+          ref: ${{ env.CLI_COMMIT }}
+          path: .shinsou-cli
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build the CLI
+        working-directory: .shinsou-cli
+        run: npm ci && npm run build
+
+      - name: Test the sources
+        run: for t in test/*.js; do node "$t"; done
+
+      - name: Sign the repository
+        if: github.event_name != 'schedule'
+        env:
+          SHINSOU_PLUGIN_KEY: ${{ secrets.SHINSOU_PLUGIN_KEY }}
+          SHINSOU_PLUGIN_PASSPHRASE: ${{ secrets.SHINSOU_PLUGIN_PASSPHRASE }}
+        run: |
+          key="$(node -p 'JSON.parse(process.env.SHINSOU_PLUGIN_KEY).name')"
+          # Regenerated in full, so a removed package leaves no stale script or sidecar behind.
+          rm -rf plugins sidecars
+          node .shinsou-cli/dist/cli.js sign-repo --dir src --out .. --flat --mirror "$MIRROR" --key "$key"
+
+      - name: Renew the revocation list when due
+        env:
+          SHINSOU_PLUGIN_KEY: ${{ secrets.SHINSOU_PLUGIN_KEY }}
+          SHINSOU_PLUGIN_PASSPHRASE: ${{ secrets.SHINSOU_PLUGIN_PASSPHRASE }}
+        run: |
+          key="$(node -p 'JSON.parse(process.env.SHINSOU_PLUGIN_KEY).name')"
+          node .shinsou-cli/dist/cli.js refresh --dir src --out .. --flat --if-due --mirror "$MIRROR" --key "$key"
+
+      - name: Commit the signed files
+        run: |
+          git config user.name "shinsou-sign"
+          git config user.email "shinsou-sign@users.noreply.github.com"
+          git add -A repo.json index.json publisher-revocations.json plugins sidecars src/.shinsou/state.json
+          if git diff --cached --quiet; then
+            echo "Nothing to commit."
+          else
+            git commit -m "chore: sign repository"
+            git push
+          fi

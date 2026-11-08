@@ -6,12 +6,14 @@ const fs = require("fs");
 const path = require("path");
 const vm = require("vm");
 
-const repoRoot = path.resolve(__dirname, "..");
+// Unsigned sources live in src/; the repository root serves the signed copies CI generates.
+const projectRoot = path.resolve(__dirname, "..");
+const repoRoot = path.join(projectRoot, "src");
 const indexPath = path.join(repoRoot, "index.json");
 const indexText = fs.readFileSync(indexPath, "utf8");
 const index = JSON.parse(indexText);
 const merged = JSON.parse(
-  fs.readFileSync(path.join(repoRoot, "merged-shuyue", "index.json"), "utf8"),
+  fs.readFileSync(path.join(projectRoot, "merged-shuyue", "index.json"), "utf8"),
 );
 
 const allowedContentKinds = new Set(["IMAGE_SEQUENCE", "PLAIN_TEXT", "EPUB_SPINE"]);
@@ -97,8 +99,8 @@ expect(index.contentContract === "extension-content-v2", "unexpected v2 content 
 expect(index.repository.unifiedSource === "merged-shuyue/index.json", "unexpected unified fixture path");
 expect(Array.isArray(index.packages) && index.packages.length === 15, "expected exactly 15 v2 packages");
 expect(new Set(index.packages.map((pkg) => pkg.id)).size === 15, "v2 package ids must be unique");
-expect(!fs.existsSync(path.join(repoRoot, "v2")), "the retired v2 subdirectory must be absent");
-expect(!fs.existsSync(path.join(repoRoot, "src")), "the retired v1 source tree must be absent");
+expect(!fs.existsSync(path.join(projectRoot, "v2")), "the retired v2 subdirectory must be absent");
+expect(!fs.existsSync(path.join(repoRoot, "src")), "src/ must not nest another source tree");
 expect(merged.format === "shinsou-unified-v1", "merged ShuYue fixture format");
 expect(Array.isArray(merged.shuyue) && merged.shuyue.length === 4, "merged ShuYue index must retain 4 sources");
 
@@ -106,7 +108,7 @@ for (const pkg of merged.shinsou || []) {
   noTraversal(pkg.scriptUrl, pkg.id + " merged scriptUrl");
   expect(pkg.scriptUrl.startsWith("shinsou/plugins/"), pkg.id + " merged scriptUrl must stay inside fixture");
   expect(
-    fs.existsSync(path.join(repoRoot, "merged-shuyue", pkg.scriptUrl.split("?")[0])),
+    fs.existsSync(path.join(projectRoot, "merged-shuyue", pkg.scriptUrl.split("?")[0])),
     pkg.id + " merged script artifact is missing",
   );
 }
@@ -185,7 +187,7 @@ for (const pkg of index.packages) {
 
   if (pkg.legacyScriptUrl) {
     const legacyUrl = pkg.legacyScriptUrl.split("?")[0];
-    const legacyPath = path.join(repoRoot, legacyUrl);
+    const legacyPath = path.join(projectRoot, legacyUrl);
     expect(fs.existsSync(legacyPath), pkg.id + " legacy migration script is missing");
     expect(!fs.readFileSync(legacyPath).equals(scriptBytes), pkg.id + " v2 artifact must differ from legacy bytes");
     expect(sidecar.migration && sidecar.migration.legacyScriptUrl === pkg.legacyScriptUrl, pkg.id + " migration script binding");

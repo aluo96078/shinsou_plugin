@@ -1,14 +1,38 @@
 # Shinsou Community Plugins
 
-這個儲存庫現在只發布 `shinsou-extension-v2` 套件，v2 索引與所有可用腳本都位於專案根目錄。舊版 v1 根目錄套件（舊 `index.json`、`plugins/`、`src/`）已移除，不再維護或發布。
+這個儲存庫只發布 `shinsou-extension-v2` 套件，並以發佈者金鑰簽章（Ed25519）。使用者在 Shinsou X 加入儲存庫時，
+請核對發佈者指紋：
 
-## 套件內容
+- 顯示指紋：`A3E9 1699 D2CA E49B 0F04 8933 341D 0536`
+- 完整指紋：`sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o`
 
-- `index.json`：v2 套件索引（`contractVersion: 2`）
-- `repo.json`：儲存庫資訊
-- `plugins/`：具獨立 SHA-256／byte size 綁定的 v2 執行腳本
-- `sidecars/`：權限、內容型別、SourceKey 與 system-event 宣告
+## 目錄配置
+
+- `src/`：**唯一要編輯的地方**，未簽章的原始檔
+  - `src/index.json`：v2 套件索引（`contractVersion: 2`）
+  - `src/repo.json`：儲存庫資訊
+  - `src/plugins/`：具獨立 SHA-256／byte size 綁定的 v2 執行腳本
+  - `src/sidecars/`：權限、內容型別、SourceKey 與 system-event 宣告
+  - `src/.shinsou/state.json`：簽章序號與撤回清單，必須一起提交
+- 根目錄的 `repo.json`、`index.json`、`plugins/`、`sidecars/`、`publisher-revocations.json`：App 實際讀取的簽章版本，
+  由 GitHub Actions 自動產生，**不要手動修改**。
 - `merged-shuyue/`：僅供既有資料遷移與測試使用的 legacy fixture，不是可安裝的 v1 套件
+
+## 簽章與發佈
+
+`.github/workflows/sign.yml` 會在 `src/` 有變更推上 `master` 時執行測試，並用發佈者金鑰重新簽署所有文件到根目錄；
+每週一另外檢查撤回清單，剩不到一半效期（30 天）時自動續簽。過期後 App 不再從這個發佈者安裝或更新套件
+（已安裝的套件照常執行）。需要的 Secrets：
+
+- `SHINSOU_PLUGIN_KEY`：發佈者金鑰檔（`~/.config/shinsou-plugin/keys/aluo.json`）的完整內容
+- `SHINSOU_PLUGIN_PASSPHRASE`：金鑰密碼
+
+手動簽署（例如 Actions 無法使用時），用 [shinsou-plugin CLI](https://github.com/aluo96078/shinsou-plugin-cli)：
+
+```bash
+shinsou-plugin sign-repo --dir src --out .. --flat --key aluo \
+  --mirror https://raw.githubusercontent.com/aluo96078/shinsou_plugin/refs/heads/master
+```
 
 成人（NSFW）專門來源（E-Hentai、NHentai、禁漫天堂、哔咔漫画、紳士漫畫）已移至獨立的 `shinsou_nsfw_plugin` 儲存庫。
 
@@ -26,25 +50,26 @@
 兩個套件皆包含站方排行榜、搜尋、分類篩選、作品詳情、目錄與內容解析，並各自使用隔離的
 登入／Cookie 工作階段。BiliManga 會員頁遇到 Cloudflare 驗證時可透過宿主的 Web 驗證流程匯入工作階段。
 
-`example.login` 是登入 API 參考實作，同樣標示為不可安裝。`example.dual` 是一個離線的小說／漫畫雙來源參考套件：同一個 package export `example.dual.novel`（`PLAIN_TEXT`）與 `example.dual.manga`（`IMAGE_SEQUENCE`），並示範來源篩選、章節與內容頁格式。它刻意標示為 `referenceOnly: true`、`installable: false`，因為目前 host 的 generic legacy adapter 與 reviewed ShuYue install path 尚不能保證 mixed package 的完整執行。所有套件的 executable artifact、sidecar 與權限宣告都由根目錄 `index.json` 綁定。
+`example.login` 是登入 API 參考實作，同樣標示為不可安裝。`example.dual` 是一個離線的小說／漫畫雙來源參考套件：同一個 package export `example.dual.novel`（`PLAIN_TEXT`）與 `example.dual.manga`（`IMAGE_SEQUENCE`），並示範來源篩選、章節與內容頁格式。它刻意標示為 `referenceOnly: true`、`installable: false`，因為目前 host 的 generic legacy adapter 與 reviewed ShuYue install path 尚不能保證 mixed package 的完整執行。所有套件的 executable artifact、sidecar 與權限宣告都由 `src/index.json` 綁定，簽章後的根目錄 `index.json` 內容與它相同。
 
 要讓其他使用者建立套件，可使用 [`skills/shinsou-extension-creator/SKILL.md`](skills/shinsou-extension-creator/SKILL.md)。這個通用 Codex skill 會引導建立 v2 script、sidecar、SourceKey、內容型別／權限宣告、digest 綁定與 smoke test；詳細欄位與雙平台範例位於 skill 的 `references/v2-package-schema.md`。
 
 ## 使用方式
 
-本地測試時，從專案根目錄啟動靜態伺服器：
+本地測試未簽章的修改時，在 Shinsou X 的「設定 → 套件安全」開啟開發者模式，再以 `src/` 啟動靜態伺服器：
 
 ```bash
-python3 -m http.server 18081 --directory .
+python3 -m http.server 18081 --directory src
 ```
 
-Shinsou X 應加入：
+Shinsou X 加入：
 
 ```text
 http://127.0.0.1:18081/index.json
 ```
 
-區域網路測試時，將 `127.0.0.1` 換成主機的內網位址。舊的 `/v2/index.json` 路徑已不再提供。
+區域網路測試時，將 `127.0.0.1` 換成主機的私有 IPv4 位址，並在開發者模式中加入該位址。開發者模式載入的套件標示為「開發中」，
+與正式安裝分開。一般使用者請加入 GitHub 上的簽章網址。
 
 ## 驗證
 

@@ -16,7 +16,7 @@ function load(file, response, legacy = false) {
   };
   const context = { console, bridge, MangasPage: class { constructor(items, hasNext) { this.items = items; this.hasNextPage = hasNext; } } };
   vm.createContext(context);
-  vm.runInContext(fs.readFileSync(path.join(__dirname, "..", "plugins", file), "utf8"), context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname, "..", "src", "plugins", file), "utf8"), context);
   return context.source;
 }
 

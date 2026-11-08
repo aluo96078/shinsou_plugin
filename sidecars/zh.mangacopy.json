@@ -1,48 +1,43 @@
 {
-  "format": "shinsou-extension-sidecar-v2",
-  "contractVersion": 2,
-  "packageId": "zh.mangacopy",
-  "name": "拷貝漫畫",
-  "version": "1.0.0",
-  "versionCode": 1,
-  "contract": "shinsou",
-  "lang": "zh",
-  "nsfw": true,
-  "installable": true,
-  "artifact": {
-    "scriptUrl": "plugins/zh.mangacopy.js",
-    "sha256": "8da992d2eab8c5b1030b0c9c617e1447645ce8ac3442145760b63f28f62cd8cb",
-    "byteSize": 41927
-  },
-  "content": {
-    "contract": "extension-content-v2",
+  "format": "shinsou-signed-envelope-v1",
+  "algorithm": "Ed25519",
+  "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
+  "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
+  "payloadType": "plugin-sidecar",
+  "sequence": 1,
+  "payload": {
+    "format": "shinsou-extension-sidecar-v2",
     "contractVersion": 2,
-    "type": "manga",
-    "kinds": ["IMAGE_SEQUENCE"]
-  },
-  "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
-  "systemEvents": {
-    "protocol": "dev.shinsou.system",
-    "minVersion": 1,
-    "maxVersion": 1,
-    "required": [],
-    "optional": []
-  },
-  "requestedHostPermissions": [],
-  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"],
-  "sources": [{
-    "sourceKey": {
-      "contractVersion": 2,
-      "packageId": "zh.mangacopy",
-      "sourceId": "6696312508930833206",
-      "legacyLongId": "6696312508930833206"
-    },
-    "sourceId": "6696312508930833206",
+    "packageId": "zh.mangacopy",
     "name": "拷貝漫畫",
+    "version": "1.0.0",
+    "versionCode": 1,
+    "contract": "shinsou",
     "lang": "zh",
-    "baseUrl": "https://www.mangacopy.com",
-    "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
-    "contentKinds": ["IMAGE_SEQUENCE"],
+    "nsfw": true,
+    "installable": true,
+    "artifact": {
+      "scriptUrl": "plugins/zh.mangacopy.js",
+      "sha256": "8da992d2eab8c5b1030b0c9c617e1447645ce8ac3442145760b63f28f62cd8cb",
+      "byteSize": 41927
+    },
+    "content": {
+      "contract": "extension-content-v2",
+      "contractVersion": 2,
+      "type": "manga",
+      "kinds": [
+        "IMAGE_SEQUENCE"
+      ]
+    },
+    "capabilities": [
+      "CATALOGUE",
+      "LATEST",
+      "BROWSE",
+      "METADATA",
+      "UNITS",
+      "CONTENT",
+      "SEARCH"
+    ],
     "systemEvents": {
       "protocol": "dev.shinsou.system",
       "minVersion": 1,
@@ -51,10 +46,52 @@
       "optional": []
     },
     "requestedHostPermissions": [],
-    "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"]
-  }],
-  "migration": {
-    "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.mangacopy.js",
-    "legacyIndex": "merged-shuyue/index.json"
-  }
+    "runtimePermissions": [
+      "EXECUTE_SCRIPT",
+      "NETWORK"
+    ],
+    "sources": [
+      {
+        "sourceKey": {
+          "contractVersion": 2,
+          "packageId": "zh.mangacopy",
+          "sourceId": "6696312508930833206",
+          "legacyLongId": "6696312508930833206"
+        },
+        "sourceId": "6696312508930833206",
+        "name": "拷貝漫畫",
+        "lang": "zh",
+        "baseUrl": "https://www.mangacopy.com",
+        "capabilities": [
+          "CATALOGUE",
+          "LATEST",
+          "BROWSE",
+          "METADATA",
+          "UNITS",
+          "CONTENT",
+          "SEARCH"
+        ],
+        "contentKinds": [
+          "IMAGE_SEQUENCE"
+        ],
+        "systemEvents": {
+          "protocol": "dev.shinsou.system",
+          "minVersion": 1,
+          "maxVersion": 1,
+          "required": [],
+          "optional": []
+        },
+        "requestedHostPermissions": [],
+        "runtimePermissions": [
+          "EXECUTE_SCRIPT",
+          "NETWORK"
+        ]
+      }
+    ],
+    "migration": {
+      "legacyScriptUrl": "merged-shuyue/shinsou/plugins/zh.mangacopy.js",
+      "legacyIndex": "merged-shuyue/index.json"
+    }
+  },
+  "signature": "_vcCoNfj5KwaoZHnuQxc_cxBIpQK31LgDx5Imv3XHP43fDuUopUiR1hIKfxNnv7E4jAAVS2VcJyNgzUdDKkiDQ"
 }

@@ -1,49 +1,44 @@
 {
-  "format": "shinsou-extension-sidecar-v2",
-  "contractVersion": 2,
-  "packageId": "all.mangadex",
-  "name": "MangaDex",
-  "version": "1.2.0",
-  "versionCode": 3,
-  "contract": "shinsou",
-  "lang": "all",
-  "nsfw": true,
-  "installable": true,
-  "unindexedLegacy": true,
-  "artifact": {
-    "scriptUrl": "plugins/all.mangadex.js",
-    "sha256": "320efd108ed7656cb00dd5270f4e54c67f08fc9e3c2af0c362f57af987c2e1f3",
-    "byteSize": 25025
-  },
-  "content": {
-    "contract": "extension-content-v2",
+  "format": "shinsou-signed-envelope-v1",
+  "algorithm": "Ed25519",
+  "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
+  "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
+  "payloadType": "plugin-sidecar",
+  "sequence": 1,
+  "payload": {
+    "format": "shinsou-extension-sidecar-v2",
     "contractVersion": 2,
-    "type": "manga",
-    "kinds": ["IMAGE_SEQUENCE"]
-  },
-  "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
-  "systemEvents": {
-    "protocol": "dev.shinsou.system",
-    "minVersion": 1,
-    "maxVersion": 1,
-    "required": [],
-    "optional": []
-  },
-  "requestedHostPermissions": [],
-  "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"],
-  "sources": [{
-    "sourceKey": {
-      "contractVersion": 2,
-      "packageId": "all.mangadex",
-      "sourceId": "2499283",
-      "legacyLongId": "2499283"
-    },
-    "sourceId": "2499283",
+    "packageId": "all.mangadex",
     "name": "MangaDex",
+    "version": "1.2.0",
+    "versionCode": 3,
+    "contract": "shinsou",
     "lang": "all",
-    "baseUrl": "https://mangadex.org",
-    "capabilities": ["CATALOGUE", "LATEST", "BROWSE", "METADATA", "UNITS", "CONTENT", "SEARCH"],
-    "contentKinds": ["IMAGE_SEQUENCE"],
+    "nsfw": true,
+    "installable": true,
+    "unindexedLegacy": true,
+    "artifact": {
+      "scriptUrl": "plugins/all.mangadex.js",
+      "sha256": "320efd108ed7656cb00dd5270f4e54c67f08fc9e3c2af0c362f57af987c2e1f3",
+      "byteSize": 25025
+    },
+    "content": {
+      "contract": "extension-content-v2",
+      "contractVersion": 2,
+      "type": "manga",
+      "kinds": [
+        "IMAGE_SEQUENCE"
+      ]
+    },
+    "capabilities": [
+      "CATALOGUE",
+      "LATEST",
+      "BROWSE",
+      "METADATA",
+      "UNITS",
+      "CONTENT",
+      "SEARCH"
+    ],
     "systemEvents": {
       "protocol": "dev.shinsou.system",
       "minVersion": 1,
@@ -52,6 +47,48 @@
       "optional": []
     },
     "requestedHostPermissions": [],
-    "runtimePermissions": ["EXECUTE_SCRIPT", "NETWORK"]
-  }]
+    "runtimePermissions": [
+      "EXECUTE_SCRIPT",
+      "NETWORK"
+    ],
+    "sources": [
+      {
+        "sourceKey": {
+          "contractVersion": 2,
+          "packageId": "all.mangadex",
+          "sourceId": "2499283",
+          "legacyLongId": "2499283"
+        },
+        "sourceId": "2499283",
+        "name": "MangaDex",
+        "lang": "all",
+        "baseUrl": "https://mangadex.org",
+        "capabilities": [
+          "CATALOGUE",
+          "LATEST",
+          "BROWSE",
+          "METADATA",
+          "UNITS",
+          "CONTENT",
+          "SEARCH"
+        ],
+        "contentKinds": [
+          "IMAGE_SEQUENCE"
+        ],
+        "systemEvents": {
+          "protocol": "dev.shinsou.system",
+          "minVersion": 1,
+          "maxVersion": 1,
+          "required": [],
+          "optional": []
+        },
+        "requestedHostPermissions": [],
+        "runtimePermissions": [
+          "EXECUTE_SCRIPT",
+          "NETWORK"
+        ]
+      }
+    ]
+  },
+  "signature": "CWT7-41nh3SJVg9Kc-yQuhHlNJTyZF8Be_SI2HhCfzaX2eWJG9Qe49qMo2f4umWKYDwaS79olsM_uKftZo7JBg"
 }
