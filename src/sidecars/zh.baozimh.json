@@ -3,16 +3,16 @@
   "contractVersion": 2,
   "packageId": "zh.baozimh",
   "name": "包子漫画",
-  "version": "1.0.11",
-  "versionCode": 12,
+  "version": "1.0.12",
+  "versionCode": 13,
   "contract": "shinsou",
   "lang": "zh",
   "nsfw": false,
   "installable": true,
   "artifact": {
     "scriptUrl": "plugins/zh.baozimh.js",
-    "sha256": "f974caf938c3797a30bfc6772f45f3deecbccd71cb096493a6c5f47c853c6355",
-    "byteSize": 24460
+    "sha256": "4a5f4489a8ca69e2ec79e86b5c839711ba65a3c8e4ed88126d5c051afa6559a8",
+    "byteSize": 24871
   },
   "content": {
     "contract": "extension-content-v2",
@@ -54,7 +54,7 @@
       "sourceId": "4502917",
       "name": "包子漫画",
       "lang": "zh",
-      "baseUrl": "https://www.baozimh.com",
+      "baseUrl": "https://www.twmanga.com",
       "contentType": "manga",
       "contentKinds": [
         "IMAGE_SEQUENCE"

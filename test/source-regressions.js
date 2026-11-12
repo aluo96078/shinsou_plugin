@@ -107,7 +107,7 @@ const baozi = loadSource("zh.baozimh.js", {
 const baoziPages = baozi.source.getPageList({
   url: "/user/page_direct?comic_id=public-slug&section_slot=0&chapter_slot=8",
 });
-assert.strictEqual(baoziRequests[0], "https://www.baozimh.com/user/page_direct?comic_id=public-slug&section_slot=0&chapter_slot=8");
+assert.strictEqual(baoziRequests[0], "https://www.twmanga.com/user/page_direct?comic_id=public-slug&section_slot=0&chapter_slot=8");
 assert.deepStrictEqual(Array.from(baoziPages, (page) => page.imageUrl), [
   "https://s1.bzcdn.net/scomic/internal-slug/0/1/1.jpg",
   "https://s1.bzcdn.net/scomic/internal-slug/0/1/2.jpg",

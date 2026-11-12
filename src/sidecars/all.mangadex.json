@@ -3,16 +3,16 @@
   "contractVersion": 2,
   "packageId": "all.mangadex",
   "name": "MangaDex",
-  "version": "1.2.2",
-  "versionCode": 5,
+  "version": "1.2.3",
+  "versionCode": 6,
   "contract": "shinsou",
   "lang": "all",
   "nsfw": true,
   "installable": true,
   "artifact": {
     "scriptUrl": "plugins/all.mangadex.js",
-    "sha256": "e63fa9c0e800beb7c5b40073e305fc6b7145faa67cb7972112ac8af88b5a33bf",
-    "byteSize": 25100
+    "sha256": "ecf24711d6304fa2de651a6d2179a17bd99feb2a6013cc8790229b3863e1b1bd",
+    "byteSize": 25369
   },
   "content": {
     "contract": "extension-content-v2",

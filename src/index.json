@@ -24,8 +24,8 @@
     {
       "id": "zh.baozimh",
       "name": "包子漫画",
-      "version": "1.0.11",
-      "versionCode": 12,
+      "version": "1.0.12",
+      "versionCode": 13,
       "lang": "zh",
       "nsfw": false,
       "contract": "shinsou",
@@ -36,8 +36,8 @@
       ],
       "scriptUrl": "plugins/zh.baozimh.js",
       "sidecarUrl": "sidecars/zh.baozimh.json",
-      "sha256": "f974caf938c3797a30bfc6772f45f3deecbccd71cb096493a6c5f47c853c6355",
-      "byteSize": 24460,
+      "sha256": "4a5f4489a8ca69e2ec79e86b5c839711ba65a3c8e4ed88126d5c051afa6559a8",
+      "byteSize": 24871,
       "capabilities": [
         "CATALOGUE",
         "LATEST",
@@ -65,7 +65,7 @@
           "legacyLongId": "4502917",
           "name": "包子漫画",
           "lang": "zh",
-          "baseUrl": "https://www.baozimh.com",
+          "baseUrl": "https://www.twmanga.com",
           "requestOrigins": [
             "https://app.baozimh.com",
             "https://appgb.baozimh.com",
@@ -536,8 +536,8 @@
     {
       "id": "all.mangadex",
       "name": "MangaDex",
-      "version": "1.2.2",
-      "versionCode": 5,
+      "version": "1.2.3",
+      "versionCode": 6,
       "lang": "all",
       "nsfw": true,
       "contract": "shinsou",
@@ -548,8 +548,8 @@
       ],
       "scriptUrl": "plugins/all.mangadex.js",
       "sidecarUrl": "sidecars/all.mangadex.json",
-      "sha256": "e63fa9c0e800beb7c5b40073e305fc6b7145faa67cb7972112ac8af88b5a33bf",
-      "byteSize": 25100,
+      "sha256": "ecf24711d6304fa2de651a6d2179a17bd99feb2a6013cc8790229b3863e1b1bd",
+      "byteSize": 25369,
       "capabilities": [
         "CATALOGUE",
         "LATEST",
