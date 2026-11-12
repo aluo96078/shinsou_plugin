@@ -9,15 +9,18 @@ var __shinsouExtensionV2 = {"contractVersion":2,"contentContract":"extension-con
 // Crawls https://cn.baozimh.com (and mirrors)
 
 var source = {
-    baseUrl: "https://www.baozimh.com",
+    // baozimh.com (www, cn, tw and app) now answers every request with its own JavaScript
+    // "gatekeeper" challenge (HTTP 403, {"error":"challenge_required"}). The official mirror
+    // twmanga.com serves the same site without it and is already where chapters are read.
+    baseUrl: "https://www.twmanga.com",
     // The Android app opens chapter pages on app.baozimh.com. appgb is used
     // by the app for static assets and remains as a mirror fallback.
     appBaseUrl: "https://app.baozimh.com",
     appMirrorBaseUrl: "https://appgb.baozimh.com",
     supportsLatest: true,
     headers: {
-        "Referer": "https://www.baozimh.com/",
-        "Origin": "https://www.baozimh.com",
+        "Referer": "https://www.twmanga.com/",
+        "Origin": "https://www.twmanga.com",
         "Accept": "*/*",
         "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.8"
     },
@@ -161,10 +164,7 @@ var source = {
     // ======== Manga Details ========
 
     getMangaDetails: function(manga) {
-        var url = manga.url;
-        if (url.indexOf("http") !== 0) {
-            url = this.baseUrl + url;
-        }
+        var url = this._fixUrl(manga.url);
 
         var html = this._requestPage(url);
 
@@ -233,6 +233,12 @@ var source = {
         return img.attr("data-original") || img.attr("data-src") || img.attr("src") || "";
     },
 
+    // Titles saved while baozimh.com was reachable keep its absolute addresses; the mirror serves
+    // the same paths.
+    _mirrorUrl: function(url) {
+        return String(url).replace(/^https?:\/\/(?:www|cn|tw)\.baozimh\.com(?=[\/?#]|$)/i, this.baseUrl);
+    },
+
     _fixUrl: function(url, baseUrl) {
         if (!url) return "";
         url = String(url).replace(/&amp;/g, "&").trim();
@@ -241,7 +247,7 @@ var source = {
             var originMatch = String(baseUrl || this.baseUrl).match(/^(https?:\/\/[^\/?#]+)/i);
             return (originMatch ? originMatch[1] : this.baseUrl) + url;
         }
-        if (url.indexOf("http://") === 0 || url.indexOf("https://") === 0) return url;
+        if (url.indexOf("http://") === 0 || url.indexOf("https://") === 0) return this._mirrorUrl(url);
         if (baseUrl && url.indexOf("/") !== 0) {
             var pathBase = String(baseUrl).replace(/[?#].*$/, "");
             var slash = pathBase.lastIndexOf("/");
@@ -253,10 +259,7 @@ var source = {
     // ======== Chapter List ========
 
     getChapterList: function(manga) {
-        var url = manga.url;
-        if (url.indexOf("http") !== 0) {
-            url = this.baseUrl + url;
-        }
+        var url = this._fixUrl(manga.url);
 
         var html = this._requestPage(url);
 

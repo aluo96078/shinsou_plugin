@@ -13,10 +13,13 @@ var source = {
     apiUrl: "https://api.mangadex.org",
     cdnUrl: "https://uploads.mangadex.org",
     supportsLatest: true,
+    // The API answers a browser User-Agent with a redirect to its bot challenge ("if this isn't a
+    // browser, don't send a browser UA"), which emptied every list. Identify as an API client.
     headers: {
         "Accept": "application/json",
         "Referer": "https://mangadex.org/",
-        "Origin": "https://mangadex.org"
+        "Origin": "https://mangadex.org",
+        "User-Agent": "Shinsou (+https://github.com/aluo96078/shinsoux)"
     },
 
     // ======== Popular ========
