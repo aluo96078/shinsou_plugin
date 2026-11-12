@@ -3,16 +3,16 @@
   "contractVersion": 2,
   "packageId": "zh.mangacopy",
   "name": "拷貝漫畫",
-  "version": "1.0.1",
-  "versionCode": 2,
+  "version": "1.0.2",
+  "versionCode": 3,
   "contract": "shinsou",
   "lang": "zh",
   "nsfw": true,
   "installable": true,
   "artifact": {
     "scriptUrl": "plugins/zh.mangacopy.js",
-    "sha256": "52c9ae99c7d17893b2100e5f8b54ac209ad6b7f12d537261799fb5b2e9fefffc",
-    "byteSize": 42004
+    "sha256": "f43b827b989abe6c38a2977057dd49c38ab70a377fe336ba9f8a87d54185b88f",
+    "byteSize": 42157
   },
   "content": {
     "contract": "extension-content-v2",

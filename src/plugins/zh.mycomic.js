@@ -332,21 +332,20 @@ var source = {
                 var heading = group.selectFirst("> div:first-child > div:first-child");
                 if (heading) groupName = heading.text().trim();
 
+                var entries = [];
                 var chapterData = this._extractChapterData(group.attr("x-data"));
                 for (var i = 0; i < chapterData.length; i++) {
                     var data = chapterData[i];
                     var chapterUrl = "/chapters/" + data.id;
                     if (!data.id || seen[chapterUrl]) continue;
                     seen[chapterUrl] = true;
-
-                    var chapter = SChapter.create();
-                    chapter.url = chapterUrl;
-                    chapter.name = String(data.title || "").trim() || ("Chapter " + data.id);
-                    chapter.scanlator = groupName || null;
-                    chapter.dateUpload = dateUpload;
-                    chapter.chapterNumber = this._chapterNumber(chapter.name, chapters.length);
-                    chapters.push(chapter);
+                    entries.push({
+                        url: chapterUrl,
+                        name: String(data.title || "").trim() || ("Chapter " + data.id),
+                        scanlator: groupName || null,
+                    });
                 }
+                this._appendInStoryOrder(chapters, entries, dateUpload);
             } catch (e) {
                 bridge.log("MyComic chapter group error: " + e);
             }
@@ -354,20 +353,15 @@ var source = {
 
         // Future-proof fallback for server-rendered chapter links.
         if (chapters.length === 0) {
-            var links = doc.select("div[data-flux-card] + div a[href*='/chapters/']");
-            links.forEach(function(link, index) {
+            var entries = [];
+            doc.select("div[data-flux-card] + div a[href*='/chapters/']").forEach(function(link) {
                 var chapterUrl = this._relativeUrl(link.absUrl("href") || link.attr("href"));
                 var name = link.text().trim();
                 if (!chapterUrl || !name || seen[chapterUrl]) return;
                 seen[chapterUrl] = true;
-
-                var chapter = SChapter.create();
-                chapter.url = chapterUrl;
-                chapter.name = name;
-                chapter.dateUpload = dateUpload;
-                chapter.chapterNumber = this._chapterNumber(name, index);
-                chapters.push(chapter);
+                entries.push({ url: chapterUrl, name: name, scanlator: null });
             }.bind(this));
+            this._appendInStoryOrder(chapters, entries, dateUpload);
         }
 
         bridge.domReleaseAll();
@@ -479,6 +473,33 @@ var source = {
         if (!value) return 0;
         var timestamp = new Date(value + (value.length === 10 ? "T00:00:00Z" : "")).getTime();
         return isNaN(timestamp) ? 0 : timestamp;
+    },
+
+    // The site lists each group newest first. Shinsou reads a chapter list in story order (the
+    // first chapter first, "next" is the following entry), so a group whose numbered entries
+    // mostly count down is turned around before it is appended.
+    _appendInStoryOrder: function(chapters, entries, dateUpload) {
+        var up = 0, down = 0, previous = null;
+        for (var i = 0; i < entries.length; i++) {
+            var match = entries[i].name.match(/(\d+(?:\.\d+)?)/);
+            if (!match) continue;
+            var number = parseFloat(match[1]);
+            if (previous !== null) {
+                if (number > previous) up++;
+                else if (number < previous) down++;
+            }
+            previous = number;
+        }
+        if (down > up) entries.reverse();
+        for (var j = 0; j < entries.length; j++) {
+            var chapter = SChapter.create();
+            chapter.url = entries[j].url;
+            chapter.name = entries[j].name;
+            chapter.scanlator = entries[j].scanlator;
+            chapter.dateUpload = dateUpload;
+            chapter.chapterNumber = this._chapterNumber(chapter.name, chapters.length);
+            chapters.push(chapter);
+        }
     },
 
     _chapterNumber: function(name, fallbackIndex) {

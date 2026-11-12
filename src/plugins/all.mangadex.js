@@ -319,7 +319,7 @@ var source = {
         while (offset < total) {
             var url = this.apiUrl + "/manga/" + mangaId + "/feed"
                 + "?limit=" + limit + "&offset=" + offset
-                + "&" + this._q("order[chapter]", "desc") + "&" + this._q("order[volume]", "desc")
+                + "&" + this._q("order[chapter]", "asc") + "&" + this._q("order[volume]", "asc")
                 + "&" + this._qa("includes", "scanlation_group")
                 + "&" + this._qa("contentRating", "safe") + "&" + this._qa("contentRating", "suggestive") + "&" + this._qa("contentRating", "erotica") + "&" + this._qa("contentRating", "pornographic");
 

@@ -237,6 +237,24 @@ var source = {
         }.bind(this));
 
         bridge.domReleaseAll();
+        return this._storyOrder(chapters);
+    },
+
+    // The site lists some titles newest first and others oldest first. Shinsou reads a chapter
+    // list in story order (the first chapter first, "next" is the following entry), so a list
+    // whose numbered chapters mostly count down is turned around.
+    _storyOrder: function(chapters) {
+        var up = 0, down = 0, previous = null;
+        for (var i = 0; i < chapters.length; i++) {
+            var number = chapters[i].chapterNumber;
+            if (!(number > 0)) continue;
+            if (previous !== null) {
+                if (number > previous) up++;
+                else if (number < previous) down++;
+            }
+            previous = number;
+        }
+        if (down > up) chapters.reverse();
         return chapters;
     },
 

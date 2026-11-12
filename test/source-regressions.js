@@ -145,6 +145,18 @@ assert.deepStrictEqual(Array.from(dm5.source._evalImageScript(dm5ChapterfunFixtu
 // Manhuagui detail pages now hide their chapter anchors in LZString-compressed __VIEWSTATE.
 // Exercise the exact host flow with a deterministic decompressor fixture; the source must append
 // the decoded inert markup before selecting chapters, without executing first-party scripts.
+// The site splits a section into <ul> pages that run oldest page first, each listing its own
+// chapters newest first; the source must return one story-order list (first chapter first).
+function manhuaguiAnchor(id, title) {
+  return {
+    attr(name) { return name === "href" ? `/comic/12912/${id}.html` : name === "title" ? title : ""; },
+    text() { return title; },
+  };
+}
+const manhuaguiPages = [
+  [manhuaguiAnchor(2, "第02話"), manhuaguiAnchor(1, "第01話")],
+  [manhuaguiAnchor(4, "第04話"), manhuaguiAnchor(3, "第03話")],
+];
 const manhuagui = loadSource("zh.manhuagui.js", {
   httpGetWithHeaders() { return '<input id="__VIEWSTATE" value="fixture-base64">'; },
   domReleaseAll() {},
@@ -152,20 +164,41 @@ const manhuagui = loadSource("zh.manhuagui.js", {
 }, {
   Jsoup: {
     parse(html) {
-      const anchors = html.includes("/comic/12912/87209.html") ? [{
-        attr(name) { return name === "href" ? "/comic/12912/87209.html" : name === "title" ? "第01卷" : ""; },
-        text() { return "第01卷"; },
-      }] : [];
-      return { select() { return elements(anchors); } };
+      const expanded = html.includes("chapter-list-1");
+      return {
+        select(selector) {
+          if (!expanded) return elements([]);
+          if (selector.includes("chapter-list")) {
+            return elements([{
+              select(inner) {
+                assert.strictEqual(inner, "ul");
+                return elements(manhuaguiPages.map((anchors) => ({
+                  select(links) {
+                    assert.strictEqual(links, "li a");
+                    const list = elements(anchors.slice());
+                    list.get = (index) => list[index];
+                    return list;
+                  },
+                })));
+              },
+            }]);
+          }
+          return elements([]);
+        },
+      };
     },
   },
   SChapter: { create() { return {}; } },
 });
 manhuagui.source._lzDecompress = (value) => {
   assert.strictEqual(value, "fixture-base64");
-  return '<div id="chapter-list-1"><ul><li><a href="/comic/12912/87209.html" title="第01卷">第01卷</a></li></ul></div>';
+  return '<div id="chapter-list-1"><ul></ul></div>';
 };
 const manhuaguiChapters = manhuagui.source.getChapterList({ url: "/comic/12912/" });
-assert.deepStrictEqual(Array.from(manhuaguiChapters, (chapter) => chapter.url), ["/comic/12912/87209.html"]);
+assert.deepStrictEqual(
+  Array.from(manhuaguiChapters, (chapter) => chapter.name),
+  ["第01話", "第02話", "第03話", "第04話"],
+);
+assert.deepStrictEqual(Array.from(manhuaguiChapters, (chapter) => chapter.chapterNumber), [1, 2, 3, 4]);
 
 console.log("source regressions: Baozi, DM5, and Manhuagui verified");

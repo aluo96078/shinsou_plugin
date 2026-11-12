@@ -3,16 +3,16 @@
   "contractVersion": 2,
   "packageId": "zh.mycomic",
   "name": "MyComic",
-  "version": "1.0.3",
-  "versionCode": 4,
+  "version": "1.0.4",
+  "versionCode": 5,
   "contract": "shinsou",
   "lang": "zh",
   "nsfw": true,
   "installable": true,
   "artifact": {
     "scriptUrl": "plugins/zh.mycomic.js",
-    "sha256": "e27f90d3c1648402425817df964f69fbc8a5f6f5e33a9c3941ee9902b5262ef8",
-    "byteSize": 24065
+    "sha256": "bd88d672d02e2cec16798b7f5c19e0c802ac90f3615386485412ade58496b322",
+    "byteSize": 25039
   },
   "content": {
     "contract": "extension-content-v2",

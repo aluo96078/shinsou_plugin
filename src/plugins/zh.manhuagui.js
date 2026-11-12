@@ -350,21 +350,35 @@ var source = {
         var doc = Jsoup.parse(this._expandChapterViewState(html), this.baseUrl);
         var chapters = [];
 
-        // Chapter sections
-        var chapterLinks = doc.select("div[id*='chapter-list'] ul li a");
+        // Shinsou reads a chapter list in story order: the first chapter first, "next" is the
+        // following entry. Each section (單話, 單行本, 番外…) splits its chapters into <ul> pages
+        // that run oldest page first, while every page lists its own chapters newest first, so
+        // each page is read backwards.
+        var chapterLinks = [];
+        doc.select("div[id*='chapter-list']").forEach(function(section) {
+            section.select("ul").forEach(function(page) {
+                var links = page.select("li a");
+                for (var i = links.size() - 1; i >= 0; i--) {
+                    chapterLinks.push(links.get(i));
+                }
+            });
+        });
 
-        if (chapterLinks.isEmpty()) {
-            chapterLinks = doc.select(".chapter-list a");
+        if (chapterLinks.length === 0) {
+            var fallback = doc.select(".chapter-list a");
+            for (var j = fallback.size() - 1; j >= 0; j--) {
+                chapterLinks.push(fallback.get(j));
+            }
         }
 
-        var num = chapterLinks.size();
+        var num = 0;
         chapterLinks.forEach(function(el) {
             try {
                 var chapter = SChapter.create();
                 chapter.url = el.attr("href");
                 chapter.name = el.attr("title") || el.text().trim();
+                num++;
                 chapter.chapterNumber = num;
-                num--;
 
                 // Only override the descending sequence number when the name
                 // carries an explicit chapter marker (話/话/章/回). This avoids

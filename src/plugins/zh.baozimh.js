@@ -260,18 +260,48 @@ var source = {
 
         var html = this._requestPage(url);
 
-        // One bounded host parse avoids two bridge calls for every chapter of long series.
-        var rows = bridge.parseHtml(html, "#chapter-items a, #chapters_other_list a, .comics-chapters a, a.comics-chapters__item, a[href*='/chapter/']");
-        if (typeof rows === "string") rows = JSON.parse(rows);
-        var chapters = [];
-        for (var i = 0; rows && i < rows.length; i++) {
+        // One bounded host parse avoids two bridge calls for every chapter of long series. The
+        // complete directory is preferred: the page also shows a short "latest chapters" block,
+        // which would otherwise repeat chapters out of order.
+        var rows = this._chapterRows(html, "#chapter-items a, #chapters_other_list a");
+        if (rows.length === 0) {
+            rows = this._chapterRows(html, ".comics-chapters a, a.comics-chapters__item, a[href*='/chapter/']");
+        }
+        var entries = [];
+        var seen = {};
+        for (var i = 0; i < rows.length; i++) {
             var row = rows[i];
             var url = String(row.attr_href || "");
             var name = String(row.text || "").trim();
-            if (!url || !name) continue;
-            chapters.push({url: url, name: name, chapterNumber: rows.length - i});
+            if (!url || !name || seen[url]) continue;
+            seen[url] = true;
+            entries.push({url: url, name: name});
+        }
+        // Shinsou reads a chapter list in story order (the first chapter first, "next" is the
+        // following entry): a list whose numbered chapters mostly count down is turned around.
+        var up = 0, down = 0, previous = null;
+        for (var j = 0; j < entries.length; j++) {
+            var match = entries[j].name.match(/(\d+(?:\.\d+)?)/);
+            if (!match) continue;
+            var number = parseFloat(match[1]);
+            if (previous !== null) {
+                if (number > previous) up++;
+                else if (number < previous) down++;
+            }
+            previous = number;
+        }
+        if (down > up) entries.reverse();
+        var chapters = [];
+        for (var k = 0; k < entries.length; k++) {
+            chapters.push({url: entries[k].url, name: entries[k].name, chapterNumber: k + 1});
         }
         return chapters;
+    },
+
+    _chapterRows: function(html, selector) {
+        var rows = bridge.parseHtml(html, selector);
+        if (typeof rows === "string") rows = JSON.parse(rows);
+        return rows || [];
     },
 
     // ======== Page List ========
