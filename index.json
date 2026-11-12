@@ -4,7 +4,7 @@
   "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
   "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
   "payloadType": "repository-index",
-  "sequence": 5,
+  "sequence": 6,
   "payload": {
     "format": "shinsou-extension-v2",
     "contractVersion": 2,
@@ -543,8 +543,8 @@
       {
         "id": "all.mangadex",
         "name": "MangaDex",
-        "version": "1.2.3",
-        "versionCode": 6,
+        "version": "1.2.4",
+        "versionCode": 7,
         "lang": "all",
         "nsfw": true,
         "contract": "shinsou",
@@ -555,8 +555,8 @@
         ],
         "scriptUrl": "plugins/all.mangadex.js",
         "sidecarUrl": "sidecars/all.mangadex.json",
-        "sha256": "ecf24711d6304fa2de651a6d2179a17bd99feb2a6013cc8790229b3863e1b1bd",
-        "byteSize": 25369,
+        "sha256": "3ce24805c23a77cdcac21a712a7e4560f54d17ef554fd79e4b6840ea04331738",
+        "byteSize": 25930,
         "capabilities": [
           "CATALOGUE",
           "LATEST",
@@ -1094,5 +1094,5 @@
       }
     ]
   },
-  "signature": "IM9X4CzGtbzZYNzv5ORHfiG8Vr68uALTWH8bO9xeMELbbe37sCL4V20cgzPi1RcR6lac_LrUOcDFPV6N0KS8Dg"
+  "signature": "geIiNjLhBUNAs3RL3yoz4yWHgzJ3za7H7WoJjMG4ZcBax12_LvpI8OTfPp0pn8AeoSJtVfGa2CC8GGdOHPfQCQ"
 }
