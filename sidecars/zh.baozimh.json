@@ -4,22 +4,22 @@
   "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
   "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
   "payloadType": "plugin-sidecar",
-  "sequence": 3,
+  "sequence": 4,
   "payload": {
     "format": "shinsou-extension-sidecar-v2",
     "contractVersion": 2,
     "packageId": "zh.baozimh",
     "name": "包子漫画",
-    "version": "1.0.10",
-    "versionCode": 11,
+    "version": "1.0.11",
+    "versionCode": 12,
     "contract": "shinsou",
     "lang": "zh",
     "nsfw": false,
     "installable": true,
     "artifact": {
       "scriptUrl": "plugins/zh.baozimh.js",
-      "sha256": "84bdf847493e314cfbd771cd995bc9fc8ee183e929ac760224cc903355366772",
-      "byteSize": 23199
+      "sha256": "f974caf938c3797a30bfc6772f45f3deecbccd71cb096493a6c5f47c853c6355",
+      "byteSize": 24460
     },
     "content": {
       "contract": "extension-content-v2",
@@ -112,5 +112,5 @@
       }
     ]
   },
-  "signature": "D_-mhU9pz2Zkaz8itdYDKzwQz1tnEVNgm4NwrgKTJUrid7LWR-6yoU23o1TKP9N0Gd_hoeE_c2uuww0y5lxLAw"
+  "signature": "ghYSC9CoG1laIWRGHJJuKsMIb5urWFj5YA6DaG-mXC5tOOkAI79tSITRjZ2JU4dkzsqEun-NEVe_1th2rBbSCQ"
 }

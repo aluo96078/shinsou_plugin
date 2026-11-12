@@ -331,7 +331,9 @@ var source = {
             chapterEls = doc.select("ul.view-win-list li a, .detail-list-select li a");
         }
 
-        var num = chapterEls.size();
+        // The page already lists chapters in story order (first chapter first); the fallback
+        // number counts up with it.
+        var num = 0;
         chapterEls.forEach(function(el) {
             try {
                 var chapterUrl = el.attr("href");
@@ -349,8 +351,8 @@ var source = {
                     name = textClone.replace(/\s*（\d+P）\s*$/, "").replace(/\s*\(\d+P\)\s*$/, "").trim();
                 }
                 chapter.name = name;
+                num++;
                 chapter.chapterNumber = num;
-                num--;
 
                 // Extract chapter number from name
                 var numMatch = chapter.name.match(/第(\d+(?:\.\d+)?)[话話卷]/);

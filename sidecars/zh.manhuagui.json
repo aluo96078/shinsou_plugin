@@ -4,22 +4,22 @@
   "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
   "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
   "payloadType": "plugin-sidecar",
-  "sequence": 3,
+  "sequence": 4,
   "payload": {
     "format": "shinsou-extension-sidecar-v2",
     "contractVersion": 2,
     "packageId": "zh.manhuagui",
     "name": "漫画柜",
-    "version": "1.1.9",
-    "versionCode": 11,
+    "version": "1.1.10",
+    "versionCode": 12,
     "contract": "shinsou",
     "lang": "zh",
     "nsfw": true,
     "installable": true,
     "artifact": {
       "scriptUrl": "plugins/zh.manhuagui.js",
-      "sha256": "f51ae504d02690104347188b349e594c64816dfcc858eb761731604150e2b718",
-      "byteSize": 32102
+      "sha256": "8329dfedc7fc7703aaeae95a1e3adabb1554aed88d6171c25981600e5becbe30",
+      "byteSize": 32824
     },
     "content": {
       "contract": "extension-content-v2",
@@ -102,5 +102,5 @@
       }
     ]
   },
-  "signature": "PLtGUfxm6XBPGISOyLiw9iQBtF0I5BKVckTvRs3Er9lt8rkxwThwGPAaNFQ7kL7PNerdNgWbdQX9UwgIp8DPDQ"
+  "signature": "I2g8bEHKMX2S-P246Lwt3GfOu4wd0900g1dFSj0gn8EdcnSCV1-Mc3f0JI6AqbZgt3ttO8tUCsrAPz0e0HaUDw"
 }

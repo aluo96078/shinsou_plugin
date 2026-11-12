@@ -4,22 +4,22 @@
   "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
   "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
   "payloadType": "plugin-sidecar",
-  "sequence": 3,
+  "sequence": 4,
   "payload": {
     "format": "shinsou-extension-sidecar-v2",
     "contractVersion": 2,
     "packageId": "zh.manhuaren",
     "name": "漫画人",
-    "version": "1.0.1",
-    "versionCode": 2,
+    "version": "1.0.2",
+    "versionCode": 3,
     "contract": "shinsou",
     "lang": "zh",
     "nsfw": false,
     "installable": true,
     "artifact": {
       "scriptUrl": "plugins/zh.manhuaren.js",
-      "sha256": "4fa2f5e26eba5c6409f4fa96a1d3b7837553589d42f8ceb8360e813d1667bc61",
-      "byteSize": 14664
+      "sha256": "f66fccb450d733a86627fa2ce86b48fac548d5d72652b0e0a79ec923255f9fd2",
+      "byteSize": 15435
     },
     "content": {
       "contract": "extension-content-v2",
@@ -111,5 +111,5 @@
       }
     ]
   },
-  "signature": "p_3Xig8OU_ARHiWprgPS9KjzL-MRK64FXXXddENtfqhWkenxCGRmpu7aaOLYi3J53pRyLA5Gm42HwpnapHaBAw"
+  "signature": "wp3WUV4TdO-ydJ9nCHJnHozw49i1RmH9YE3CVUtSjeAN4ExD_UnlIdAgCpMCfUxVCPiUBa371n28tZqUdfgTAQ"
 }
