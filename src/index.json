@@ -536,8 +536,8 @@
     {
       "id": "all.mangadex",
       "name": "MangaDex",
-      "version": "1.2.3",
-      "versionCode": 6,
+      "version": "1.2.4",
+      "versionCode": 7,
       "lang": "all",
       "nsfw": true,
       "contract": "shinsou",
@@ -548,8 +548,8 @@
       ],
       "scriptUrl": "plugins/all.mangadex.js",
       "sidecarUrl": "sidecars/all.mangadex.json",
-      "sha256": "ecf24711d6304fa2de651a6d2179a17bd99feb2a6013cc8790229b3863e1b1bd",
-      "byteSize": 25369,
+      "sha256": "3ce24805c23a77cdcac21a712a7e4560f54d17ef554fd79e4b6840ea04331738",
+      "byteSize": 25930,
       "capabilities": [
         "CATALOGUE",
         "LATEST",

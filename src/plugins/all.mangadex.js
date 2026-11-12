@@ -22,6 +22,15 @@ var source = {
         "User-Agent": "Shinsou (+https://github.com/aluo96078/shinsoux)"
     },
 
+    // The host fetches covers and pages itself, with a browser User-Agent unless an image URL
+    // names another one in its "#Header=value" fragment. uploads.mangadex.org redirects a browser
+    // UA to its bot challenge and MangaDex@Home nodes answer it with 404, so every image URL
+    // carries the API client UA.
+    _asClient: function(url) {
+        if (!url) return url;
+        return url + (url.indexOf("#") < 0 ? "#" : "&") + "User-Agent=" + encodeURIComponent(this.headers["User-Agent"]);
+    },
+
     // ======== Popular ========
 
     getPopularManga: function(page) {
@@ -300,7 +309,7 @@ var source = {
 
             // Cover
             if (coverFile) {
-                result.thumbnailUrl = this.cdnUrl + "/covers/" + mangaId + "/" + coverFile + ".512.jpg";
+                result.thumbnailUrl = this._asClient(this.cdnUrl + "/covers/" + mangaId + "/" + coverFile + ".512.jpg");
             }
 
             return result;
@@ -439,7 +448,7 @@ var source = {
 
             for (var i = 0; i < files.length; i++) {
                 var imageUrl = serverBaseUrl + "/data/" + hash + "/" + files[i];
-                pages.push(new Page(i, "", imageUrl));
+                pages.push(new Page(i, "", this._asClient(imageUrl)));
             }
 
             return pages;
@@ -542,7 +551,7 @@ var source = {
                     for (var r = 0; r < item.relationships.length; r++) {
                         var rel = item.relationships[r];
                         if (rel.type === "cover_art" && rel.attributes) {
-                            manga.thumbnailUrl = this.cdnUrl + "/covers/" + item.id + "/" + rel.attributes.fileName + ".256.jpg";
+                            manga.thumbnailUrl = this._asClient(this.cdnUrl + "/covers/" + item.id + "/" + rel.attributes.fileName + ".256.jpg");
                             break;
                         }
                     }
