@@ -795,8 +795,8 @@
     {
       "id": "zh.bilimanga.manga",
       "name": "嗶哩漫畫（BiliManga）",
-      "version": "1.0.2",
-      "versionCode": 3,
+      "version": "1.0.3",
+      "versionCode": 4,
       "lang": "zh",
       "nsfw": true,
       "contract": "shinsou",
@@ -807,8 +807,8 @@
       ],
       "scriptUrl": "plugins/zh.bilimanga.manga.js",
       "sidecarUrl": "sidecars/zh.bilimanga.manga.json",
-      "sha256": "819a775fbec9631f3d39df041c986212b940369ac53d6c4af273e70d40c88f4a",
-      "byteSize": 32675,
+      "sha256": "20948c18a17202d5db8c6524c7473e2f47b2f3508b025107195e3820762a2bb4",
+      "byteSize": 33103,
       "capabilities": [
         "CATALOGUE",
         "LATEST",
@@ -853,6 +853,7 @@
             "https://www.bilimanga.net"
           ],
           "contentOrigins": [
+            "https://c.motiezw.com",
             "https://i.motiezw.com",
             "https://www.bilimanga.net"
           ],

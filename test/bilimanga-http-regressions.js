@@ -150,3 +150,14 @@ for (const body of [
 }
 
 console.log("BiliManga HTTP regressions: structured failures, public callbacks, and reader note PASS");
+
+// Lazy cover attributes must win over the same tag's placeholder src.
+{
+  const run = load(() => '<a href="/detail/917.html"><img src="https://www.bilimanga.net/themes/mobile/images/book-cover-no.svg" data-src="https://c.motiezw.com/0/917/917s.jpg"><h2 class="book-layout"><h2 class="book-title">Cover fixture</h2></a>', { structured: false });
+  const page = run.source.getPopularManga(0);
+  assert.strictEqual(page.mangas.length, 1);
+  assert.strictEqual(page.mangas[0].thumbnailUrl, "https://c.motiezw.com/0/917/917s.jpg");
+  const index = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "src", "index.json"), "utf8"));
+  const entry = index.packages.find(pkg => pkg.id === "zh.bilimanga.manga");
+  assert.ok(entry.sources[0].contentOrigins.includes("https://c.motiezw.com"));
+}

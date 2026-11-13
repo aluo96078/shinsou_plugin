@@ -388,11 +388,18 @@ var BiliManga = {
   },
 
   image: function(block, baseUrl) {
-    var pattern = /<(?:img|source)\b[^>]*(?:data-src|data-original|src)=["']([^"']+)["'][^>]*>/gi;
-    var match;
-    while ((match = pattern.exec(String(block || ""))) !== null) {
-      var value = this.absolute(match[1], baseUrl);
-      if (value && !/book-cover-no\.svg|transparent\.gif|spacer\.(?:gif|png)/i.test(value)) return value;
+    // Lazy images carry a placeholder in src and the real cover in data-src. Select attributes
+    // from each tag separately: a greedy tag regexp otherwise picks src and loses data-src.
+    var tags = String(block || "").match(/<(?:img|source)\b[^>]*>/gi) || [];
+    for (var i = 0; i < tags.length; i++) {
+      var attributes = ["data-src", "data-original", "src"];
+      for (var j = 0; j < attributes.length; j++) {
+        var pattern = new RegExp("(?:^|\\s)" + attributes[j] + "\\s*=\\s*[\"']([^\"']+)[\"']", "i");
+        var match = pattern.exec(tags[i]);
+        if (!match) continue;
+        var value = this.absolute(match[1], baseUrl);
+        if (value && !/book-cover-no\.svg|transparent\.gif|spacer\.(?:gif|png)/i.test(value)) return value;
+      }
     }
     return "";
   },
