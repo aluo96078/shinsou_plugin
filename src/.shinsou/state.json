@@ -16,8 +16,8 @@
       "payloadSha256": "6487c00630837ae1142dd445cfc9afe2e1f6b3d274ee79e05a545797bb55e57a"
     },
     "index.json": {
-      "sequence": 6,
-      "payloadSha256": "55d4885141c4203a99044d1473bb9eefab46943d86a5dc1ca802115a5e967b60"
+      "sequence": 7,
+      "payloadSha256": "6a1b957a1b4ba4e25033d8c4a4a1f946b3e6e41c3239923c0def275ea35015f9"
     },
     "sidecars/zh.baozimh.json": {
       "sequence": 5,
@@ -64,8 +64,8 @@
       "payloadSha256": "8c3f2c1416880aa94f7f5d1fd510a9f155ee4dcd5cbcc77f3c3c986838269869"
     },
     "sidecars/zh.bilimanga.manga.json": {
-      "sequence": 2,
-      "payloadSha256": "17e25581c43208af26d7e50f6d4fd57fcaae484bd7d256fadd0aa7ab891386bc"
+      "sequence": 3,
+      "payloadSha256": "a12c3674d31f8c93bd0cefb5ef59b4a93fd8450818605a2316a06c4015cbde69"
     },
     "sidecars/zh.wenku8.json": {
       "sequence": 2,
