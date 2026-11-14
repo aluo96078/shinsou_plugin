@@ -39,6 +39,7 @@ shinsou-plugin sign-repo --dir src --out .. --flat --key aluo \
 
 - `zh.wenku8.api`：維護中的文庫 relay 來源
 - `zh.biquge.tw`：筆趣閣來源
+- `ko.novelpia`：Novelpia（노벨피아）韓文網路小說；免費章節不需登入，PLUS 章節需以已訂閱的帳號登入，不列出 19 禁作品
 - `zh.wenku8`：已停止維護，只為保留既有書庫身分而存在，不列入新安裝
 
 原本 ShuYue 格式的來源都已改寫成 Shinsou 格式，並保留原本的來源身分（字串 `sourceId` 與數字 `legacyLongId`，

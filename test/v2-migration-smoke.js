@@ -97,8 +97,8 @@ expect(index.format === "shinsou-extension-v2", "unexpected repository index for
 expect(index.contractVersion === 2, "unexpected v2 contract version");
 expect(index.contentContract === "extension-content-v2", "unexpected v2 content contract");
 expect(!("unifiedSource" in index.repository), "the retired unified ShuYue fixture must not be referenced");
-expect(Array.isArray(index.packages) && index.packages.length === 15, "expected exactly 15 v2 packages");
-expect(new Set(index.packages.map((pkg) => pkg.id)).size === 15, "v2 package ids must be unique");
+expect(Array.isArray(index.packages) && index.packages.length === 16, "expected exactly 16 v2 packages");
+expect(new Set(index.packages.map((pkg) => pkg.id)).size === 16, "v2 package ids must be unique");
 expect(!fs.existsSync(path.join(projectRoot, "v2")), "the retired v2 subdirectory must be absent");
 expect(!fs.existsSync(path.join(repoRoot, "src")), "src/ must not nest another source tree");
 const seenScriptUrls = new Set();
@@ -180,7 +180,7 @@ for (const pkg of index.packages) {
       expect(/^-?\d{1,19}$/.test(String(source.legacyLongId)), pkg.id + " string source id needs a numeric legacyLongId");
     }
     const sidecarSource = sidecar.sources.find((entry) => entry.sourceId === source.sourceId);
-    for (const field of ["requestOrigins", "credentialOrigins", "contentOrigins", "browserSessionOrigins", "contentHostSuffixes", "browserImageOrigins"]) {
+    for (const field of ["requestOrigins", "credentialOrigins", "contentOrigins", "browserSessionOrigins", "contentHostSuffixes", "browserImageOrigins", "browserLoginOrigins", "browserLoginResourceOrigins"]) {
       assert.deepStrictEqual(sidecarSource && sidecarSource[field], source[field], pkg.id + " sidecar " + field);
     }
     if (pkg.installable !== false && pkg.runtimePermissions.includes("NETWORK")) {
@@ -262,4 +262,4 @@ for (const pkg of index.packages) {
 const mangadex = index.packages.find((pkg) => pkg.id === "all.mangadex");
 expect(mangadex && mangadex.unindexedLegacy === true && !mangadex.legacyScriptUrl, "MangaDex must not reference a removed v1 artifact");
 expect(index.packages.some((pkg) => pkg.id === "example.login" && pkg.referenceOnly === true), "reference-only login entry missing");
-console.log("v2 smoke: 15 Shinsou packages, scripts, sidecars, permissions, origins and identities verified");
+console.log("v2 smoke: 16 Shinsou packages, scripts, sidecars, permissions, origins and identities verified");
