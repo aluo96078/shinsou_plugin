@@ -16,8 +16,8 @@
       "payloadSha256": "6487c00630837ae1142dd445cfc9afe2e1f6b3d274ee79e05a545797bb55e57a"
     },
     "index.json": {
-      "sequence": 7,
-      "payloadSha256": "6a1b957a1b4ba4e25033d8c4a4a1f946b3e6e41c3239923c0def275ea35015f9"
+      "sequence": 8,
+      "payloadSha256": "44dcf30bb6d817ef9eac8ab7ca75952ac15a37988785f4f9e5b40c2831c258b1"
     },
     "sidecars/zh.baozimh.json": {
       "sequence": 5,
@@ -83,6 +83,10 @@
       "sequence": 1,
       "payloadSha256": "c4dc68ffe9238f0a679c1916308a805b92471dd0ac38cf426f9f8fa6fd093f66",
       "expiresAt": 1796708230
+    },
+    "sidecars/ko.novelpia.json": {
+      "sequence": 1,
+      "payloadSha256": "c9f404c822c4cc2153ee522ffcc399629fbc08da85befb7952288804ec78db86"
     }
   }
 }

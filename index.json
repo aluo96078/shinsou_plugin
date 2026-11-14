@@ -4,7 +4,7 @@
   "keyFingerprint": "sha256:o-kWmdLK5JsPBIkzNB0FNsomhKpPqWB5QunWv2O137o",
   "publicKey": "S3hD2niGrxMK0e1L7UlEwhXa57I9I2nmcjEzXF_feo8",
   "payloadType": "repository-index",
-  "sequence": 7,
+  "sequence": 8,
   "payload": {
     "format": "shinsou-extension-v2",
     "contractVersion": 2,
@@ -1092,8 +1092,104 @@
             ]
           }
         ]
+      },
+      {
+        "id": "ko.novelpia",
+        "name": "Novelpia（노벨피아）",
+        "version": "1.0.0",
+        "versionCode": 1,
+        "lang": "ko",
+        "nsfw": false,
+        "contract": "shinsou",
+        "runtime": "legacy-shinsou-adapter-v2",
+        "installable": true,
+        "contentType": "novel",
+        "contentKinds": [
+          "PLAIN_TEXT"
+        ],
+        "scriptUrl": "plugins/ko.novelpia.js",
+        "sidecarUrl": "sidecars/ko.novelpia.json",
+        "sha256": "c874133801379151f059b89e03bc45d8f68a69de17d806ccff50dc384db3a4f0",
+        "byteSize": 26898,
+        "capabilities": [
+          "CATALOGUE",
+          "LATEST",
+          "BROWSE",
+          "METADATA",
+          "UNITS",
+          "CONTENT",
+          "SEARCH",
+          "LOGIN"
+        ],
+        "runtimePermissions": [
+          "EXECUTE_SCRIPT",
+          "NETWORK",
+          "COOKIE_STORAGE",
+          "CREDENTIAL_ACCESS",
+          "BROWSER_CHALLENGE"
+        ],
+        "requestedHostPermissions": [],
+        "systemEvents": {
+          "protocol": "dev.shinsou.system",
+          "minVersion": 1,
+          "maxVersion": 1,
+          "required": [],
+          "optional": []
+        },
+        "sources": [
+          {
+            "sourceId": "ko.novelpia",
+            "legacyLongId": "-9110000000000005",
+            "name": "Novelpia（노벨피아）",
+            "lang": "ko",
+            "baseUrl": "https://novelpia.com",
+            "contentType": "novel",
+            "contentKinds": [
+              "PLAIN_TEXT"
+            ],
+            "requestOrigins": [
+              "https://novelpia.com",
+              "https://images.novelpia.com"
+            ],
+            "credentialOrigins": [
+              "https://novelpia.com"
+            ],
+            "contentOrigins": [
+              "https://novelpia.com",
+              "https://images.novelpia.com"
+            ],
+            "browserSessionOrigins": [
+              "https://novelpia.com"
+            ],
+            "browserLoginOrigins": [
+              "https://nid.naver.com",
+              "https://kauth.kakao.com",
+              "https://accounts.kakao.com",
+              "https://accounts.google.com",
+              "https://appleid.apple.com",
+              "https://www.facebook.com"
+            ],
+            "browserLoginResourceOrigins": [
+              "https://ssl.pstatic.net",
+              "https://static.nid.naver.com",
+              "https://ncpt.naver.com",
+              "https://nca.naver.com",
+              "https://accounts.kakaocdn.net",
+              "https://t1.kakaocdn.net",
+              "https://www.gstatic.com",
+              "https://ssl.gstatic.com",
+              "https://fonts.gstatic.com",
+              "https://fonts.googleapis.com",
+              "https://appleid.cdn-apple.com",
+              "https://www.apple.com",
+              "https://idmsa.apple.com",
+              "https://is1-ssl.mzstatic.com",
+              "https://static.xx.fbcdn.net"
+            ]
+          }
+        ]
       }
     ]
   },
-  "signature": "tM24EcinvMQJwenTUp5SkPtlVcd6DIHuocK3VKJ7eZswwx_pUCOEG0Mddsr4Rtr_-EXyPXqvn8goYA0v3ZYBCg"
+  "signature": "l2HrQD3LK-tzqb8KL_SSP8CkGB6ePffFE45oZ0JqYPi2zoq5y3EgrwfHi493tDw7yJspGWEMweZODxlw4wC0DQ"
 }
