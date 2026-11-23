@@ -80,9 +80,9 @@
       "payloadSha256": "83b5d01f4d40e1d7f739e03d380a68c76bce94f4ad48d08e45da27de7fadb7e9"
     },
     "publisher-revocations.json": {
-      "sequence": 1,
-      "payloadSha256": "c4dc68ffe9238f0a679c1916308a805b92471dd0ac38cf426f9f8fa6fd093f66",
-      "expiresAt": 1796708230
+      "sequence": 2,
+      "payloadSha256": "6504945c6359b5c2fef5acfb22d72db4a3151c80591e9ab108a0066851323b88",
+      "expiresAt": 1798029811
     },
     "sidecars/ko.novelpia.json": {
       "sequence": 1,
