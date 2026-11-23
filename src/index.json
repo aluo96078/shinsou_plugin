@@ -1181,6 +1181,198 @@
           ]
         }
       ]
+    },
+    {
+      "id": "en.mangakatana",
+      "name": "MangaKatana (English)",
+      "version": "1.0.0",
+      "versionCode": 1,
+      "lang": "en",
+      "nsfw": true,
+      "contract": "shinsou",
+      "runtime": "legacy-shinsou-adapter-v2",
+      "contentType": "manga",
+      "contentKinds": [
+        "IMAGE_SEQUENCE"
+      ],
+      "scriptUrl": "plugins/en.mangakatana.js",
+      "sidecarUrl": "sidecars/en.mangakatana.json",
+      "sha256": "969271fd8e1943c6544c5cd5c7f913d12c1226c8c90de6966cb1e8b250402d8c",
+      "byteSize": 20325,
+      "capabilities": [
+        "CATALOGUE",
+        "LATEST",
+        "BROWSE",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "SEARCH"
+      ],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK",
+        "COOKIE_STORAGE",
+        "BROWSER_CHALLENGE"
+      ],
+      "requestedHostPermissions": [],
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
+      "sources": [
+        {
+          "sourceId": "2171979632015656421",
+          "legacyLongId": "2171979632015656421",
+          "name": "MangaKatana (English)",
+          "lang": "en",
+          "baseUrl": "https://mangakatana.com",
+          "requestOrigins": [
+            "https://mangakatana.com"
+          ],
+          "credentialOrigins": [
+            "https://mangakatana.com"
+          ],
+          "contentOrigins": [
+            "https://i1.mangakatana.com",
+            "https://mangakatana.com"
+          ],
+          "browserSessionOrigins": [
+            "https://mangakatana.com",
+            "https://challenges.cloudflare.com"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ja.rawkuma",
+      "name": "Rawkuma (日本語 Raw)",
+      "version": "1.0.0",
+      "versionCode": 1,
+      "lang": "ja",
+      "nsfw": true,
+      "contract": "shinsou",
+      "runtime": "legacy-shinsou-adapter-v2",
+      "contentType": "manga",
+      "contentKinds": [
+        "IMAGE_SEQUENCE"
+      ],
+      "scriptUrl": "plugins/ja.rawkuma.js",
+      "sidecarUrl": "sidecars/ja.rawkuma.json",
+      "sha256": "0b3184f338b7654e6162194e32f274dcd2733ff016481d1e37b40d3828f1fa46",
+      "byteSize": 20719,
+      "capabilities": [
+        "CATALOGUE",
+        "LATEST",
+        "BROWSE",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "SEARCH"
+      ],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK",
+        "COOKIE_STORAGE",
+        "BROWSER_CHALLENGE"
+      ],
+      "requestedHostPermissions": [],
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
+      "sources": [
+        {
+          "sourceId": "7997661877405526296",
+          "legacyLongId": "7997661877405526296",
+          "name": "Rawkuma (日本語 Raw)",
+          "lang": "ja",
+          "baseUrl": "https://rawkuma.net",
+          "requestOrigins": [
+            "https://rawkuma.net"
+          ],
+          "credentialOrigins": [
+            "https://rawkuma.net"
+          ],
+          "contentOrigins": [
+            "https://cdn.rawkuma.com",
+            "https://rawkuma.net"
+          ],
+          "browserSessionOrigins": [
+            "https://rawkuma.net",
+            "https://challenges.cloudflare.com"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ja.senmanga",
+      "name": "Sen Manga Raw (日本語 Raw)",
+      "version": "1.0.0",
+      "versionCode": 1,
+      "lang": "ja",
+      "nsfw": true,
+      "contract": "shinsou",
+      "runtime": "legacy-shinsou-adapter-v2",
+      "contentType": "manga",
+      "contentKinds": [
+        "IMAGE_SEQUENCE"
+      ],
+      "scriptUrl": "plugins/ja.senmanga.js",
+      "sidecarUrl": "sidecars/ja.senmanga.json",
+      "sha256": "eac6e9f526a06f531d0d79929fd21f64bb6c57c69e2dd0b57736942e1cd14c71",
+      "byteSize": 16271,
+      "capabilities": [
+        "CATALOGUE",
+        "LATEST",
+        "BROWSE",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "SEARCH"
+      ],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK",
+        "COOKIE_STORAGE",
+        "BROWSER_CHALLENGE"
+      ],
+      "requestedHostPermissions": [],
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
+      "sources": [
+        {
+          "sourceId": "3283322064241121169",
+          "legacyLongId": "3283322064241121169",
+          "name": "Sen Manga Raw (日本語 Raw)",
+          "lang": "ja",
+          "baseUrl": "https://raw.senmanga.com",
+          "requestOrigins": [
+            "https://raw.senmanga.com"
+          ],
+          "credentialOrigins": [
+            "https://raw.senmanga.com"
+          ],
+          "contentOrigins": [
+            "https://cdn.rawkuma.com",
+            "https://rawkuma.net"
+          ],
+          "browserSessionOrigins": [
+            "https://raw.senmanga.com",
+            "https://challenges.cloudflare.com"
+          ]
+        }
+      ]
     }
   ]
 }

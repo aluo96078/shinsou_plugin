@@ -42,6 +42,13 @@ shinsou-plugin sign-repo --dir src --out .. --flat --key aluo \
 - `ko.novelpia`：Novelpia（노벨피아）韓文網路小說；免費章節不需登入，PLUS 章節需以已訂閱的帳號登入，不列出 19 禁作品
 - `zh.wenku8`：已停止維護，只為保留既有書庫身分而存在，不列入新安裝
 
+漫畫來源（標示目標網站語言）：
+
+- `en.mangakatana`：MangaKatana（mangakatana.com），**英文**漫畫；支援排序、狀態、章節數與類型包含／排除篩選，可依書名或作者搜尋
+- `ja.rawkuma`：Rawkuma（rawkuma.net），**日文 raw**（未翻譯的日文原版）漫畫；支援排序、類型、狀態與類型包含／排除篩選
+- `ja.senmanga`：Sen Manga Raw（raw.senmanga.com），**日文 raw** 漫畫；圖片與 Rawkuma 共用同一個 CDN。站方的關鍵字搜尋目前無作用，
+  套件會先以書名對應的網址代稱直接查找作品，再就目錄結果在本機比對關鍵字，因此輸入完整羅馬拼音書名效果最好
+
 原本 ShuYue 格式的來源都已改寫成 Shinsou 格式，並保留原本的來源身分（字串 `sourceId` 與數字 `legacyLongId`，
 例如 `zh.wenku8.api` / `-9110000000000002`），所以使用者的書庫、閱讀進度與登入會直接沿用。
 

@@ -97,8 +97,8 @@ expect(index.format === "shinsou-extension-v2", "unexpected repository index for
 expect(index.contractVersion === 2, "unexpected v2 contract version");
 expect(index.contentContract === "extension-content-v2", "unexpected v2 content contract");
 expect(!("unifiedSource" in index.repository), "the retired unified ShuYue fixture must not be referenced");
-expect(Array.isArray(index.packages) && index.packages.length === 16, "expected exactly 16 v2 packages");
-expect(new Set(index.packages.map((pkg) => pkg.id)).size === 16, "v2 package ids must be unique");
+expect(Array.isArray(index.packages) && index.packages.length === 19, "expected exactly 19 v2 packages");
+expect(new Set(index.packages.map((pkg) => pkg.id)).size === 19, "v2 package ids must be unique");
 expect(!fs.existsSync(path.join(projectRoot, "v2")), "the retired v2 subdirectory must be absent");
 expect(!fs.existsSync(path.join(repoRoot, "src")), "src/ must not nest another source tree");
 const seenScriptUrls = new Set();
@@ -262,4 +262,4 @@ for (const pkg of index.packages) {
 const mangadex = index.packages.find((pkg) => pkg.id === "all.mangadex");
 expect(mangadex && mangadex.unindexedLegacy === true && !mangadex.legacyScriptUrl, "MangaDex must not reference a removed v1 artifact");
 expect(index.packages.some((pkg) => pkg.id === "example.login" && pkg.referenceOnly === true), "reference-only login entry missing");
-console.log("v2 smoke: 16 Shinsou packages, scripts, sidecars, permissions, origins and identities verified");
+console.log("v2 smoke: 19 Shinsou packages, scripts, sidecars, permissions, origins and identities verified");

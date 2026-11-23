@@ -1,0 +1,103 @@
+{
+  "format": "shinsou-extension-sidecar-v2",
+  "contractVersion": 2,
+  "packageId": "ja.rawkuma",
+  "name": "Rawkuma (日本語 Raw)",
+  "version": "1.0.0",
+  "versionCode": 1,
+  "contract": "shinsou",
+  "lang": "ja",
+  "nsfw": true,
+  "installable": true,
+  "artifact": {
+    "scriptUrl": "plugins/ja.rawkuma.js",
+    "sha256": "0b3184f338b7654e6162194e32f274dcd2733ff016481d1e37b40d3828f1fa46",
+    "byteSize": 20719
+  },
+  "content": {
+    "contract": "extension-content-v2",
+    "contractVersion": 2,
+    "type": "manga",
+    "kinds": [
+      "IMAGE_SEQUENCE"
+    ]
+  },
+  "capabilities": [
+    "CATALOGUE",
+    "LATEST",
+    "BROWSE",
+    "METADATA",
+    "UNITS",
+    "CONTENT",
+    "SEARCH"
+  ],
+  "systemEvents": {
+    "protocol": "dev.shinsou.system",
+    "minVersion": 1,
+    "maxVersion": 1,
+    "required": [],
+    "optional": []
+  },
+  "requestedHostPermissions": [],
+  "runtimePermissions": [
+    "EXECUTE_SCRIPT",
+    "NETWORK",
+    "COOKIE_STORAGE",
+    "BROWSER_CHALLENGE"
+  ],
+  "sources": [
+    {
+      "sourceKey": {
+        "contractVersion": 2,
+        "packageId": "ja.rawkuma",
+        "sourceId": "7997661877405526296",
+        "legacyLongId": "7997661877405526296"
+      },
+      "sourceId": "7997661877405526296",
+      "name": "Rawkuma (日本語 Raw)",
+      "lang": "ja",
+      "baseUrl": "https://rawkuma.net",
+      "contentType": "manga",
+      "contentKinds": [
+        "IMAGE_SEQUENCE"
+      ],
+      "requestOrigins": [
+        "https://rawkuma.net"
+      ],
+      "credentialOrigins": [
+        "https://rawkuma.net"
+      ],
+      "contentOrigins": [
+        "https://cdn.rawkuma.com",
+        "https://rawkuma.net"
+      ],
+      "browserSessionOrigins": [
+        "https://rawkuma.net",
+        "https://challenges.cloudflare.com"
+      ],
+      "capabilities": [
+        "CATALOGUE",
+        "LATEST",
+        "BROWSE",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "SEARCH"
+      ],
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
+      "requestedHostPermissions": [],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK",
+        "COOKIE_STORAGE",
+        "BROWSER_CHALLENGE"
+      ]
+    }
+  ]
+}

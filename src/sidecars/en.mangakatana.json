@@ -1,0 +1,103 @@
+{
+  "format": "shinsou-extension-sidecar-v2",
+  "contractVersion": 2,
+  "packageId": "en.mangakatana",
+  "name": "MangaKatana (English)",
+  "version": "1.0.0",
+  "versionCode": 1,
+  "contract": "shinsou",
+  "lang": "en",
+  "nsfw": true,
+  "installable": true,
+  "artifact": {
+    "scriptUrl": "plugins/en.mangakatana.js",
+    "sha256": "969271fd8e1943c6544c5cd5c7f913d12c1226c8c90de6966cb1e8b250402d8c",
+    "byteSize": 20325
+  },
+  "content": {
+    "contract": "extension-content-v2",
+    "contractVersion": 2,
+    "type": "manga",
+    "kinds": [
+      "IMAGE_SEQUENCE"
+    ]
+  },
+  "capabilities": [
+    "CATALOGUE",
+    "LATEST",
+    "BROWSE",
+    "METADATA",
+    "UNITS",
+    "CONTENT",
+    "SEARCH"
+  ],
+  "systemEvents": {
+    "protocol": "dev.shinsou.system",
+    "minVersion": 1,
+    "maxVersion": 1,
+    "required": [],
+    "optional": []
+  },
+  "requestedHostPermissions": [],
+  "runtimePermissions": [
+    "EXECUTE_SCRIPT",
+    "NETWORK",
+    "COOKIE_STORAGE",
+    "BROWSER_CHALLENGE"
+  ],
+  "sources": [
+    {
+      "sourceKey": {
+        "contractVersion": 2,
+        "packageId": "en.mangakatana",
+        "sourceId": "2171979632015656421",
+        "legacyLongId": "2171979632015656421"
+      },
+      "sourceId": "2171979632015656421",
+      "name": "MangaKatana (English)",
+      "lang": "en",
+      "baseUrl": "https://mangakatana.com",
+      "contentType": "manga",
+      "contentKinds": [
+        "IMAGE_SEQUENCE"
+      ],
+      "requestOrigins": [
+        "https://mangakatana.com"
+      ],
+      "credentialOrigins": [
+        "https://mangakatana.com"
+      ],
+      "contentOrigins": [
+        "https://i1.mangakatana.com",
+        "https://mangakatana.com"
+      ],
+      "browserSessionOrigins": [
+        "https://mangakatana.com",
+        "https://challenges.cloudflare.com"
+      ],
+      "capabilities": [
+        "CATALOGUE",
+        "LATEST",
+        "BROWSE",
+        "METADATA",
+        "UNITS",
+        "CONTENT",
+        "SEARCH"
+      ],
+      "systemEvents": {
+        "protocol": "dev.shinsou.system",
+        "minVersion": 1,
+        "maxVersion": 1,
+        "required": [],
+        "optional": []
+      },
+      "requestedHostPermissions": [],
+      "runtimePermissions": [
+        "EXECUTE_SCRIPT",
+        "NETWORK",
+        "COOKIE_STORAGE",
+        "BROWSER_CHALLENGE"
+      ]
+    }
+  ]
+}
