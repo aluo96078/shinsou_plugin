@@ -16,8 +16,8 @@
       "payloadSha256": "6487c00630837ae1142dd445cfc9afe2e1f6b3d274ee79e05a545797bb55e57a"
     },
     "index.json": {
-      "sequence": 8,
-      "payloadSha256": "44dcf30bb6d817ef9eac8ab7ca75952ac15a37988785f4f9e5b40c2831c258b1"
+      "sequence": 9,
+      "payloadSha256": "94f489b8e10cf0a07ccf39e5b44ba156b9a3c7d0ff522e6f78f09f62e1851271"
     },
     "sidecars/zh.baozimh.json": {
       "sequence": 5,
@@ -87,6 +87,18 @@
     "sidecars/ko.novelpia.json": {
       "sequence": 1,
       "payloadSha256": "c9f404c822c4cc2153ee522ffcc399629fbc08da85befb7952288804ec78db86"
+    },
+    "sidecars/en.mangakatana.json": {
+      "sequence": 1,
+      "payloadSha256": "ad4d65dad93390ab6f4afc77a65741b8ac507a70ff14bb37f03e4c9205f29de1"
+    },
+    "sidecars/ja.rawkuma.json": {
+      "sequence": 1,
+      "payloadSha256": "a447e76de35753889d58dcf0258bdb557aebb3d863a93ef641663cebd688dba6"
+    },
+    "sidecars/ja.senmanga.json": {
+      "sequence": 1,
+      "payloadSha256": "b3798b737169938ad4deb1b0d9bc6fe4b5b502ec38c586a3e6845c0324a4f8d7"
     }
   }
 }
